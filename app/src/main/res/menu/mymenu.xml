@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:title="@string/text_home"
+        android:icon="@drawable/messenger_bubble_small_blue"
+         />
+
+    <item
+        android:id="@+id/action_top"
+        android:title="@string/text_top"
+        android:icon="@drawable/messenger_bubble_small_blue"
+
+        />
+
+    <item
+        android:id="@+id/action_notification"
+        android:title="@string/text_notification"
+        android:icon="@drawable/messenger_bubble_small_blue"
+
+        />
+
+    <item
+        android:id="@+id/action_profile"
+        android:title="@string/text_profile"
+        android:icon="@drawable/messenger_bubble_small_blue"
+
+        />
+
+
+
+    <item
+        android:id="@+id/action_setting"
+        android:title="@string/text_setting"
+        android:icon="@drawable/messenger_bubble_small_blue"
+
+        />
+
+
+
+</menu>

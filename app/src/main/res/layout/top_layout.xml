@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:layout_weight="1"
+        android:text="Top 5 of the"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_weight="1"
+        android:text="in"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/day_no"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Top 5 of the"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+
+            />
+
+        <Spinner
+            android:id="@+id/country_name"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="in"
+
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+
+            />
+
+    </LinearLayout>
+
+
+    <GridView
+        android:id="@+id/top_5_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </GridView>
+
+
+</LinearLayout>

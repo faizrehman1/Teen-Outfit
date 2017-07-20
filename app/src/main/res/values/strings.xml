@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Vividways</string>
+    <string name="facebook_app_id">1265487793578069</string>
+    <string name="fb_login_protocol_scheme">fb1265487793578069</string>
+    <string name="home_screen">Home</string>
+    <string name="text_home">Home</string>
+    <string name="text_top">Top 5</string>
+    <string name="text_notification">Notification</string>
+    <string name="text_profile">Profile</string>
+    <string name="text_setting">Setting</string>
+
+    <string name="country_prompt">Choose a country</string>
+
+    <string-array name="country_arrays">
+        <item>Malaysia</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>India</item>
+        <item>Pakistan</item>
+    </string-array>
+
+
+    <string-array name="days_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+    </string-array>
+
+
+
+
+</resources>

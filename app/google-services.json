@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "391259819693",
+    "firebase_url": "https://vividways-1675b.firebaseio.com",
+    "project_id": "vividways-1675b",
+    "storage_bucket": "vividways-1675b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391259819693:android:88f261fd1b64bceb",
+        "android_client_info": {
+          "package_name": "com.example.faiz.vividways"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "391259819693-h9gtr9bvmj4ioqsnfo0913v699nj4vf7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmd1VzLEROFMiYo6w-yRXApUdtCREaRBA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
