@@ -24,6 +24,13 @@ public class Setting_Fragment extends android.support.v4.app.Fragment {
        view = inflater.inflate(R.layout.setting_layout,null);
         MainActivity.appbar_TextView.setText("Setting");
         MainActivity.Uploadbutton.setVisibility(View.GONE);
+
+
+
+
+
+
+
         return view;
     }
 }

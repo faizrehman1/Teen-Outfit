@@ -25,6 +25,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="10dp"
         android:layout_marginTop="10dp"
         android:weightSum="2"
         android:layout_width="match_parent"
@@ -55,6 +56,9 @@
 
 
     <GridView
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
         android:id="@+id/top_5_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

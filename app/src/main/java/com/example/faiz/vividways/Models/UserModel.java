@@ -25,6 +25,12 @@ public class UserModel {
         this.imgURL = imgURL;
     }
 
+    public UserModel(String fname, String lname, String imgURL) {
+        this.fname = fname;
+        this.lname = lname;
+        this.imgURL = imgURL;
+    }
+
     public UserModel() {
     }
 

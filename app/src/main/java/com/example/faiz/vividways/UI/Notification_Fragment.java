@@ -14,7 +14,7 @@ import com.example.faiz.vividways.R;
 
 public class Notification_Fragment extends android.support.v4.app.Fragment {
 
-    View view;
+    public View view;
 
 
     @Nullable

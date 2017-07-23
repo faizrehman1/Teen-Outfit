@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     public FragmentManager fragmentManager;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private Button fbLogin;
+    private LinearLayout fbLogin;
     private boolean fbSignIn = false;
     private Profile profile;
     private UserModel user = new UserModel();
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         fbLoginMan = LoginManager.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        fbLogin = (Button) findViewById(R.id.fb_login);
+        fbLogin = (LinearLayout) findViewById(R.id.bSearch2);
         signUpText = (TextView) findViewById(R.id.signup);
         loginBtn = (Button) findViewById(R.id.user_login);
         useremail = (EditText) findViewById(R.id.editText_Loginemail);
@@ -239,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
                         AppLogs.logd("Auth State User PhotoUrl:" + currentUser.getPhotoUrl());
                         AppLogs.logd("Auth State User Name:" + currentUser.getDisplayName());
 
-                        firebase.child("User").child(currentUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
+                        firebase.child("users").child(currentUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 AppLogs.logd("User Logged In For FB:" + user.getEmail());

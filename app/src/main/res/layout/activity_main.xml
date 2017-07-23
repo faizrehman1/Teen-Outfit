@@ -17,16 +17,15 @@
             layout="@layout/toolbar" />
 
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/menu_bar"
-        android:layout_below="@+id/toolbar_outside"
-        ></FrameLayout>
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/menu_bar"
+            android:layout_below="@+id/toolbar_outside"></FrameLayout>
 
 
-    <!--<android.support.design.widget.BottomNavigationView-->
+        <!--<android.support.design.widget.BottomNavigationView-->
         <!--android:id="@+id/bottom_navigation"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
@@ -38,132 +37,149 @@
         <!--app:menu="@menu/mymenu" />-->
 
         <View
-            android:layout_below="@+id/fragment_container"
-            android:background="#000"
             android:layout_width="match_parent"
-            android:layout_height="1dp"></View>
+            android:layout_height="1dp"
+            android:layout_below="@+id/fragment_container"
+            android:background="#a9a7a7"></View>
 
 
-    <LinearLayout
-        android:id="@+id/menu_bar"
-        android:weightSum="5"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/menu_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#fff"
+            android:paddingTop="15dp"
+            android:weightSum="5">
 
-    <LinearLayout
-        android:id="@+id/home_view"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        >
+            <LinearLayout
+                android:id="@+id/home_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
 
-
-
-        <ImageView
-            android:src="@drawable/messenger_bubble_small_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:text="Home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/top_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
-
-        >
-        <ImageView
-            android:src="@drawable/messenger_bubble_small_blue"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:text="Top 5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                >
 
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/notification_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
+                <ImageView
+                    android:id="@+id/home_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sel_home_icon" />
 
-        >
-        <ImageView
-            android:src="@drawable/messenger_bubble_small_blue"
+                <TextView
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/home_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home" />
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            </LinearLayout>
 
-        <TextView
-            android:text="Notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <LinearLayout
+                android:id="@+id/top_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/profile_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
+                >
 
-        >
+                <ImageView
+                    android:id="@+id/top_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/top5_icon" />
 
-        <ImageView
-            android:src="@drawable/messenger_bubble_small_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:text="Profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/top_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top 5" />
 
 
+            </LinearLayout>
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/setting_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
+            <LinearLayout
+                android:id="@+id/notification_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
 
-        >
+                >
 
-        <ImageView
-            android:src="@drawable/messenger_bubble_small_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/notification_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/notification_icon" />
 
-        <TextView
-            android:text="Setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/notification_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notification" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+
+                >
+
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/profile_icon" />
+
+                <TextView
+                    android:id="@+id/profile_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile" />
 
 
-    </LinearLayout>
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/setting_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+
+                >
+
+                <ImageView
+                    android:id="@+id/setting_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/settings_icon" />
+
+                <TextView
+                    android:id="@+id/setting_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Setting" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

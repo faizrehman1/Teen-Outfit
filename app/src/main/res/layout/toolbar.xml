@@ -19,6 +19,15 @@
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Light">
 
 
+    <ImageView
+        android:padding="15dp"
+        android:src="@mipmap/back_arrow"
+        android:id="@+id/back_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
     <TextView
         android:id="@+id/main_appbar_textView"
         android:layout_width="wrap_content"
@@ -29,22 +38,39 @@
         android:textSize="20dp"
         />
 
+
     <Button
         android:id="@+id/upload_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@color/colorAccent"
+        android:background="@mipmap/upload_btn"
         android:layout_marginRight="10dp"
         android:gravity="center"
-        android:text="Upload"
         android:textAllCaps="false"
         android:textColor="#fff"
-
         android:textSize="16dp"
         android:textStyle="bold"
         android:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/delete_image"
+        android:layout_margin="10dp"
+        android:src="@mipmap/delete_icon"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <ImageView
+android:id="@+id/report_image"
+        android:src="@mipmap/report_icon"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 

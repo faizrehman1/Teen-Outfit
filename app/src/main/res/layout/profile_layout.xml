@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_margin="20dp"
+        android:src="@drawable/user"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/user_image_profile"
+       />
 
 
-    <TextView
-        android:text="Blank Fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:text="Faiz Rehman"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_name_profile"
+            android:layout_alignTop="@+id/user_image_profile"
+            android:layout_toRightOf="@+id/user_image_profile"
+            android:layout_toEndOf="@+id/user_image_profile" />
+
+        <TextView
+            android:text="Faiz Rehman"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_name_profile"
+            android:layout_alignLeft="@+id/user_name_profile"
+            android:layout_alignStart="@+id/user_name_profile"
+            android:id="@+id/user_city" />
 
 
 
-</LinearLayout>
+                <ImageView
+                    android:layout_margin="35dp"
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/grid_view"
+                    android:layout_alignParentRight="true"
+
+
+                     />
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_below="@id/user_image_profile"
+        android:id="@+id/grid_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="auto_fit"
+        android:columnWidth="90dp"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:gravity="center"
+        android:stretchMode="columnWidth" >
+
+    </GridView>
+
+
+    </RelativeLayout>
+
