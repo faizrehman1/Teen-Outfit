@@ -7,15 +7,26 @@ package com.example.faiz.vividways.Models;
 public class ItemObject {
     public String itemID;
     public String itemImageURl;
+    public boolean leaveit;
+    public boolean takeit;
 
 
     public ItemObject() {
+    }
+
+    public ItemObject(String itemID, String itemImageURl, boolean leaveit, boolean takeit) {
+        this.itemID = itemID;
+        this.itemImageURl = itemImageURl;
+        this.leaveit = leaveit;
+        this.takeit = takeit;
     }
 
     public ItemObject(String itemID, String itemImageURl) {
         this.itemID = itemID;
         this.itemImageURl = itemImageURl;
     }
+
+
 
     public String getItemID() {
         return itemID;

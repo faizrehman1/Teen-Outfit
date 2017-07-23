@@ -115,6 +115,7 @@
             android:layout_height="wrap_content" />
 
         <Button
+            android:layout_marginTop="20dp"
             android:id="@+id/user_login"
             android:textColor="@color/colorPrimary"
             android:background="@drawable/my_loginbtn"
@@ -124,7 +125,7 @@
 
         <TextView
             android:textStyle="italic"
-            android:layout_margin="8dp"
+            android:layout_margin="15dp"
             android:textColor="#c7bfbf"
             android:text="Forgot Your Password?"
             android:layout_width="wrap_content"
@@ -164,16 +165,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
+
             <TextView
                 android:text="Don't Have an Account?"
                 android:textColor="#fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 />
 
             <TextView

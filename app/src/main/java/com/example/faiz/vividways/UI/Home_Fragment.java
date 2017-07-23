@@ -63,7 +63,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         my_recycler_view.setHasFixedSize(true);
 
 
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
+        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/postImages%2Fas.jpg?alt=media&token=d6a071d9-840e-4980-93e7-917100312614"));
         imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
         imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
         imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
@@ -83,6 +83,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         my_recycler_view.setLayoutManager(new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration));
       //  my_recycler_view.setLayoutManager(layoutManager);
         my_recycler_view.setAdapter(adapter);
+
+
 
 
         return view;

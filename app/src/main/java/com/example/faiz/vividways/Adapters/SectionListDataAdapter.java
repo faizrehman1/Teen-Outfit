@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.AppLogs;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.R;
@@ -104,7 +105,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         });
 
 
-      //  Glide.with(mContext).load(singleItem.getItemImageURl()).into(holder.itemImage);
+     //   Glide.with(mContext).load(singleItem.getItemImageURl()).into(holder.itemImage);
 
 
        /* Glide.with(mContext)
@@ -131,20 +132,20 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             super(view);
 
 
-            this.leave_btn = (Button)view.findViewById(R.id.leave_btn);
+           this.leave_btn = (Button)view.findViewById(R.id.leave_btn);
             this.take_btn = (Button)view.findViewById(R.id.take_btn);
             this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
             this.leaveIT =(LinearLayout)view.findViewById(R.id.itemleave);
             this.takeIT =(LinearLayout)view.findViewById(R.id.itemtake);
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
 //                    Toast.makeText(v.getContext(),"Hello", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            });
+
+                }
+            });
 
 
         }
