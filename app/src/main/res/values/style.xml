@@ -5,4 +5,12 @@
         <item name="windowNoTitle">true</item>
 
     </style>
+
+    <style name="rating_star" parent="@android:style/Widget.RatingBar">
+    <item name="android:progressDrawable">@drawable/rating_star</item>
+    <item name="android:minHeight">12dip</item>
+    <item name="android:maxHeight">12dip</item>
+
+    </style>
+
 </resources>

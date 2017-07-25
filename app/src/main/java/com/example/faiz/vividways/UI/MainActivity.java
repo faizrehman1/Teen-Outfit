@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+           //     R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right
+            //    overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 menu_bar.setVisibility(View.VISIBLE);
                 getSupportFragmentManager().popBackStack();
             }
@@ -245,8 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+                .beginTransaction();
         transaction.add(R.id.fragment_container, new Home_Fragment());
         transaction.commit();
 

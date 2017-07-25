@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.Models.ItemObject;
@@ -13,20 +14,22 @@ import com.example.faiz.vividways.R;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
- * Created by Faiz on 7/21/2017.
+ * Created by Faiz on 7/25/2017.
  */
 
-public class GridViewAdapter extends BaseAdapter {
+public class Notification_Adapter extends BaseAdapter {
 
-    public LayoutInflater inflater;
     public Context mContext;
     public ArrayList<ItemObject> itemObjectArrayList;
+    public LayoutInflater inflater;
 
-    public GridViewAdapter(Context mContext, ArrayList<ItemObject> itemObjectArrayList) {
-        this.inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public Notification_Adapter(Context mContext, ArrayList<ItemObject> itemObjectArrayList) {
         this.mContext = mContext;
         this.itemObjectArrayList = itemObjectArrayList;
+        this.inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -46,11 +49,14 @@ public class GridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+
+       ViewHolder  viewHolder;
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.top_grid_view,parent,false);
+            convertView = inflater.inflate(R.layout.layout_notification_view,parent,false);
             viewHolder = new ViewHolder();
-            viewHolder.imgStatus= (ImageView) convertView.findViewById(R.id.top_image_card);
+            viewHolder.imageView = (ImageView)convertView.findViewById(R.id.post_image_noti);
+            viewHolder.circleImageView = (CircleImageView)convertView.findViewById(R.id.user_image_noti);
+            viewHolder.textView = (TextView)convertView.findViewById(R.id.user_post_noti);
             convertView.setTag(viewHolder);
         }
         else {
@@ -58,7 +64,11 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
 
-        Glide.with(mContext).load(itemObjectArrayList.get(position).getItemImageURl()).into(viewHolder.imgStatus);
+
+        viewHolder.textView.setText(itemObjectArrayList.get(position).getItemID());
+        Glide.with(mContext).load(itemObjectArrayList.get(position).itemImageURl).into(viewHolder.imageView);
+
+
 
 
 
@@ -66,7 +76,9 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        ImageView imgStatus;
+      public  ImageView imageView;
+      public  CircleImageView circleImageView;
+      public  TextView textView;
 
     }
 }

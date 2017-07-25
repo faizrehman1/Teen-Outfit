@@ -75,6 +75,14 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
     private Uri selectedImage;
     private Bitmap bitmap;
     private String imgPath;
+    private Spinner spinner_country;
+    String contry_array[] = {"Country","Afghanistan",
+            "Albania",
+            "Algeria",
+            "Andorra",
+            "Angola",
+            "Antigua & Barbuda",
+    };
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,12 +103,11 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
         email = (EditText) rootView.findViewById(R.id.editText_email);
         userID = (EditText) rootView.findViewById(R.id.editText_userID);
         password = (EditText) rootView.findViewById(R.id.editText_password);
-        confirmpass = (EditText) rootView.findViewById(R.id.editText_cpassword);
         fname = (EditText) rootView.findViewById(R.id.editText_fname);
         lname = (EditText) rootView.findViewById(R.id.editText_lname);
         signup = (Button)rootView.findViewById(R.id.signup_btn);
         profile_image  = (CircleImageView)rootView.findViewById(R.id.profile_img);
-
+        spinner_country=(Spinner)rootView.findViewById(R.id.country_signup_spin);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,9 +116,6 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                 //Checking the length of pasword while registering new USER;
                 if (pass.length() <= 6) {
                     main(pass);
-                }else if(!pass.matches(confrim_passwordd)){
-                    Toast.makeText(getActivity(),"Something Wrong in Password",Toast.LENGTH_SHORT).show();
-                    confirmpass.setError("Pass not match");
                 }else if(( fname.getText().toString().equals("")
                         || lname.getText().toString().equals("")
                         || userID.getText().toString().equals("")
@@ -128,6 +132,8 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                 }
                 else if(lname.getText().length() == 0 || !lname.getText().toString().matches("[a-zA-Z ]+")){
                     lname.setError("Invalid Name");
+                }else if(spinner_country.getSelectedItem().toString()!=null && spinner_country.getSelectedItem().toString().equals("")){
+                    spinner_country.getSelectedItem().toString();
                 }
                 //Checking the length of pasword while registering new USER;
                 else if (pass.length() <= 6) {
@@ -143,7 +149,7 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         String uid = mAuth.getCurrentUser().getUid();
-                                            firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass, confrim_passwordd, uid, fname.getText().toString(), lname.getText().toString(),imageURL));
+                                            firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass,uid, fname.getText().toString(), lname.getText().toString(),imageURL,spinner_country.getSelectedItem().toString()));
                                         progressDialog.dismiss();
                                         Toast.makeText(getActivity(), "Successfull", Toast.LENGTH_SHORT).show();
                                         AppLogs.logd("createUserWithEmail:onComplete: " + task.isSuccessful());

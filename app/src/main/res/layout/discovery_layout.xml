@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:scrollbars="none"
+    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#fff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/discovery_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:text="Welcome To Vividways"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:textColor="#999999"
+        android:textSize="12sp"
+        android:layout_gravity="center"
+        android:text="Welcome To Vividways"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardUseCompatPadding="true"
+        card_view:cardCornerRadius="8dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+
+
+
+                <TextView
+                    android:textColor="#999999"
+                    android:textSize="12sp"
+                    android:layout_gravity="center"
+                    android:text="Welcome To Vividways"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textColor="#000"
+                    android:textSize="12sp"
+                    android:layout_gravity="center"
+                    android:text="Who Can see my Post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Afghanistan"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Albania"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Algeria"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Andorra"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Angola"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Antigua and Barbuda"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textColor="#000"
+                    android:textSize="12sp"
+                    android:layout_gravity="center"
+                    android:text="Want to see post them"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Afghanistan"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Albania"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Algeria"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Andorra"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Angola"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:text="Antigua and Barbuda"
+                    android:background="@drawable/dis_pref_button_edges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    <Button
+        android:textColor="#fff"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@color/colorPrimary"
+        android:text="DONE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
+    </ScrollView>

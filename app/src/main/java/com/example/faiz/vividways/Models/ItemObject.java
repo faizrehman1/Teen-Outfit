@@ -9,17 +9,22 @@ public class ItemObject {
     public String itemImageURl;
     public boolean leaveit;
     public boolean takeit;
+    public String userID;
+    public String notification_text;
 
 
-    public ItemObject() {
-    }
-
-    public ItemObject(String itemID, String itemImageURl, boolean leaveit, boolean takeit) {
+    public ItemObject(String itemID, String itemImageURl, boolean leaveit, boolean takeit, String userID) {
         this.itemID = itemID;
         this.itemImageURl = itemImageURl;
         this.leaveit = leaveit;
         this.takeit = takeit;
+        this.userID = userID;
     }
+
+    public ItemObject() {
+    }
+
+
 
     public ItemObject(String itemID, String itemImageURl) {
         this.itemID = itemID;

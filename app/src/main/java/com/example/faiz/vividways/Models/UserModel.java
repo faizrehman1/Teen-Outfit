@@ -13,16 +13,17 @@ public class UserModel {
     private String fname;
     private String lname;
     private String imgURL;
+    private String country;
 
 
-    public UserModel(String email, String password, String cpassword, String userID, String fname, String lname, String imgURL) {
+    public UserModel(String email, String password, String userID, String fname, String lname, String imgURL, String country) {
         this.email = email;
         this.password = password;
-        this.cpassword = cpassword;
         this.userID = userID;
         this.fname = fname;
         this.lname = lname;
         this.imgURL = imgURL;
+        this.country = country;
     }
 
     public UserModel(String fname, String lname, String imgURL) {
@@ -34,6 +35,14 @@ public class UserModel {
     public UserModel() {
     }
 
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
     public String getImgURL() {
         return imgURL;
@@ -59,13 +68,6 @@ public class UserModel {
         this.password = password;
     }
 
-    public String getCpassword() {
-        return cpassword;
-    }
-
-    public void setCpassword(String cpassword) {
-        this.cpassword = cpassword;
-    }
 
     public String getUserID() {
         return userID;

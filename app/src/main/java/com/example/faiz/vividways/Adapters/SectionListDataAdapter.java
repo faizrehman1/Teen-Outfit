@@ -92,7 +92,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             public void onClick(View v) {
 
                 FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
-                        .beginTransaction().setCustomAnimations(R.anim.out_from_left,R.anim.in_from_right);
+                        .beginTransaction().setCustomAnimations(R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right);
                 mainActivity.Uploadbutton.setVisibility(View.GONE);
                 mainActivity.appbar_TextView.setText("Statistic");
                 MainActivity.back_image.setVisibility(View.VISIBLE);
@@ -163,7 +163,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
        }
        List_Fragment list_fragment = new List_Fragment();
         FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
-                .beginTransaction();
+                .beginTransaction().setCustomAnimations(R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right);;
         mainActivity.Uploadbutton.setVisibility(View.GONE);
         mainActivity.appbar_TextView.setText("List");
         mainActivity.back_image.setVisibility(View.VISIBLE);
