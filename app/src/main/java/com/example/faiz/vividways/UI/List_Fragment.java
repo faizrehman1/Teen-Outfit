@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.faiz.vividways.Adapters.CustomizeViewPager;
 import com.example.faiz.vividways.Adapters.TabAdapter;
+import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.R;
 
 import java.util.ArrayList;
@@ -52,18 +53,23 @@ public class List_Fragment extends android.support.v4.app.Fragment {
 
         Bundle extras = getArguments();
         list_choice = extras.getBoolean("listb");
+        ItemObject itemObject = extras.getParcelable("item");
 
+        Leave_Fragment.itemObject = itemObject;
+        Take_Fragment.itemObject = itemObject;
 
         if(list_choice){
              //take it
             viewPager.setCurrentItem(1);
             TabLayout.Tab tab = tabLayout.getTabAt(1);
             tab.select();
+
         }else{
             //leave it
             viewPager.setCurrentItem(0);
             TabLayout.Tab tab = tabLayout.getTabAt(0);
             tab.select();
+
         }
         viewPager.setPagingEnabled(false);
 //

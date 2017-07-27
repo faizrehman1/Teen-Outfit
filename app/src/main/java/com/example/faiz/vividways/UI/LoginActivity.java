@@ -152,13 +152,13 @@ public class LoginActivity extends AppCompatActivity {
 
                                                                String first_namefire = object.getString("first_name");
                                                                Log.e("FirstName", "" + first_namefire);
-                                                               user.setFname(first_namefire);
+                                                               user.setUser_fname(first_namefire);
                                                                String last_namefire = object.getString("last_name");
                                                                Log.e("LastName", "" + last_namefire);
-                                                               user.setLname(last_namefire);
+                                                               user.setUser_lname(last_namefire);
                                                                String emailfire = object.getString("email");
                                                                Log.e("Email", "" + emailfire);
-                                                               user.setEmail(emailfire);
+                                                               user.setUser_email(emailfire);
                                                                String birthdayfire = object.getString("birthday");
                                                                Log.e("birthday", "" + birthdayfire);
 //                                    user.setDob(birthdayfire);
@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
 //                                    user.setGender(genderfire);
                                                                String dpfire = Profile.getCurrentProfile().getProfilePictureUri(400, 400).toString();
                                                                Log.e("Graph Dp:", "" + dpfire);
-                                                               user.setImgURL(dpfire);
+                                                               user.setUser_imgURL(dpfire);
 
 
                                                            } catch (Exception ex) {
@@ -232,9 +232,9 @@ public class LoginActivity extends AppCompatActivity {
                         /**
                          * Face Book Auth
                          * */
-                        user.setUserID(currentUser.getUid());
-                        user.setPassword("");
-                        user.setImgURL(currentUser.getPhotoUrl().toString());
+                        user.setUser_userID(currentUser.getUid());
+                        user.setUser_password("");
+                        user.setUser_imgURL(currentUser.getPhotoUrl().toString());
                         AppLogs.logd("Auth State User ID:" + currentUser.getUid());
                         AppLogs.logd("Auth State User Email:" + currentUser.getEmail());
                         AppLogs.logd("Auth State User PhotoUrl:" + currentUser.getPhotoUrl());
@@ -243,7 +243,7 @@ public class LoginActivity extends AppCompatActivity {
                         firebase.child("users").child(currentUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                AppLogs.logd("User Logged In For FB:" + user.getEmail());
+                                AppLogs.logd("User Logged In For FB:" + user.getUser_email());
                                 //     SharedPref.setCurrentUser(LoginActivity.this, user);
                                 openMainScreen();
                             }

@@ -57,7 +57,7 @@ public class ProfileGridAdapter extends BaseAdapter {
           imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
     //    imageView.setLayoutParams(new GridView.LayoutParams(70, 70));
         imageView.setLayoutParams(new GridView.LayoutParams(200,200));
-        Glide.with(mContext).load(itemObjectArrayList.get(position).getItemImageURl()).into(imageView);
+        Glide.with(mContext).load(itemObjectArrayList.get(position).getItemImageURl()).placeholder(R.mipmap.placeholder).into(imageView);
 
 
 

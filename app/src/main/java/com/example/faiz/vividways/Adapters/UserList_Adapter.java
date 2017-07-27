@@ -55,8 +55,8 @@ public class UserList_Adapter extends BaseAdapter {
 
         UserModel userModel = userModelArrayList.get(position);
 
-        textView.setText(userModel.getFname()+" "+userModel.getLname());
-        Glide.with(mContext).load(userModel.getImgURL()).into(circleImageView);
+        textView.setText(userModel.getUser_fname()+" "+userModel.getUser_lname());
+        Glide.with(mContext).load(userModel.getUser_imgURL()).into(circleImageView);
 
 
 

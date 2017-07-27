@@ -121,10 +121,17 @@
                 android:text=""
                 android:textSize="14sp"/>
 
-            <Spinner
+                    <Spinner
+
                 android:id="@+id/country_signup_spin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></Spinner>
+
+            <Spinner
+                android:id="@+id/country_signup_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></Spinner>
+
 
 
         </LinearLayout>

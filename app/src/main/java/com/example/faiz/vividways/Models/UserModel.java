@@ -6,90 +6,98 @@ package com.example.faiz.vividways.Models;
 
 public class UserModel {
 
-    private String email;
-    private String password;
-    private String cpassword;
-    private String userID;
-    private String fname;
-    private String lname;
-    private String imgURL;
-    private String country;
+    private String user_email;
+    private String user_password;
+    private String user_userID;
+    private String user_fname;
+    private String user_lname;
+    private String user_imgURL;
+    private String user_country;
+    private String user_gender;
 
 
-    public UserModel(String email, String password, String userID, String fname, String lname, String imgURL, String country) {
-        this.email = email;
-        this.password = password;
-        this.userID = userID;
-        this.fname = fname;
-        this.lname = lname;
-        this.imgURL = imgURL;
-        this.country = country;
+    public UserModel(String user_email, String user_password, String user_userID, String user_fname, String user_lname, String user_imgURL, String user_country, String user_gender) {
+        this.user_email = user_email;
+        this.user_password = user_password;
+        this.user_userID = user_userID;
+        this.user_fname = user_fname;
+        this.user_lname = user_lname;
+        this.user_imgURL = user_imgURL;
+        this.user_country = user_country;
+        this.user_gender = user_gender;
     }
 
-    public UserModel(String fname, String lname, String imgURL) {
-        this.fname = fname;
-        this.lname = lname;
-        this.imgURL = imgURL;
+    public UserModel(String user_fname, String user_lname, String user_imgURL) {
+        this.user_fname = user_fname;
+        this.user_lname = user_lname;
+        this.user_imgURL = user_imgURL;
     }
 
     public UserModel() {
     }
 
 
-    public String getCountry() {
-        return country;
+    public String getUser_email() {
+        return user_email;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setUser_email(String user_email) {
+        this.user_email = user_email;
     }
 
-    public String getImgURL() {
-        return imgURL;
+    public String getUser_password() {
+        return user_password;
     }
 
-    public void setImgURL(String imgURL) {
-        this.imgURL = imgURL;
+    public void setUser_password(String user_password) {
+        this.user_password = user_password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUser_userID() {
+        return user_userID;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUser_userID(String user_userID) {
+        this.user_userID = user_userID;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUser_fname() {
+        return user_fname;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUser_fname(String user_fname) {
+        this.user_fname = user_fname;
     }
 
-
-    public String getUserID() {
-        return userID;
+    public String getUser_lname() {
+        return user_lname;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUser_lname(String user_lname) {
+        this.user_lname = user_lname;
     }
 
-    public String getFname() {
-        return fname;
+    public String getUser_imgURL() {
+        return user_imgURL;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setUser_imgURL(String user_imgURL) {
+        this.user_imgURL = user_imgURL;
     }
 
-    public String getLname() {
-        return lname;
+    public String getUser_country() {
+        return user_country;
     }
 
-    public void setLname(String lname) {
-        this.lname = lname;
+    public void setUser_country(String user_country) {
+        this.user_country = user_country;
+    }
+
+    public String getUser_gender() {
+        return user_gender;
+    }
+
+    public void setUser_gender(String user_gender) {
+        this.user_gender = user_gender;
     }
 }

@@ -8,9 +8,15 @@
         android:id="@+id/imageView_Alert"
         android:layout_width="300dp"
         android:layout_gravity="center"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
+        android:scaleType="fitXY"
         />
 
-
+    <EditText
+        android:layout_margin="10dp"
+        android:hint="Caption"
+        android:id="@+id/caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

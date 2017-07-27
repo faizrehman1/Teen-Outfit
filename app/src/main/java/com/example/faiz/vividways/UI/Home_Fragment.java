@@ -31,15 +31,19 @@ import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
 import com.example.faiz.vividways.AppLogs;
+import com.example.faiz.vividways.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -54,6 +58,7 @@ import java.util.Date;
 
 public class Home_Fragment extends android.support.v4.app.Fragment {
 
+    private static final String TAG = "Home_Activity";
     public View view;
     public ViewPager mViewPager;
     private  DatabaseReference firebase;
@@ -67,6 +72,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     private static final int SELECTED_PICTURE = 1;
     private ProgressDialog mProgressDialog;
     private String downloadURL;
+    private String string_caption;
+    public SectionListDataAdapter adapter;
 
     @Nullable
     @Override
@@ -91,6 +98,14 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         my_recycler_view.setHasFixedSize(true);
 
 
+        adapter = new SectionListDataAdapter(getActivity(), imageURL);
+        //  layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
+        int duration = getResources().getInteger(R.integer.scroll_duration);
+
+        my_recycler_view.setLayoutManager(new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration));
+        //  my_recycler_view.setLayoutManager(layoutManager);
+        my_recycler_view.setAdapter(adapter);
+
         MainActivity.Uploadbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,31 +115,69 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         });
 
 
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/postImages%2Fas.jpg?alt=media&token=d6a071d9-840e-4980-93e7-917100312614"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
-        imageURL.add(new ItemObject("Faiz","https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2FScreenshot_2017-07-14-19-08-55Wed%20Jul%2019%2020%3A24%3A01%20GMT%2B05%3A00%202017.png?alt=media&token=6bcb2510-3b6f-4b77-a0cd-8971afa128ef"));
+            FirebaseHandler.getInstance().getPostRef()
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            imageURL.clear();
+                            if (dataSnapshot.getValue() != null) {
+                                AppLogs.d(TAG, "" + dataSnapshot.getValue().toString());
+                                for(DataSnapshot data:dataSnapshot.getChildren()) {
+                                    ItemObject itemObject = data.getValue(ItemObject.class);
+                                    if (itemObject.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                                    } else {
+                                        imageURL.add(itemObject);
+                                     ///   adapter.notifyDataSetChanged();
+                                    }
+                                }
+                                filterPost(imageURL);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
 
-
-
-
-        SectionListDataAdapter adapter = new SectionListDataAdapter(getActivity(), imageURL);
-      //  layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
-
-        int duration = getResources().getInteger(R.integer.scroll_duration);
-        my_recycler_view.setLayoutManager(new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration));
-      //  my_recycler_view.setLayoutManager(layoutManager);
-        my_recycler_view.setAdapter(adapter);
 
 
 
 
         return view;
+    }
+
+    private void filterPost(final ArrayList<ItemObject> imageURL) {
+        FirebaseHandler.getInstance()
+                .getUser_leaveit_post()
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot!=null) {
+                            if (dataSnapshot.getValue() != null) {
+                                AppLogs.d("Hello", dataSnapshot.getValue().toString());
+                                for(DataSnapshot data:dataSnapshot.getChildren()) {
+                                   ItemObject itemObject = data.getValue(ItemObject.class);
+                                        for (int i = 0; i < imageURL.size(); i++) {
+                                            if(imageURL.get(i).getItemID().equals(itemObject.getItemID())){
+                                                imageURL.remove(i);
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                   }
+                                }
+                            }else{
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
 
@@ -150,13 +203,17 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view1 = inflater.inflate(R.layout.image_view_alert, null);
             ImageView alertImageView = (ImageView) view1.findViewById(R.id.imageView_Alert);
+            final EditText editText_caption = (EditText)view1.findViewById(R.id.caption);
             if (getActivity() != null) {
                 Glide.with(getActivity()).load(uri).into(alertImageView);
             }
             builder.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    string_caption = editText_caption.getText().toString();
                     uploadImage(imgPath);
+
+
                 }
             });
             builder.setNeutralButton("Cancel", null);
@@ -200,11 +257,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                     downloadURL = downloadUrl;
                     mProgressDialog.dismiss();
                 final DatabaseReference ref = firebase.child("user-post").child(mAuth.getCurrentUser().getUid()).push();
-                   final ItemObject itemObject = new ItemObject(ref.getKey().toString(), downloadUrl, false, false, mAuth.getCurrentUser().getUid());
+                   final ItemObject itemObject = new ItemObject(ref.getKey().toString(), downloadUrl,0,0, mAuth.getCurrentUser().getUid(),string_caption);
                     ref.setValue(itemObject, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            firebase.child("post").push().setValue(itemObject);
+                            firebase.child("post").child(String.valueOf(ref.getKey().toString())).setValue(itemObject);
                         }
                     });
                 }

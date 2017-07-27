@@ -26,7 +26,7 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
     public GridView grid_view_top5;
     public View view;
     public Spinner day_no,country_name;
-    String contry_array[] = {"Country","Afghanistan",
+    String contry_array[] = {"Afghanistan",
             "Albania",
             "Algeria",
             "Andorra",
@@ -34,33 +34,14 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
             "Antigua & Barbuda",
             };
 
-    String days_array[] = {"day","1",
+    String days_array[] = {"1",
             "2",
             "3",
             "4",
             "5",
             "6",
             "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14","15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28","29","30"};
+           };
 
     @Nullable
     @Override

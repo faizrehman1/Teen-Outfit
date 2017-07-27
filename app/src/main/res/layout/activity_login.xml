@@ -179,6 +179,7 @@
                 />
 
             <TextView
+                android:padding="12dp"
                 android:id="@+id/signup"
                 android:textStyle="bold"
                 android:textColor="#fff"

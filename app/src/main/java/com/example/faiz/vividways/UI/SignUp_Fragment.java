@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -76,13 +77,19 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
     private Bitmap bitmap;
     private String imgPath;
     private Spinner spinner_country;
-    String contry_array[] = {"Country","Afghanistan",
+    private Spinner spinner_gender;
+    String country_array[] = {"Afghanistan",
             "Albania",
             "Algeria",
             "Andorra",
             "Angola",
             "Antigua & Barbuda",
     };
+
+    String gender_array[] = {"Male",
+            "Female",
+    };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,19 +115,26 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
         signup = (Button)rootView.findViewById(R.id.signup_btn);
         profile_image  = (CircleImageView)rootView.findViewById(R.id.profile_img);
         spinner_country=(Spinner)rootView.findViewById(R.id.country_signup_spin);
+        spinner_gender=(Spinner)rootView.findViewById(R.id.country_signup_gender);
+
+        ArrayAdapter<String> adapter_country = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner, country_array);
+        spinner_country.setAdapter(adapter_country);
+
+        ArrayAdapter<String> adapter_gender = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner, gender_array);
+        spinner_gender.setAdapter(adapter_gender);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String pass = password.getText().toString();
-                final String confrim_passwordd = confirmpass.getText().toString();
+          //      final String confrim_passwordd = confirmpass.getText().toString();
                 //Checking the length of pasword while registering new USER;
                 if (pass.length() <= 6) {
                     main(pass);
                 }else if(( fname.getText().toString().equals("")
                         || lname.getText().toString().equals("")
                         || userID.getText().toString().equals("")
-                        || pass.equals("")
-                        || confrim_passwordd.equals("")) ){
+                        || pass.equals(""))){
+                    ///    || confrim_passwordd.equals("")) ){
                     Toast.makeText(getActivity(),"Fields Should not be left Empty",Toast.LENGTH_SHORT).show();
 
                 }
@@ -149,7 +163,9 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         String uid = mAuth.getCurrentUser().getUid();
-                                            firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass,uid, fname.getText().toString(), lname.getText().toString(),imageURL,spinner_country.getSelectedItem().toString()));
+                                        String user_country = spinner_country.getSelectedItem().toString();
+                                        String user_gender = spinner_gender.getSelectedItem().toString();
+                                            firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass,uid, fname.getText().toString(), lname.getText().toString(),imageURL,user_country,user_gender));
                                         progressDialog.dismiss();
                                         Toast.makeText(getActivity(), "Successfull", Toast.LENGTH_SHORT).show();
                                         AppLogs.logd("createUserWithEmail:onComplete: " + task.isSuccessful());
