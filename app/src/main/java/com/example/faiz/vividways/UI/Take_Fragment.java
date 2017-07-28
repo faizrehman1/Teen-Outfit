@@ -26,12 +26,14 @@ import java.util.ArrayList;
 public class Take_Fragment extends android.support.v4.app.Fragment {
 
     private static final String ARG_PARAM1 = "Args";
+    private static final String TAG = "TAKE_FRAG";
     public View view;
     public ListView listView;
     public ArrayList<UserModel> userModelArrayList;
     public UserList_Adapter userList_adapter;
     public ArrayList<String> itemObjectArrayList;
     public static ItemObject itemObject;
+    public ArrayList<String> userList;
 
 
     public static Take_Fragment newInstance(ItemObject memberData) {
@@ -57,36 +59,84 @@ public class Take_Fragment extends android.support.v4.app.Fragment {
         userList_adapter = new UserList_Adapter(userModelArrayList, getActivity());
         listView.setDivider(null);
         listView.setAdapter(userList_adapter);
+        userList = new ArrayList<>();
 
         AppLogs.d("Take_TAG",itemObject+"");
 
-        if(!itemObject.isLeave_it_check() && itemObject.isTake_it_check()) {
-            FirebaseHandler.getInstance().getUsersRef()
-                    .child(itemObject.getUserID())
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot != null) {
-                                if (dataSnapshot.getValue() != null) {
-                                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                                    userModelArrayList.add(userModel);
-                                    userList_adapter.notifyDataSetChanged();
+
+        FirebaseHandler.getInstance().getUser_leaveit_post()
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot!=null){
+                            if(dataSnapshot.getValue()!=null){
+                                AppLogs.d("TAG_snap",dataSnapshot.getValue().toString());
+                                for(DataSnapshot data:dataSnapshot.getChildren()){
+                                    AppLogs.d("TAG_snap",data.getValue().toString());
+                                    for(DataSnapshot again_data:data.getChildren()) {
+                                        if (again_data.getKey().equals("user-take-posts")){
+                                            AppLogs.d("TAG_snap", data.getValue().toString());
+                                            for (DataSnapshot data_snap : again_data.getChildren()) {
+                                                ItemObject Object_item = data_snap.getValue(ItemObject.class);
+                                                AppLogs.d("TAG_snap", Object_item.toString());
+                                                if (itemObject.getItemID().equals(Object_item.getItemID())) {
+                                                    AppLogs.d("TAG_snap", data.getKey().toString());
+                                                    userList.add(data.getKey().toString());
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
+                                //    AppLogs.d("TAG_snap",dataSnapshot.getValue().toString());
                             }
                         }
+                        getUser();
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-        }
+                    }
+                });
+
+
+
+
+
+
+
 
 
         return view;
     }
 
+    private void getUser() {
+        if(userList.size()>0){
+            for (String s : userList) {
+                FirebaseHandler.getInstance()
+                        .getUsersRef()
+                        .child(s)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot!=null){
+                                    if(dataSnapshot.getValue()!=null){
+                                        AppLogs.d("TAG_snap",dataSnapshot.getValue().toString());
+                                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                                        userModelArrayList.add(userModel);
+                                        userList_adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
 
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        }
+    }
 
 
 }

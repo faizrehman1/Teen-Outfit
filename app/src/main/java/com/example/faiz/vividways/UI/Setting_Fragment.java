@@ -1,5 +1,6 @@
 package com.example.faiz.vividways.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.example.faiz.vividways.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Created by Faiz on 7/20/2017.
@@ -17,7 +19,7 @@ import com.example.faiz.vividways.R;
 public class Setting_Fragment extends android.support.v4.app.Fragment {
 
     public View view;
-    public RelativeLayout relativeLayout;
+    public RelativeLayout relativeLayout,relativeLayout_logout;
 
 
     @Nullable
@@ -29,6 +31,21 @@ public class Setting_Fragment extends android.support.v4.app.Fragment {
 
         MainActivity.appbar_TextView.setText("Setting");
         relativeLayout = (RelativeLayout)view.findViewById(R.id.discovery_pref);
+        relativeLayout_logout = (RelativeLayout)view.findViewById(R.id.logout);
+
+
+        relativeLayout_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(),LoginActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+
+
         MainActivity.Uploadbutton.setVisibility(View.GONE);
         MainActivity.back_image.setVisibility(View.GONE);
 

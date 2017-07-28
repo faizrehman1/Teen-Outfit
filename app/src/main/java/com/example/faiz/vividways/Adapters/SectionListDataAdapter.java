@@ -86,6 +86,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).getTakeit_count()+"");
                 takit_count = itemsList.get(i).getTakeit_count()+1;
+                itemsList.get(i).setTakeit_count(takit_count);
                 final int finalTakit_count = takit_count;
                 FirebaseHandler.getInstance().getPostRef()
                         .child(String.valueOf(itemsList.get(i).getItemID()))
@@ -96,7 +97,12 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
                               //  ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
                                 FirebaseHandler.getInstance().getPostRef().child(String.valueOf(itemsList.get(i).getItemID())).child("take_it_check").setValue(true);
-                                FirebaseHandler.getInstance().getUser_leaveit_post().child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+                                FirebaseHandler.getInstance().getUser_postRef().child(itemsList.get(i).getUserID()).child(itemsList.get(i).getItemID()).child("take_it_check").setValue(true);
+                                FirebaseHandler.getInstance().getUser_postRef().child(itemsList.get(i).getUserID()).child(itemsList.get(i).getItemID()).child("takeit_count").setValue(finalTakit_count);
+
+                                FirebaseHandler.getInstance().getUser_leaveit_post()
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+                                        .child("user-take-posts")
                                         .child(itemsList.get(i).getItemID())
                                         .setValue(new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false,itemsList.get(i).getUserID()));
                             }
@@ -111,11 +117,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 int leave_it_count=0;
                 Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).leaveit_count+"");
-
-
                 Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
-                AppLogs.d(TAG,itemsList.get(i).getTakeit_count()+"");
-                leave_it_count = itemsList.get(i).getTakeit_count()+1;
+                AppLogs.d(TAG,itemsList.get(i).getLeaveit_count()+"");
+                leave_it_count = itemsList.get(i).getLeaveit_count()+1;
+                itemsList.get(i).setLeaveit_count(leave_it_count);
                 final int finalLeave_it_count = leave_it_count;
                 FirebaseHandler.getInstance().getPostRef()
                         .child(String.valueOf(itemsList.get(i).getItemID()))
@@ -126,7 +131,12 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
                           //      ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
                                 FirebaseHandler.getInstance().getPostRef().child(String.valueOf(itemsList.get(i).getItemID())).child("leave_it_check").setValue(true);
-                                FirebaseHandler.getInstance().getUser_leaveit_post().child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+                                FirebaseHandler.getInstance().getUser_postRef().child(itemsList.get(i).getUserID()).child(itemsList.get(i).getItemID()).child("leave_it_check").setValue(true);
+                                FirebaseHandler.getInstance().getUser_postRef().child(itemsList.get(i).getUserID()).child(itemsList.get(i).getItemID()).child("leaveit_count").setValue(finalLeave_it_count);
+
+                                FirebaseHandler.getInstance().getUser_leaveit_post()
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+                                        .child("user-leave-posts")
                                         .child(itemsList.get(i).getItemID())
                                         .setValue(new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),false,true,itemsList.get(i).getUserID()));
                             }

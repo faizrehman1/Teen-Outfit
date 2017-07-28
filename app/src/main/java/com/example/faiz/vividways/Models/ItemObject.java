@@ -106,6 +106,13 @@ public class ItemObject implements Parcelable {
         return takeit_count;
     }
 
+    public void setLeaveit_count(int leaveit_count) {
+        this.leaveit_count = leaveit_count;
+    }
+
+    public void setTakeit_count(int takeit_count) {
+        this.takeit_count = takeit_count;
+    }
 
     public String getUserID() {
         return userID;

@@ -159,13 +159,15 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                             if (dataSnapshot.getValue() != null) {
                                 AppLogs.d("Hello", dataSnapshot.getValue().toString());
                                 for(DataSnapshot data:dataSnapshot.getChildren()) {
-                                   ItemObject itemObject = data.getValue(ItemObject.class);
+                                    for (DataSnapshot data_again : data.getChildren()) {
+                                        ItemObject itemObject = data_again.getValue(ItemObject.class);
                                         for (int i = 0; i < imageURL.size(); i++) {
-                                            if(imageURL.get(i).getItemID().equals(itemObject.getItemID())){
+                                            if (imageURL.get(i).getItemID().equals(itemObject.getItemID())) {
                                                 imageURL.remove(i);
                                                 adapter.notifyDataSetChanged();
                                             }
-                                   }
+                                        }
+                                    }
                                 }
                             }else{
                                 adapter.notifyDataSetChanged();
@@ -205,7 +207,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
             ImageView alertImageView = (ImageView) view1.findViewById(R.id.imageView_Alert);
             final EditText editText_caption = (EditText)view1.findViewById(R.id.caption);
             if (getActivity() != null) {
-                Glide.with(getActivity()).load(uri).into(alertImageView);
+            //    Glide.with(getActivity()).load(uri).into(alertImageView);
+                alertImageView.setImageURI(uri);
             }
             builder.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
                 @Override

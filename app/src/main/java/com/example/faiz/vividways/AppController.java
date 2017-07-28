@@ -1,6 +1,7 @@
 package com.example.faiz.vividways;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.SystemClock;
 
 import com.facebook.FacebookSdk;
@@ -14,11 +15,18 @@ import java.util.concurrent.TimeUnit;
 
 public class AppController extends Application {
 
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        context = this.getApplicationContext();
     //    SystemClock.sleep(TimeUnit.SECONDS.toMillis(3));
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

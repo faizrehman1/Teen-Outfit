@@ -33,6 +33,8 @@ public class Leave_Fragment extends android.support.v4.app.Fragment {
     public UserList_Adapter userList_adapter;
     private static final String ARG_PARAM1 = "param1";
     public static ItemObject itemObject;
+    public ArrayList<String> userList;
+
 
     public static Leave_Fragment newInstance(ItemObject memberData) {
         AppLogs.d("kkk", "admin get argument");
@@ -53,7 +55,7 @@ public class Leave_Fragment extends android.support.v4.app.Fragment {
 
         view = inflater.inflate(R.layout.leave_frag,null);
         userModelArrayList = new ArrayList<>();
-
+        userList = new ArrayList<>();
         listView = (ListView)view.findViewById(R.id.leave_listview);
         userList_adapter = new UserList_Adapter(userModelArrayList,getActivity());
         listView.setDivider(null);
@@ -65,65 +67,75 @@ public class Leave_Fragment extends android.support.v4.app.Fragment {
 
             AppLogs.d("Leave_TAG",itemObject+"");
 
+            FirebaseHandler.getInstance().getUser_leaveit_post()
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot!=null){
+                                if(dataSnapshot.getValue()!=null){
+                                    AppLogs.d("TAG_snap",dataSnapshot.getValue().toString());
+                                    for(DataSnapshot data:dataSnapshot.getChildren()){
+                                        AppLogs.d("TAG_snap",data.getValue().toString());
+                                        for(DataSnapshot again_data:data.getChildren()) {
+                                            if (again_data.getKey().equals("user-leave-posts")){
+                                                AppLogs.d("TAG_snap", data.getValue().toString());
+                                            for (DataSnapshot data_snap : again_data.getChildren()) {
+                                                ItemObject Object_item = data_snap.getValue(ItemObject.class);
+                                                AppLogs.d("TAG_snap", Object_item.toString());
+                                                if (itemObject.getItemID().equals(Object_item.getItemID())) {
+                                                    AppLogs.d("TAG_snap", data.getKey().toString());
+                                                    userList.add(data.getKey().toString());
+                                                }
+                                            }
+                                        }
+                                        }
+                                    }
+                                //    AppLogs.d("TAG_snap",dataSnapshot.getValue().toString());
+                                }
+                            }
+                            getUser();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
 
-
-//        FirebaseHandler.getInstance().getUser_leaveit_post()
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                            if(dataSnapshot!=null){
-//                                if(dataSnapshot.getValue()!=null){
-//                                    for(DataSnapshot data:dataSnapshot.getChildren()){
-//                                        for(DataSnapshot dataChild:data.getChildren()){
-//                                            AppLogs.d("Node_Data",dataChild.getValue().toString());
-//                                            ItemObject itemObject = dataChild.getValue(ItemObject.class);
-                                            if(itemObject.isLeave_it_check() && !itemObject.isTake_it_check()){
-
-                                                FirebaseHandler.getInstance().getUsersRef()
-                                                        .child(itemObject.getUserID())
-                                                        .addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                               if(dataSnapshot!=null){
-                                                                   if(dataSnapshot.getValue()!=null){
-                                                                       UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                                                                       userModelArrayList.add(userModel);
-                                                                       userList_adapter.notifyDataSetChanged();
-                                                                   }
-                                                               }
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-
-
-//
-                                           }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//
-//
-//
-//
-//
 
 
 
 
 
         return view;
+    }
+
+    private void getUser() {
+        if(userList.size()>0){
+            for (String s : userList) {
+                FirebaseHandler.getInstance()
+                        .getUsersRef()
+                        .child(s)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot!=null){
+                                        if(dataSnapshot.getValue()!=null){
+                                            AppLogs.d("TAG_snap",dataSnapshot.getValue().toString());
+                                            UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                                            userModelArrayList.add(userModel);
+                                            userList_adapter.notifyDataSetChanged();
+                                        }
+                                    }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        }
     }
 }
