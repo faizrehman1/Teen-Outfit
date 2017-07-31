@@ -1,13 +1,16 @@
 package com.example.faiz.vividways.UI;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -74,6 +77,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     private String downloadURL;
     private String string_caption;
     public SectionListDataAdapter adapter;
+    private static final int CAMERA_REQUEST = 1888;
 
     @Nullable
     @Override
@@ -109,8 +113,28 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         MainActivity.Uploadbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, SELECTED_PICTURE);
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                alert.setTitle("Upload Image");
+                alert.setMessage("Want to upload image..?");
+                alert.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    }
+                });
+                alert.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(i, SELECTED_PICTURE);
+                    }
+                });
+                alert.create().show();
+
+
+
             }
         });
 
@@ -191,7 +215,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == getActivity().RESULT_OK && requestCode == SELECTED_PICTURE) {
+      if (resultCode == getActivity().RESULT_OK && requestCode == SELECTED_PICTURE
+              ||
+              requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK
+              ) {
             Uri uri = data.getData();
             String[] imgHolder = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(uri, imgHolder, null, null, null);

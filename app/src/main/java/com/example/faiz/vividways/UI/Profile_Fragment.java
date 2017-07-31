@@ -59,6 +59,8 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
         MainActivity.appbar_TextView.setText("Profile");
         MainActivity.Uploadbutton.setVisibility(View.GONE);
         MainActivity.back_image.setVisibility(View.GONE);
+        MainActivity.report_image.setVisibility(View.GONE);
+        MainActivity.delete_image.setVisibility(View.GONE);
         itemObjectArrayList = new ArrayList<>();
         mainActivity = (MainActivity) getActivity();
         final RatingBarView ratingBarView = (RatingBarView)view.findViewById(R.id.starView);
@@ -71,6 +73,7 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Glide.get(getActivity()).clearMemory();
                         if(dataSnapshot!=null){
                             if(dataSnapshot.getValue()!=null){
                                 UserModel userModel  = dataSnapshot.getValue(UserModel.class);
@@ -134,7 +137,7 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
                 Statistic_Fragment statistic_fragment = new Statistic_Fragment();
                 statistic_fragment.setArguments(bundle);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager()
-                        .beginTransaction().setCustomAnimations(R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right);
+                        .beginTransaction();
                 mainActivity.Uploadbutton.setVisibility(View.GONE);
                 mainActivity.appbar_TextView.setText("Statistic");
                 MainActivity.back_image.setVisibility(View.VISIBLE);

@@ -46,7 +46,8 @@ public class Statistic_Fragment extends android.support.v4.app.Fragment {
     CustomPieChart pieChart;
     LinearLayout linearLayout;
     private ArrayList<String> stringArrayList;
-
+    private TextView leave_male_count,leave_female_count;
+    private TextView take_male_count,take_female_count;
     private ArrayList<String> stringArrayList_take;
     private ArrayList<String> stringArrayList_leave;
 
@@ -64,6 +65,15 @@ public class Statistic_Fragment extends android.support.v4.app.Fragment {
         take_count = (TextView) view.findViewById(R.id.select_item_take);
         pieChart_take = (LinearLayout) view.findViewById(R.id.pie_take_it);
         pieChart_leave = (LinearLayout) view.findViewById(R.id.pie_leave_it);
+        take_female_count = (TextView)view.findViewById(R.id.take_female_count);
+
+        take_male_count = (TextView)view.findViewById(R.id.take_male_count);
+
+        leave_female_count = (TextView)view.findViewById(R.id.leave_female_count);
+
+        leave_male_count = (TextView)view.findViewById(R.id.leave_male_count);
+
+
         stringArrayList_take = new ArrayList<>();
         stringArrayList_leave = new ArrayList<>();
         stringArrayList = new ArrayList<>();
@@ -192,13 +202,14 @@ public class Statistic_Fragment extends android.support.v4.app.Fragment {
     }
 
     private void getGender() {
-        final int[] Graph_data = {0, 0};
-        final int counter_male = 0;
-        final int counter_female = 0;
+        final int[] Graph_data_leave = {0, 0};
+        final int[] Graph_data_take = {0, 0};
+        final int[] counter_male = new int[1];
+        final int[] counter_female = new int[1];
 
         //blue or pink
         final int[] color = {Color.parseColor("#44d0dd"), Color.parseColor("#da59a8")};
-      //  final int[] color1 = {Color.parseColor("#da59a8"),Color.parseColor("#44d0dd")};
+        final int[] color1 = {Color.parseColor("#da59a8"),Color.parseColor("#44d0dd")};
 
 
 
@@ -216,24 +227,71 @@ public class Statistic_Fragment extends android.support.v4.app.Fragment {
                                     UserModel us = data.getValue(UserModel.class);
                                     if(stringArrayList_leave.contains(us.getUser_userID())){
                                         if (us.getUser_gender().equals("Male")) {
-                                            Graph_data[0] = counter_male + 1;
-                                            Graph_data[1] = counter_female;
-                                            pieChart_leave.addView(new CustomPieChart(parent, 2, Graph_data, color, itemObject.getLeaveit_count()));
+                                            counter_male[0] = Graph_data_leave[0];
+                                            Graph_data_leave[0] = counter_male[0] + 1;
+                                         //   Graph_data[1] = counter_female;
+//                                           int sumMale = Graph_data[0]/itemObject.getLeaveit_count()*100;
+//                                            int sumFemale = Graph_data[0]/itemObject.getLeaveit_count()*100;
+//                                            leave_male_count.setText(String.valueOf(sumMale));
+//                                            leave_female_count.setText(String.valueOf(sumFemale));
+
+                                        //    pieChart_leave.addView(new CustomPieChart(parent, 2, Graph_data, color1, itemObject.getLeaveit_count()));
                                         } else {
-                                            Graph_data[0] = counter_male;
-                                            Graph_data[1] = counter_female + 1;
-                                            pieChart_leave.addView(new CustomPieChart(parent, 2, Graph_data, color, itemObject.getLeaveit_count()));
+                                         //   Graph_data[0] = counter_male;
+                                            int count;
+                                            counter_female[0] = Graph_data_leave[1];
+                                            Graph_data_leave[1] = counter_female[0] + 1;
+
+//                                            int sumMale = Graph_data[0]/itemObject.getLeaveit_count()*100;
+//                                            int sumFemale = Graph_data[0]/itemObject.getLeaveit_count()*100;
+//                                            leave_male_count.setText(String.valueOf(sumMale));
+//                                            leave_female_count.setText(String.valueOf(sumFemale));
+
                                         }
+
+                                        if(itemObject.getLeaveit_count()>0) {
+                                            double sumMale = (double)Graph_data_leave[0] / itemObject.getLeaveit_count() * 100;
+                                            double sumFemale = (double) Graph_data_leave[1] / itemObject.getLeaveit_count() * 100;
+                                            int finalPercent_male = (int) sumMale;
+                                            int finalPercent_female = (int) sumFemale;
+                                            leave_male_count.setText(String.valueOf(finalPercent_male)+"%");
+                                            leave_female_count.setText(String.valueOf(finalPercent_female)+"%");
+                                        }else{
+                                            take_male_count.setText(String.valueOf(0));
+                                            take_female_count.setText(String.valueOf(0));
+                                        }
+                                        pieChart_leave.addView(new CustomPieChart(parent, 2, Graph_data_leave, color, itemObject.getLeaveit_count()));
                                     }else if(stringArrayList_take.contains(us.getUser_userID())){
                                         if (us.getUser_gender().equals("Male")) {
-                                            Graph_data[0] = counter_male + 1;
-                                            Graph_data[1] = counter_female;
-                                            pieChart_take.addView(new CustomPieChart(parent, 2, Graph_data, color, itemObject.getTakeit_count()));
+                                            counter_male[0] = Graph_data_take[0];
+                                            Graph_data_take[0] = counter_male[0] + 1;
+                                         //   Graph_data[1] = counter_female;
+//                                            int sumMale = Graph_data[0]/itemObject.getLeaveit_count()*100;
+//                                            int sumFemale = Graph_data[0]/itemObject.getLeaveit_count()*100;
+//                                            take_male_count.setText(String.valueOf(sumMale));
+//                                            take_female_count.setText(String.valueOf(sumFemale));
+
+                                        //    pieChart_take.addView(new CustomPieChart(parent, 2, Graph_data, color1, itemObject.getTakeit_count()));
                                         } else {
-                                            Graph_data[0] = counter_male;
-                                            Graph_data[1] = counter_female + 1;
-                                            pieChart_take.addView(new CustomPieChart(parent, 2, Graph_data, color, itemObject.getTakeit_count()));
+                                       //     Graph_data[0] = counter_male;
+                                            counter_female[0] = Graph_data_take[1];
+                                            Graph_data_take[1] = counter_female[0] + 1;
+//
+
                                         }
+                                        if(itemObject.getTakeit_count()>0) {
+                                            double sumMale = (double)Graph_data_take[0] / itemObject.getTakeit_count() * 100;
+                                            double sumFemale = (double) Graph_data_take[1] / itemObject.getTakeit_count() * 100;
+                                            int finalPercent_male = (int) sumMale;
+                                            int finalPercent_female = (int) sumFemale;
+                                            take_male_count.setText(String.valueOf(finalPercent_male)+"%");
+                                            take_female_count.setText(String.valueOf(finalPercent_female)+"%");
+                                        }else{
+                                            take_male_count.setText(String.valueOf(0));
+                                            take_female_count.setText(String.valueOf(0));
+                                        }
+                                        pieChart_take.addView(new CustomPieChart(parent, 2, Graph_data_take, color, itemObject.getTakeit_count()));
+
                                     }
                                 }
 

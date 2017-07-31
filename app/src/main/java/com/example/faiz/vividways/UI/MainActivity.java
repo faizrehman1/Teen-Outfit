@@ -2,8 +2,11 @@ package com.example.faiz.vividways.UI;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
         // clear FLAG_TRANSLUCENT_STATUS flag:
         //  window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        //   window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        Window window = MainActivity.this.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimaryDark));
 
 
         back_image.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
            //     R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right
             //    overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 menu_bar.setVisibility(View.VISIBLE);
+
                 getSupportFragmentManager().popBackStack();
             }
         });

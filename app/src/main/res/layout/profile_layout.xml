@@ -20,7 +20,7 @@
         <TextView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_marginTop="10dp"
-            android:text="Faiz Rehman"
+            android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
 
         <TextView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:text="Faiz Rehman"
+            android:text=""
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,20 +68,23 @@
 
                      />
 
+
     <GridView
-        android:layout_below="@id/user_image_profile"
         android:id="@+id/grid_view_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:columnWidth="90dp"
-        android:horizontalSpacing="1dp"
-        android:verticalSpacing="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="#eee"
         android:gravity="center"
-        android:stretchMode="columnWidth" >
-
-    </GridView>
-
-
+        android:horizontalSpacing="2dp"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="4dp"
+        android:layout_below="@+id/user_image_profile"
+        />
     </RelativeLayout>
 

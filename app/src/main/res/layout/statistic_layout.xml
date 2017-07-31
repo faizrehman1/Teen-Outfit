@@ -167,10 +167,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                     <TextView
-
+                        android:id="@+id/leave_male_count"
                         android:padding="2dp"
                         android:layout_gravity="center"
-                        android:text="30%"
+                        android:text="0%"
                         android:textColor="#44d0dd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -199,9 +199,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/leave_female_count"
                             android:padding="2dp"
                             android:layout_gravity="center"
-                            android:text="60%"
+                            android:text="0%"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
@@ -244,9 +245,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/take_male_count"
                             android:padding="2dp"
                             android:layout_gravity="center"
-                            android:text="30%"
+                            android:text="0%"
                             android:textColor="#44d0dd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
@@ -274,10 +276,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <TextView
-
+                            android:id="@+id/take_female_count"
                             android:padding="2dp"
                             android:layout_gravity="center"
-                            android:text="60%"
+                            android:text="0%"
                             android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />

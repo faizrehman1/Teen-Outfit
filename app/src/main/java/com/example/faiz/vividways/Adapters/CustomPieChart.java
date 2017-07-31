@@ -60,7 +60,7 @@ public class CustomPieChart extends View {
         cx = cy = getWidth() / 2;
         canvas.drawCircle(cx, cy, radius, cenPaint);
         cenPaint.setColor(Color.parseColor("#da59a8"));
-        cenPaint.setTextSize(30);
+        cenPaint.setTextSize(80);
         cenPaint.setTextAlign(Paint.Align.CENTER);
         cenPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         canvas.drawText(String.valueOf(item_count), cx, cy+15, cenPaint);

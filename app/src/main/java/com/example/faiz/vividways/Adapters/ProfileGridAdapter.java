@@ -49,18 +49,18 @@ public class ProfileGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-     //   View view = layoutInflater.inflate(R.layout.gridview_views,null);
+        View view = layoutInflater.inflate(R.layout.gridview_views,null);
 
-     //   ImageView imageView = (ImageView)view.findViewById(R.id.profile_indi_image);
-        ImageView imageView = new ImageView(mContext);
+        ImageView imageView = (ImageView)view.findViewById(R.id.profile_indi_image);
+    //    ImageView imageView = new ImageView(mContext);
       //  imageView.setImageResource(mThumbIds[position]);
           imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
     //    imageView.setLayoutParams(new GridView.LayoutParams(70, 70));
-        imageView.setLayoutParams(new GridView.LayoutParams(200,200));
+     //   imageView.setLayoutParams(new GridView.LayoutParams(200,200));
         Glide.with(mContext).load(itemObjectArrayList.get(position).getItemImageURl()).placeholder(R.mipmap.placeholder).into(imageView);
 
 
 
-        return imageView;
+        return view;
     }
 }

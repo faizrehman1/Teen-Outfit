@@ -156,7 +156,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 Statistic_Fragment statistic_fragment = new Statistic_Fragment();
                 statistic_fragment.setArguments(bundle);
                 FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
-                        .beginTransaction().setCustomAnimations(R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right);
+                        .beginTransaction();
                 mainActivity.Uploadbutton.setVisibility(View.GONE);
                 mainActivity.appbar_TextView.setText("Statistic");
                 MainActivity.back_image.setVisibility(View.VISIBLE);
@@ -169,7 +169,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         });
 
 
-        Glide.with(mContext).load(singleItem.getItemImageURl()).into(holder.itemImage);
+        Glide.with(mContext).load(singleItem.getItemImageURl()).placeholder(R.mipmap.placeholder).into(holder.itemImage);
         holder.take_num.setText(String.valueOf(singleItem.getTakeit_count()));
         holder.leave_num.setText(String.valueOf(singleItem.getLeaveit_count()));
         holder.caption.setText(singleItem.getCaption());
@@ -235,7 +235,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
        List_Fragment list_fragment = new List_Fragment();
 
         FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
-                .beginTransaction().setCustomAnimations(R.anim.in_from_right,R.anim.out_from_left,R.anim.out_from_left,R.anim.in_from_right);;
+                .beginTransaction();
         mainActivity.Uploadbutton.setVisibility(View.GONE);
         mainActivity.appbar_TextView.setText("List");
         mainActivity.back_image.setVisibility(View.VISIBLE);

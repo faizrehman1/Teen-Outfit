@@ -92,7 +92,7 @@
 
                 <EditText
                     android:backgroundTint="#fff"
-                    android:inputType="textVisiblePassword"
+                    android:inputType="textPassword"
                     android:textColor="#fff"
                     android:id="@+id/editText_loginpass"
                     android:layout_width="match_parent"
@@ -107,6 +107,7 @@
         </LinearLayout>
 
         <CheckBox
+
             android:layout_marginTop="10dp"
             android:buttonTint="#fff"
             android:textColor="#fff"
@@ -115,6 +116,7 @@
             android:layout_height="wrap_content" />
 
         <Button
+
             android:layout_marginTop="20dp"
             android:id="@+id/user_login"
             android:textColor="@color/colorPrimary"

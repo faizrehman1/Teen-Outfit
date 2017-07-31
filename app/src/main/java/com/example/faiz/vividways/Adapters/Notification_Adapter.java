@@ -66,7 +66,7 @@ public class Notification_Adapter extends BaseAdapter {
 
 
         viewHolder.textView.setText(itemObjectArrayList.get(position).getItemID());
-        Glide.with(mContext).load(itemObjectArrayList.get(position).itemImageURl).into(viewHolder.imageView);
+        Glide.with(mContext).load(itemObjectArrayList.get(position).itemImageURl).placeholder(R.mipmap.placeholder).into(viewHolder.imageView);
 
 
 
