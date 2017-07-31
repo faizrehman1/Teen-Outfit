@@ -6,7 +6,6 @@ package com.example.faiz.vividways.Adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.faiz.vividways.AppLogs;
-import com.example.faiz.vividways.FirebaseHandler;
+import com.example.faiz.vividways.Utils.AppLogs;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.R;
 import com.example.faiz.vividways.UI.Home_Fragment;
 import com.example.faiz.vividways.UI.List_Fragment;
-import com.example.faiz.vividways.UI.MainActivity;
+import com.example.faiz.vividways.UI.Activities.MainActivity;
 import com.example.faiz.vividways.UI.Statistic_Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -76,6 +75,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             public void onClick(View v) {
                 Toast.makeText(v.getContext(),"Leave IT", Toast.LENGTH_SHORT).show();
                 openListFragment(mContext, false, itemsList,i);
+
             }
         });
 
@@ -83,7 +83,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             @Override
             public void onClick(View v) {
                 int takit_count=0;
-                Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+         //       Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).getTakeit_count()+"");
                 takit_count = itemsList.get(i).getTakeit_count()+1;
                 itemsList.get(i).setTakeit_count(takit_count);
@@ -104,7 +104,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
                                         .child("user-take-posts")
                                         .child(itemsList.get(i).getItemID())
-                                        .setValue(new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false,itemsList.get(i).getUserID()));
+                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), true, false, itemsList.get(i).getUserID()), new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                itemsList.remove(i);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
                             }
                         });
 
@@ -115,7 +121,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             @Override
             public void onClick(View v) {
                 int leave_it_count=0;
-                Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+           //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).leaveit_count+"");
                 Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).getLeaveit_count()+"");
@@ -138,7 +144,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
                                         .child("user-leave-posts")
                                         .child(itemsList.get(i).getItemID())
-                                        .setValue(new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),false,true,itemsList.get(i).getUserID()));
+                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), false, true, itemsList.get(i).getUserID()), new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                itemsList.remove(i);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
                             }
                         });
 

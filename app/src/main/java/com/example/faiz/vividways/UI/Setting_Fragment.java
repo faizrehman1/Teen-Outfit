@@ -1,6 +1,8 @@
 package com.example.faiz.vividways.UI;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.UI.Activities.LoginActivity;
+import com.example.faiz.vividways.UI.Activities.MainActivity;
+import com.example.faiz.vividways.Utils.SharedPref;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -38,6 +43,9 @@ public class Setting_Fragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+//                SharedPreferences.Editor pref = getActivity().getSharedPreferences("packageName", Context.MODE_PRIVATE).edit();
+//                pref.clear();
+//                pref.commit();
                 Intent intent = new Intent(getActivity(),LoginActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();

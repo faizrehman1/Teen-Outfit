@@ -1,11 +1,9 @@
 package com.example.faiz.vividways.UI;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +13,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.Adapters.CustomPieChart;
-import com.example.faiz.vividways.AppController;
-import com.example.faiz.vividways.AppLogs;
-import com.example.faiz.vividways.FirebaseHandler;
+import com.example.faiz.vividways.Utils.AppLogs;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.example.faiz.vividways.UI.Activities.MainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.faiz.vividways.UI.MainActivity"
+    tools:context="com.example.faiz.vividways.UI.Activities.MainActivity"
     android:orientation="vertical">
 
 
@@ -43,6 +43,8 @@
             android:background="#a9a7a7"></View>
 
 
+
+
         <LinearLayout
             android:id="@+id/menu_bar"
             android:layout_width="match_parent"
@@ -53,6 +55,8 @@
             android:background="#fff"
             android:paddingTop="15dp"
             android:weightSum="5">
+
+
 
             <LinearLayout
                 android:id="@+id/home_view"
@@ -79,6 +83,7 @@
                     android:text="Home" />
 
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/top_view"
@@ -126,6 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Notification" />
+
 
             </LinearLayout>
 
@@ -180,6 +186,8 @@
             </LinearLayout>
 
         </LinearLayout>
+
+
     </RelativeLayout>
 
 </LinearLayout>

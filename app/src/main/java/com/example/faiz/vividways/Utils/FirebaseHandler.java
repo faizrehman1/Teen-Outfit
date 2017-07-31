@@ -1,4 +1,4 @@
-package com.example.faiz.vividways;
+package com.example.faiz.vividways.Utils;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;

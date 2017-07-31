@@ -1,4 +1,4 @@
-package com.example.faiz.vividways;
+package com.example.faiz.vividways.Utils;
 
 import android.app.Application;
 import android.content.Context;

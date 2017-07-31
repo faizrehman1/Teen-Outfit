@@ -1,5 +1,6 @@
 package com.example.faiz.vividways.UI;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -15,17 +16,16 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.Adapters.ProfileGridAdapter;
 import com.example.faiz.vividways.Adapters.RatingBarView;
-import com.example.faiz.vividways.AppLogs;
-import com.example.faiz.vividways.FirebaseHandler;
+import com.example.faiz.vividways.Utils.AppLogs;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.UI.Activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -46,7 +46,7 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
     public MainActivity mainActivity;
     public CircleImageView user_profile_img;
     public TextView user_name_profile,user_city;
-
+    MainActivity parent;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -151,5 +151,11 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
 
 
         return view;
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        parent = (MainActivity) activity;
     }
 }

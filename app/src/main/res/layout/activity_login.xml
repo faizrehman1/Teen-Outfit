@@ -2,14 +2,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:fillViewport="true"
-    android:overScrollMode="never"
-    android:scrollbars="none"
+
     >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
 
         <FrameLayout
@@ -20,19 +18,12 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_height="match_parent"
+        android:padding="30dp"
         android:orientation="vertical"
-        tools:context=".UI.LoginActivity">
-
-
-
+        tools:context=".UI.Activities.LoginActivity">
 
         <ImageView
-            android:layout_marginTop="30dp"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,13 +31,12 @@
             />
 
         <TextView
-            android:layout_marginTop="15dp"
-            android:textStyle="bold"
+            android:layout_marginTop="30dp"
             android:textColor="#fff"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome To Vividways"
+            android:text="Welcome To vividways"
             android:textSize="20sp"
             />
 
@@ -54,23 +44,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="1dp"
             android:layout_height="wrap_content">
-            <ImageView
-                android:layout_marginTop="8dp"
-                android:src="@mipmap/user_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                />
+            <!--<ImageView-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:src="@mipmap/user_icon"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--/>-->
                 <EditText
+                    android:paddingBottom="20dp"
+                    android:drawableLeft="@mipmap/user_icon"
                     android:backgroundTint="@color/white"
                     android:textColor="#fff"
                     android:id="@+id/editText_Loginemail"
+                    android:fontFamily="sans-serif"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_gravity="center_horizontal"
                     android:hint="Username"
+                    android:textSize="12sp"
+                    android:drawablePadding="10dp"
                     android:textColorHint="#fff"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/editText_userID"
@@ -81,16 +75,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_marginTop="8dp"
-                android:src="@mipmap/password_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageView2" />
-
-
                 <EditText
+                    android:drawableLeft="@mipmap/password_icon"
                     android:backgroundTint="#fff"
                     android:inputType="textPassword"
                     android:textColor="#fff"
@@ -99,19 +85,25 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:hint="Password"
+                    android:textSize="12sp"
+                    android:drawablePadding="10dp"
+                    android:paddingBottom="20dp"
                     android:textColorHint="#fff"
+                    android:fontFamily="sans-serif"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/editText_userID"
                     android:singleLine="true"
+
                     />
         </LinearLayout>
 
         <CheckBox
-
-            android:layout_marginTop="10dp"
+            android:textSize="12sp"
+            android:id="@+id/remember_me"
+            android:layout_marginTop="8dp"
             android:buttonTint="#fff"
             android:textColor="#fff"
-            android:text="Remember Me"
+            android:text="Remember me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -126,16 +118,19 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:textSize="12sp"
             android:textStyle="italic"
-            android:layout_margin="15dp"
-            android:textColor="#c7bfbf"
-            android:text="Forgot Your Password?"
+            android:layout_marginTop="8dp"
+            android:textColor="#dedddd"
+            android:textAllCaps="false"
+            android:text="Forgot your password?"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             />
 
         <LinearLayout
+            android:layout_marginTop="35dp"
             android:id="@+id/bSearch2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -144,11 +139,15 @@
             android:padding="16dp"
             android:orientation="horizontal" >
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <ImageView
+                android:layout_marginLeft="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="50dp"
                 android:adjustViewBounds="true"
                 android:maxHeight="30dp"
                 android:maxWidth="30dp"
@@ -156,17 +155,20 @@
                 android:src="@mipmap/fb_icon" />
 
             <TextView
+
                 android:id="@+id/tvSearchCaption"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:textColor="#fff"
-                android:layout_marginLeft="25dp"
-                android:gravity="start"
+                android:gravity="center"
                 android:text="Connect With Facebook" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
+            android:padding="12dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
@@ -174,6 +176,7 @@
 
 
             <TextView
+                android:textSize="12sp"
                 android:text="Don't Have an Account?"
                 android:textColor="#fff"
                 android:layout_width="wrap_content"
@@ -181,7 +184,7 @@
                 />
 
             <TextView
-                android:padding="12dp"
+                android:textSize="12sp"
                 android:id="@+id/signup"
                 android:textStyle="bold"
                 android:textColor="#fff"

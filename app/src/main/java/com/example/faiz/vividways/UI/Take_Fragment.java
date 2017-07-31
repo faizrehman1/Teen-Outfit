@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.faiz.vividways.Adapters.UserList_Adapter;
-import com.example.faiz.vividways.AppLogs;
-import com.example.faiz.vividways.FirebaseHandler;
+import com.example.faiz.vividways.Utils.AppLogs;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;

@@ -6,42 +6,33 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
-import com.example.faiz.vividways.AppLogs;
-import com.example.faiz.vividways.FirebaseHandler;
+import com.example.faiz.vividways.Utils.AppLogs;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.UI.Activities.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -184,9 +175,9 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                 AppLogs.d("Hello", dataSnapshot.getValue().toString());
                                 for(DataSnapshot data:dataSnapshot.getChildren()) {
                                     for (DataSnapshot data_again : data.getChildren()) {
-                                        ItemObject itemObject = data_again.getValue(ItemObject.class);
+                           //             ItemObject itemObject = data_again.getValue(ItemObject.class);
                                         for (int i = 0; i < imageURL.size(); i++) {
-                                            if (imageURL.get(i).getItemID().equals(itemObject.getItemID())) {
+                                            if (imageURL.get(i).getItemID().equals(data_again.getKey())) {
                                                 imageURL.remove(i);
                                                 adapter.notifyDataSetChanged();
                                             }

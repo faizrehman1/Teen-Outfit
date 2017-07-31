@@ -1,7 +1,9 @@
-package com.example.faiz.vividways.UI;
+package com.example.faiz.vividways.UI.Activities;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.UI.Home_Fragment;
+import com.example.faiz.vividways.UI.Notification_Fragment;
+import com.example.faiz.vividways.UI.Profile_Fragment;
+import com.example.faiz.vividways.UI.Setting_Fragment;
+import com.example.faiz.vividways.UI.Top_Fragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     public TextView home_text, top_text, notification_text, setting_text, profile_text;
     public static Context context;
     public static ImageView back_image, delete_image, report_image;
-
     public static MainActivity getInstance() {
         return mainActivity;
     }
@@ -91,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         setting_image = (ImageView) findViewById(R.id.setting_image);
         setting_text = (TextView) findViewById(R.id.setting_text);
 
+
+
         home_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 profile_text.setTextColor(Color.parseColor("#bfbfbf"));
                 setting_image.setImageResource(R.mipmap.settings_icon);
                 setting_text.setTextColor(Color.parseColor("#bfbfbf"));
+
 
 
                 FragmentTransaction transaction = getSupportFragmentManager()

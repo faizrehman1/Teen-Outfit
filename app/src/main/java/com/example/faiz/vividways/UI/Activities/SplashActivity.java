@@ -1,12 +1,15 @@
-package com.example.faiz.vividways.UI;
+package com.example.faiz.vividways.UI.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 
-import com.example.faiz.vividways.AppLogs;
+import com.example.faiz.vividways.Utils.AppLogs;
 import com.example.faiz.vividways.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,6 +50,11 @@ public class SplashActivity extends AppCompatActivity {
 //        };
 //        timerThread.start();
 
+
+        Window window = SplashActivity.this.getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setStatusBarColor(ContextCompat.getColor(SplashActivity.this,R.color.colorPrimaryDark));
+        }
 
         new Handler().postDelayed(new Runnable(){
             @Override

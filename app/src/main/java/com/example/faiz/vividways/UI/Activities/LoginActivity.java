@@ -1,22 +1,31 @@
-package com.example.faiz.vividways.UI;
+package com.example.faiz.vividways.UI.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.faiz.vividways.AppLogs;
+import com.example.faiz.vividways.Utils.AppLogs;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.UI.SignUp_Fragment;
+import com.example.faiz.vividways.Utils.SharedPref;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -60,6 +69,11 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference firebase;
     private LoginManager fbLoginMan;
     private CallbackManager callbackManager;
+    private CheckBox checkBox;
+    private boolean remember_flag=false;
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,46 +88,76 @@ public class LoginActivity extends AppCompatActivity {
         useremail = (EditText) findViewById(R.id.editText_Loginemail);
         userpass = (EditText) findViewById(R.id.editText_loginpass);
         firebase = FirebaseDatabase.getInstance().getReference();
+        checkBox = (CheckBox)findViewById(R.id.remember_me);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Window window = LoginActivity.this.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(LoginActivity.this,R.color.colorPrimaryDark));
+
+
+        if(SharedPref.getCurrentUser(LoginActivity.this)!=null){
+         UserModel user=SharedPref.getCurrentUser(LoginActivity.this);
+            useremail.setText(user.getUser_email());
+            userpass.setText(user.getUser_password());
+        }
+
+
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    remember_flag = true;
+                }else{
+                    remember_flag = false;
+                }
+            }
+        });
+
+
+
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fbSignIn = false;
-
+                final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Sign In", "Connecting...", true, false);
                 String emails = useremail.getText().toString();
                 String passo = userpass.getText().toString();
 
 
                 if (emails.length() == 0) {
                     useremail.setError("This is Required Field");
+                    progressDialog.dismiss();
                 } else if (passo.length() == 0 && passo.length() <= 6) {
                     userpass.setError("This is Required Field");
-                }
+                    progressDialog.dismiss();
+                } else
+                 {
+                    try {
 
-
-                try {
-                    final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Sign In", "Connecting...", true, false);
-
-                    mAuth.signInWithEmailAndPassword(emails, passo).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                AppLogs.logd("signInWithEmail:onComplete:" + task.isSuccessful());
-                                Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                                openMainScreen();
-                                progressDialog.dismiss();
-                            } else if (!task.isSuccessful()) {
-                                progressDialog.dismiss();
-                                AppLogs.logw("signInWithEmail" + task.getException());
-                                Toast.makeText(LoginActivity.this, "" + task.getException(),
-                                        Toast.LENGTH_LONG).show();
+                        mAuth.signInWithEmailAndPassword(emails, passo).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    AppLogs.logd("signInWithEmail:onComplete:" + task.isSuccessful());
+                                    Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+                              ///      openMainScreen();
+                                    progressDialog.dismiss();
+                                } else if (!task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    AppLogs.logw("signInWithEmail" + task.getException());
+                                    Toast.makeText(LoginActivity.this, "" + task.getException(),
+                                            Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
 
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        progressDialog.dismiss();
+                    }
                 }
             }
         });
@@ -244,7 +288,9 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 AppLogs.logd("User Logged In For FB:" + user.getUser_email());
-                                //     SharedPref.setCurrentUser(LoginActivity.this, user);
+                                if(remember_flag) {
+                                    SharedPref.setCurrentUser(LoginActivity.this, user);
+                                }
                                 openMainScreen();
                             }
                         });
@@ -256,6 +302,9 @@ public class LoginActivity extends AppCompatActivity {
                                         UserModel user = dataSnapshot.getValue(UserModel.class);
 //                                AppLogs.logd("User Logged In For My Auth:" + user.getEmail());
                                         if (user != null) {
+                                            if(remember_flag) {
+                                                SharedPref.setCurrentUser(LoginActivity.this, user);
+                                            }
                                             openMainScreen();
                                         }
                                     }
