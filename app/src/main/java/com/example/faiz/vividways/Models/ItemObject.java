@@ -17,29 +17,53 @@ public class ItemObject implements Parcelable {
     public String caption;
     public boolean take_it_check;
     public boolean leave_it_check;
+    public String country;
+    public String want_see;
+    public String can_see;
 
     public ItemObject() {
     }
 
 
-    public ItemObject(String itemID, String itemImageURl, boolean take_it_check, boolean leave_it_check,String userID) {
+
+
+    public ItemObject(String itemID, String itemImageURl, boolean take_it_check, boolean leave_it_check,String userID,String caption,int leaveit_count,int takeit_count,String post_country,String can_see) {
         this.itemID = itemID;
         this.itemImageURl = itemImageURl;
         this.take_it_check = take_it_check;
         this.leave_it_check = leave_it_check;
         this.userID = userID;
-    }
-
-
-    public ItemObject(String itemID, String itemImageURl, int leaveit_count, int takeit_count, String userID, String caption) {
-        this.itemID = itemID;
-        this.itemImageURl = itemImageURl;
-        this.leaveit_count = leaveit_count;
-        this.takeit_count = takeit_count;
-        this.userID = userID;
         this.caption = caption;
+        this.leaveit_count = leaveit_count;
+        this.takeit_count  = takeit_count;
+        this.country = post_country;
+        this.can_see = can_see;
     }
 
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getWant_see() {
+        return want_see;
+    }
+
+    public void setWant_see(String want_see) {
+        this.want_see = want_see;
+    }
+
+    public String getCan_see() {
+        return can_see;
+    }
+
+    public void setCan_see(String can_see) {
+        this.can_see = can_see;
+    }
 
     public boolean isTake_it_check() {
         return take_it_check;
@@ -59,6 +83,9 @@ public class ItemObject implements Parcelable {
         caption = in.readString();
         take_it_check = in.readByte() != 0;
         leave_it_check = in.readByte() != 0;
+        country = in.readString();
+        can_see = in.readString();
+        want_see = in.readString();
     }
 
     public static final Creator<ItemObject> CREATOR = new Creator<ItemObject>() {
@@ -139,5 +166,9 @@ public class ItemObject implements Parcelable {
         out.writeInt(leaveit_count);
         out.writeInt(takeit_count);
         out.writeString(userID);
+        out.writeString(notification_text);
+        out.writeString(country);
+        out.writeString(want_see);
+        out.writeString(can_see);
     }
 }

@@ -24,9 +24,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.faiz.vividways.Models.FilterItem;
 import com.example.faiz.vividways.Utils.AppLogs;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -160,6 +162,9 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                                         String user_country = spinner_country.getSelectedItem().toString();
                                         String user_gender = spinner_gender.getSelectedItem().toString();
                                             firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass,uid, fname.getText().toString(), lname.getText().toString(),imageURL,user_country,user_gender));
+                                        FirebaseHandler.getInstance().getUser_privacy()
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .setValue(new FilterItem("", ""));
                                         progressDialog.dismiss();
                                         Toast.makeText(getActivity(), "Successfull", Toast.LENGTH_SHORT).show();
                                         AppLogs.logd("createUserWithEmail:onComplete: " + task.isSuccessful());
@@ -167,9 +172,6 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                                             getActivity().getSupportFragmentManager()
                                                     .beginTransaction().
                                                     remove(getActivity().getSupportFragmentManager().findFragmentById(R.id.container)).commit();
-
-
-
                                         }
 //                                                } else
                                         if (!task.isSuccessful()) {

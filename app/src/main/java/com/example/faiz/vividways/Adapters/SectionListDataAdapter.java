@@ -104,11 +104,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
                                         .child("user-take-posts")
                                         .child(itemsList.get(i).getItemID())
-                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), true, false, itemsList.get(i).getUserID()), new DatabaseReference.CompletionListener() {
+                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), true, itemsList.get(i).isLeave_it_check(), itemsList.get(i).getUserID(),itemsList.get(i).getCaption(),itemsList.get(i).getLeaveit_count(),itemsList.get(i).getTakeit_count(),itemsList.get(i).getCountry(),itemsList.get(i).getCan_see()), new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                itemsList.remove(i);
-                                                notifyDataSetChanged();
+
                                             }
                                         });
                             }
@@ -123,7 +122,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 int leave_it_count=0;
            //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).leaveit_count+"");
-                Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+            //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                 AppLogs.d(TAG,itemsList.get(i).getLeaveit_count()+"");
                 leave_it_count = itemsList.get(i).getLeaveit_count()+1;
                 itemsList.get(i).setLeaveit_count(leave_it_count);
@@ -144,11 +143,13 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
                                         .child("user-leave-posts")
                                         .child(itemsList.get(i).getItemID())
-                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), false, true, itemsList.get(i).getUserID()), new DatabaseReference.CompletionListener() {
+                                        .setValue(new ItemObject(itemsList.get(i).getItemID(),
+                                                itemsList.get(i).getItemImageURl(),itemsList.get(i).isTake_it_check(),
+                                                true, itemsList.get(i).getUserID(),itemsList.get(i).getCaption(),
+                                                itemsList.get(i).getLeaveit_count(),itemsList.get(i).getTakeit_count(),
+                                                itemsList.get(i).getCountry(),itemsList.get(i).getCan_see()), new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                itemsList.remove(i);
-                                                notifyDataSetChanged();
                                             }
                                         });
                             }

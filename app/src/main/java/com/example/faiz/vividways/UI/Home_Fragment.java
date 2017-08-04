@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
+import com.example.faiz.vividways.Models.FilterItem;
+import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.Utils.AppLogs;
 import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Models.ItemObject;
@@ -44,6 +46,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -69,6 +72,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     private String string_caption;
     public SectionListDataAdapter adapter;
     private static final int CAMERA_REQUEST = 1888;
+    private UserModel userModel;
+
 
     @Nullable
     @Override
@@ -91,7 +96,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         MainActivity.report_image.setVisibility(View.GONE);
         my_recycler_view.setOnFlingListener(snapHelper);
         my_recycler_view.setHasFixedSize(true);
-
+        userModel = new UserModel();
 
         adapter = new SectionListDataAdapter(getActivity(), imageURL);
         //  layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
@@ -142,7 +147,12 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                     if (itemObject.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
                                     } else {
-                                        imageURL.add(itemObject);
+                                        if(itemObject.getCan_see().equals(UserModel.getInstanceIfNotNull().getUser_country())) {
+                                            if(itemObject.getCountry().equals(FilterItem.getInstanceIfNotNull().getWant_see()))
+                                            {
+                                                imageURL.add(itemObject);
+                                            }
+                                        }
                                      ///   adapter.notifyDataSetChanged();
                                     }
                                 }
@@ -175,9 +185,9 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                 AppLogs.d("Hello", dataSnapshot.getValue().toString());
                                 for(DataSnapshot data:dataSnapshot.getChildren()) {
                                     for (DataSnapshot data_again : data.getChildren()) {
-                           //             ItemObject itemObject = data_again.getValue(ItemObject.class);
+                                        ItemObject itemObject = data_again.getValue(ItemObject.class);
                                         for (int i = 0; i < imageURL.size(); i++) {
-                                            if (imageURL.get(i).getItemID().equals(data_again.getKey())) {
+                                            if (imageURL.get(i).getItemID().equals(itemObject.getItemID())) {
                                                 imageURL.remove(i);
                                                 adapter.notifyDataSetChanged();
                                             }
@@ -278,7 +288,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                     downloadURL = downloadUrl;
                     mProgressDialog.dismiss();
                 final DatabaseReference ref = firebase.child("user-post").child(mAuth.getCurrentUser().getUid()).push();
-                   final ItemObject itemObject = new ItemObject(ref.getKey().toString(), downloadUrl,0,0, mAuth.getCurrentUser().getUid(),string_caption);
+                   final ItemObject itemObject = new ItemObject(ref.getKey().toString(), downloadUrl,false,false,mAuth.getCurrentUser().getUid(),string_caption,0,0, UserModel.getInstanceIfNotNull().getUser_country(),FilterItem.getInstanceIfNotNull().getCan_see());
                     ref.setValue(itemObject, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

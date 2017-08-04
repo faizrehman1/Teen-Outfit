@@ -16,6 +16,7 @@ public class UserModel {
     private String user_gender;
 
 
+
     public UserModel(String user_email, String user_password, String user_userID, String user_fname, String user_lname, String user_imgURL, String user_country, String user_gender) {
         this.user_email = user_email;
         this.user_password = user_password;
@@ -100,4 +101,17 @@ public class UserModel {
     public void setUser_gender(String user_gender) {
         this.user_gender = user_gender;
     }
+
+    private static UserModel myObj;
+    public static UserModel getInstance(String user_email, String user_password, String user_userID, String user_fname, String user_lname, String user_imgURL, String user_country, String user_gender){
+        if(myObj == null){
+            myObj = new UserModel(user_email, user_password,user_userID,user_fname, user_lname,user_imgURL,user_country,user_gender);
+        }
+        return myObj;
+    }
+
+    public static UserModel getInstanceIfNotNull(){
+        return myObj;
+    }
+
 }

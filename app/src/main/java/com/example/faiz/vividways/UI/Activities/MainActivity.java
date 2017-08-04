@@ -21,12 +21,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.faiz.vividways.Models.FilterItem;
 import com.example.faiz.vividways.R;
 import com.example.faiz.vividways.UI.Home_Fragment;
 import com.example.faiz.vividways.UI.Notification_Fragment;
 import com.example.faiz.vividways.UI.Profile_Fragment;
 import com.example.faiz.vividways.UI.Setting_Fragment;
 import com.example.faiz.vividways.UI.Top_Fragment;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,6 +103,30 @@ public class MainActivity extends AppCompatActivity {
         setting_view = (LinearLayout) findViewById(R.id.setting_view);
         setting_image = (ImageView) findViewById(R.id.setting_image);
         setting_text = (TextView) findViewById(R.id.setting_text);
+
+        home_image.setImageResource(R.mipmap.sel_home_icon);
+        home_text.setTextColor(Color.parseColor("#da59a8"));
+
+        FirebaseHandler.getInstance().getUser_privacy()
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot!=null){
+                            if(dataSnapshot.getValue()!=null){
+                                FilterItem filterItem = dataSnapshot.getValue(FilterItem.class);
+                                FilterItem.getInstance(filterItem.getCan_see(),filterItem.getWant_see());
+                            }
+                        }
+
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
 
 

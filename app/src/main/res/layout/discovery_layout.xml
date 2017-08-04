@@ -71,10 +71,10 @@
 
 
                 <TextView
-                    android:textColor="#999999"
+                    android:textColor="#000000"
                     android:textSize="12sp"
                     android:layout_gravity="center"
-                    android:text="Welcome To Vividways"
+                    android:text="Lorem Ipsum Dolor sit amet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -82,12 +82,14 @@
 
 
         <LinearLayout
+            android:weightSum="2"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:layout_weight="1"
                 android:layout_margin="10dp"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -102,6 +104,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/who_see1"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Afghanistan"
@@ -110,6 +113,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/who_see2"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Albania"
@@ -117,6 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:id="@+id/who_see3"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Algeria"
@@ -124,6 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:id="@+id/who_see4"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Andorra"
@@ -131,6 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:id="@+id/who_see5"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Angola"
@@ -139,6 +146,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/who_see6"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Antigua and Barbuda"
@@ -149,7 +157,7 @@
             </LinearLayout>
 
             <LinearLayout
-
+                android:layout_weight="1"
                 android:layout_margin="10dp"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -164,6 +172,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/want_see1"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Afghanistan"
@@ -172,6 +181,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/want_see2"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Albania"
@@ -179,6 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:id="@+id/want_see3"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Algeria"
@@ -186,6 +197,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:id="@+id/want_see4"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Andorra"
@@ -193,6 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:id="@+id/want_see5"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Angola"
@@ -201,6 +214,7 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/want_see6"
                     android:layout_marginTop="2dp"
                     android:textAllCaps="false"
                     android:text="Antigua and Barbuda"
@@ -216,6 +230,7 @@
         </android.support.v7.widget.CardView>
 
     <Button
+        android:id="@+id/done"
         android:textColor="#fff"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"

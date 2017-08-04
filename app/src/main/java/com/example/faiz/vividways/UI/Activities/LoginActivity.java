@@ -21,10 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.faiz.vividways.Models.FilterItem;
 import com.example.faiz.vividways.Utils.AppLogs;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
 import com.example.faiz.vividways.UI.SignUp_Fragment;
+import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.example.faiz.vividways.Utils.SharedPref;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -287,7 +289,6 @@ public class LoginActivity extends AppCompatActivity {
                         firebase.child("users").child(currentUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                AppLogs.logd("User Logged In For FB:" + user.getUser_email());
                                 if(remember_flag) {
                                     SharedPref.setCurrentUser(LoginActivity.this, user);
                                 }

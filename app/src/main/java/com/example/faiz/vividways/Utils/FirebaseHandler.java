@@ -16,6 +16,7 @@ public class FirebaseHandler  {
     private DatabaseReference user_postRef;
     private DatabaseReference user_takeit_post;
     private DatabaseReference user_takeit_or_leaveit_post;
+    private DatabaseReference user_privacy;
     private static final String TAG = "FirebaseHandler";
     private static FirebaseHandler ourInstance;
     private DatabaseReference firebaseRef;
@@ -54,6 +55,7 @@ public class FirebaseHandler  {
         postRef = firebaseRef.child("post");
         user_postRef = firebaseRef.child("user-post");
         user_takeit_or_leaveit_post = firebaseRef.child("user-take-or-leave-post");
+        user_privacy = firebaseRef.child("users-privacy");
        // user_takeit_post = firebaseRef.child("user-takeit-post");
     }
 
@@ -77,5 +79,7 @@ public class FirebaseHandler  {
         return user_postRef;
     }
 
-
+    public DatabaseReference getUser_privacy() {
+        return user_privacy;
+    }
 }
