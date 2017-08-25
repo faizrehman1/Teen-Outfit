@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
 import com.example.faiz.vividways.UI.Activities.LoginActivity;
 import com.example.faiz.vividways.UI.Activities.MainActivity;
@@ -44,8 +45,10 @@ public class Setting_Fragment extends android.support.v4.app.Fragment {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
 //                SharedPreferences.Editor pref = getActivity().getSharedPreferences("packageName", Context.MODE_PRIVATE).edit();
-//                pref.clear();
-//                pref.commit();
+            //    UserModel userModel = new UserModel("","","","","","","","");
+          //      SharedPref.setCurrentUser(getActivity(),userModel);
+             //   pref.clear();
+             //   pref.commit();
                 Intent intent = new Intent(getActivity(),LoginActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();

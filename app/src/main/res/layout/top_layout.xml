@@ -8,24 +8,28 @@
 
     <LinearLayout
         android:weightSum="2"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
         android:layout_weight="1"
         android:text="Top 5 of the"
         android:layout_width="0dp"
+        android:textColor="#6b6a6a"
+        android:textSize="15sp"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_weight="1"
-        android:text="in"
+        android:text="In"
+        android:textSize="15sp"
+        android:textColor="#6b6a6a"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:padding="10dp"
         android:layout_marginTop="10dp"
         android:weightSum="2"
         android:layout_width="match_parent"
@@ -37,19 +41,19 @@
             android:layout_weight="1"
             android:text="Top 5 of the"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-
+            android:layout_height="40dp"
+            android:spinnerMode="dialog"
+            android:background="@drawable/gradient_spinner"
             />
 
         <Spinner
             android:id="@+id/country_name"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="in"
-
+            android:spinnerMode="dialog"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-
+            android:layout_height="40dp"
+            android:background="@drawable/gradient_spinner"
             />
 
     </LinearLayout>

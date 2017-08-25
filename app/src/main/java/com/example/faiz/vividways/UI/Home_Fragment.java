@@ -1,16 +1,24 @@
 package com.example.faiz.vividways.UI;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -19,10 +27,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
 import com.example.faiz.vividways.Models.FilterItem;
@@ -39,6 +49,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -48,6 +59,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by Faiz on 7/20/2017.
@@ -73,7 +85,9 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     public SectionListDataAdapter adapter;
     private static final int CAMERA_REQUEST = 1888;
     private UserModel userModel;
-
+    public FilterItem filterItemObj;
+    private static final int REQUEST_READ_CONTACTS = 2;
+    public Uri  mCapturedImageURI;
 
     @Nullable
     @Override
@@ -85,6 +99,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         firebase = FirebaseDatabase.getInstance().getReference();
         MainActivity.appbar_TextView.setText("Home");
         MainActivity.Uploadbutton.setVisibility(View.VISIBLE);
+        MainActivity.getInstance().home_image.setImageResource(R.mipmap.sel_home_icon);
+        MainActivity.getInstance().home_text.setTextColor(Color.parseColor("#da59a8"));
+        MainActivity.getInstance().setting_image.setImageResource(R.mipmap.settings_icon);
+        MainActivity.getInstance().setting_text.setTextColor(Color.parseColor("#bfbfbf"));
         imageURL = new ArrayList<ItemObject>();
         rootStorageRef = FirebaseStorage.getInstance().getReference();
         folderRef = rootStorageRef.child("postImages");
@@ -97,11 +115,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         my_recycler_view.setOnFlingListener(snapHelper);
         my_recycler_view.setHasFixedSize(true);
         userModel = new UserModel();
-
+        filterItemObj = new FilterItem();
         adapter = new SectionListDataAdapter(getActivity(), imageURL);
         //  layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
         int duration = getResources().getInteger(R.integer.scroll_duration);
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         my_recycler_view.setLayoutManager(new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration));
         //  my_recycler_view.setLayoutManager(layoutManager);
         my_recycler_view.setAdapter(adapter);
@@ -110,21 +128,48 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
+
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 alert.setTitle("Upload Image");
                 alert.setMessage("Want to upload image..?");
                 alert.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+              != PackageManager.PERMISSION_GRANTED  && ContextCompat.checkSelfPermission(getActivity(),
+               Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{
+                                            Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    2);
+                        }else {
+                            String fileName = "temp.jpg";
+                            ContentValues values = new ContentValues();
+                            values.put(MediaStore.Images.Media.TITLE, fileName);
+                         mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+                            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                        }
                     }
                 });
                 alert.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(i, SELECTED_PICTURE);
+                      //  mayRequestContacts();
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED  && ContextCompat.checkSelfPermission(getActivity(),
+                                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{
+                                            Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    2);
+                        }else {
+
+                            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(i, SELECTED_PICTURE);
+                        }
                     }
                 });
                 alert.create().show();
@@ -135,7 +180,33 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         });
 
 
-            FirebaseHandler.getInstance().getPostRef()
+        FirebaseHandler.getInstance().getUser_privacy()
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot!=null){
+                            if(dataSnapshot.getValue()!=null){
+                                FilterItem filterItem = dataSnapshot.getValue(FilterItem.class);
+                                filterItemObj.setCan_see(filterItem.getCan_see());
+                                filterItemObj.setWant_see(filterItem.getWant_see());
+                                //      FilterItem.getInstance(filterItem.getCan_see(),filterItem.getWant_see());
+                            }
+                        }
+
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+        FirebaseHandler.getInstance().getPostRef()
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -147,12 +218,22 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                     if (itemObject.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
                                     } else {
-                                        if(itemObject.getCan_see().equals(UserModel.getInstanceIfNotNull().getUser_country())) {
-                                            if(itemObject.getCountry().equals(FilterItem.getInstanceIfNotNull().getWant_see()))
-                                            {
-                                                imageURL.add(itemObject);
-                                            }
-                                        }
+                                      if(UserModel.getInstanceIfNotNull()!=null){
+                                       if(UserModel.getInstanceIfNotNull().getUser_country()!=null) {
+                                           if (!itemObject.getCan_see().equals("")) {
+                                               if(filterItemObj!=null) {
+                                                   if (!filterItemObj.getWant_see().equals("")) {
+                                                       if (itemObject.getCan_see().equals(UserModel.getInstanceIfNotNull().getUser_country())) {
+                                                           if (itemObject.getCountry().equals(filterItemObj.getWant_see())) {
+                                                               imageURL.add(itemObject);
+                                                           }
+                                                       }
+                                                   }
+                                               }
+                                               }else imageURL.add(itemObject);
+                                           }else
+                                               imageURL.add(itemObject);
+                                       }
                                      ///   adapter.notifyDataSetChanged();
                                     }
                                 }
@@ -173,7 +254,59 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         return view;
     }
 
-    private void filterPost(final ArrayList<ItemObject> imageURL) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //   populateAutoComplete();
+            }
+        }else{
+            Toast.makeText(getActivity(),"Please Allow Storage ..",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+
+    private boolean mayRequestContacts() {
+      if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED  && ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    && ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // getActivity() thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        2);
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        2);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                // app-defined int constant. The callback method gets the
+//                // result of the request.
+            }
+        }
+        return false;
+    }
+
+
+
+        private void filterPost(final ArrayList<ItemObject> imageURL) {
         FirebaseHandler.getInstance()
                 .getUser_leaveit_post()
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -197,6 +330,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                             }else{
                                 adapter.notifyDataSetChanged();
                             }
+                        }else{
+                            adapter.notifyDataSetChanged();
                         }
                     }
                     @Override
@@ -216,28 +351,37 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-      if (resultCode == getActivity().RESULT_OK && requestCode == SELECTED_PICTURE
-              ||
-              requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK
-              ) {
-            Uri uri = data.getData();
-            String[] imgHolder = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(uri, imgHolder, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(imgHolder[0]);
-            imgPath = cursor.getString(columnIndex);
-            cursor.close();
+      if (resultCode == getActivity().RESULT_OK){
 
+              if(requestCode == 1888){
+                  //for camera
+                  String[] projection = { MediaStore.Images.Media.DATA};
+                  Cursor cursor = getActivity().getContentResolver().query(mCapturedImageURI, projection, null, null, null);
+                  int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                  cursor.moveToFirst();
+                   imgPath = cursor.getString(column_index_data);
+                  cursor.close();
+              }
+             else if(requestCode == 1) {
+                  //for gallery
+                  mCapturedImageURI = data.getData();
+                  String[] imgHolder = {MediaStore.Images.Media.DATA};
+                  Cursor cursor = getActivity().getContentResolver().query(mCapturedImageURI, imgHolder, null, null, null);
+                  cursor.moveToFirst();
+                  int columnIndex = cursor.getColumnIndex(imgHolder[0]);
+                  imgPath = cursor.getString(columnIndex);
+                  cursor.close();
+              }
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Want to Upload Image or not ?");
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view1 = inflater.inflate(R.layout.image_view_alert, null);
             ImageView alertImageView = (ImageView) view1.findViewById(R.id.imageView_Alert);
             final EditText editText_caption = (EditText)view1.findViewById(R.id.caption);
-            if (getActivity() != null) {
-            //    Glide.with(getActivity()).load(uri).into(alertImageView);
-                alertImageView.setImageURI(uri);
-            }
+       //     if (getActivity() != null) {
+                Glide.with(getActivity()).load(mCapturedImageURI).into(alertImageView);
+            //    alertImageView.setImageURI(uri);
+        //    }
             builder.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -260,7 +404,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     private void uploadImage(String imgPath) {
         try {
             File fileRef = new File(imgPath);
-            Date date = new Date(System.currentTimeMillis());
+            final Date date = new Date(System.currentTimeMillis());
             final String filenew = fileRef.getName();
             AppLogs.d("fileNewName", filenew);
             int dot = filenew.lastIndexOf('.');
@@ -288,7 +432,15 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                     downloadURL = downloadUrl;
                     mProgressDialog.dismiss();
                 final DatabaseReference ref = firebase.child("user-post").child(mAuth.getCurrentUser().getUid()).push();
-                   final ItemObject itemObject = new ItemObject(ref.getKey().toString(), downloadUrl,false,false,mAuth.getCurrentUser().getUid(),string_caption,0,0, UserModel.getInstanceIfNotNull().getUser_country(),FilterItem.getInstanceIfNotNull().getCan_see());
+                        if(FilterItem.getInstanceIfNotNull()==null){
+                            FilterItem.getInstance("","");
+                        }
+
+
+
+                    final ItemObject itemObject = new ItemObject(ref.getKey().toString(), downloadUrl,false,false,mAuth.getCurrentUser().getUid()
+                            ,string_caption,0,0, UserModel.getInstanceIfNotNull().getUser_country(),
+                            FilterItem.getInstanceIfNotNull().getCan_see(), System.currentTimeMillis());
                     ref.setValue(itemObject, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -301,6 +453,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
             e.printStackTrace();
         }
     }
+
 
 
 }

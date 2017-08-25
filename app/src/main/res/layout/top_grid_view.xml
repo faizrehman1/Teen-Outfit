@@ -44,61 +44,64 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:weightSum="2"
                     android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_marginLeft="12dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/circleImageView2"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignTop="@+id/circleImageView"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
                         android:layout_toEndOf="@+id/circleImageView"
                         android:layout_toRightOf="@+id/circleImageView"
                         android:src="@mipmap/white_like_btn" />
 
                     <TextView
                         android:layout_marginLeft="5dp"
-                        android:id="@+id/textViewContactName"
+                        android:id="@+id/tak_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/circleImageView"
-                        android:layout_toRightOf="@+id/circleImageView"
                         android:text="5"
                         android:textSize="8dp"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
+                    </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_marginLeft="8dp"
+                           android:gravity="center"
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_marginTop="5dp"
                         android:id="@+id/circleImageView"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginLeft="14dp"
-                        android:layout_marginStart="14dp"
                         android:src="@mipmap/white_dislike_btn"
-                        android:layout_alignTop="@+id/textViewContactName"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                         />
 
                     <TextView
-                        android:id="@+id/textViewContactNumber"
+                        android:layout_marginLeft="5dp"
+                        android:id="@+id/leave_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/circleImageView2"
-                        android:layout_toRightOf="@+id/circleImageView2"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:text="3"
                         android:textSize="8dp"
                         android:textStyle="bold"
                         android:textColor="#FFFFFF" />
-                </RelativeLayout>
+                </LinearLayout>
+                </LinearLayout>
+
             </RelativeLayout>
         </RelativeLayout>
 
@@ -113,7 +116,7 @@
                 android:layout_margin="10dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/cir_image"
+                    android:id="@+id/user_card_image"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/user" />
@@ -127,7 +130,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/hello"
+                    android:id="@+id/user_card_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/cir_image"
@@ -138,7 +141,7 @@
                     android:textColor="#000" />
 
                 <TextView
-                    android:id="@+id/helloooo"
+                    android:id="@+id/user_card_country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/hello"

@@ -102,7 +102,7 @@ public class UserModel {
         this.user_gender = user_gender;
     }
 
-    private static UserModel myObj;
+    public static UserModel myObj;
     public static UserModel getInstance(String user_email, String user_password, String user_userID, String user_fname, String user_lname, String user_imgURL, String user_country, String user_gender){
         if(myObj == null){
             myObj = new UserModel(user_email, user_password,user_userID,user_fname, user_lname,user_imgURL,user_country,user_gender);

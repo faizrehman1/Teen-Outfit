@@ -104,7 +104,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
                                         .child("user-take-posts")
                                         .child(itemsList.get(i).getItemID())
-                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), true, itemsList.get(i).isLeave_it_check(), itemsList.get(i).getUserID(),itemsList.get(i).getCaption(),itemsList.get(i).getLeaveit_count(),itemsList.get(i).getTakeit_count(),itemsList.get(i).getCountry(),itemsList.get(i).getCan_see()), new DatabaseReference.CompletionListener() {
+                                        .setValue(new ItemObject(itemsList.get(i).getItemID(), itemsList.get(i).getItemImageURl(), true,
+                                                itemsList.get(i).isLeave_it_check(), itemsList.get(i).getUserID(),itemsList.get(i).getCaption(),
+                                                itemsList.get(i).getLeaveit_count(),itemsList.get(i).getTakeit_count(),itemsList.get(i).getCountry(),
+                                                itemsList.get(i).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
@@ -147,7 +150,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                                                 itemsList.get(i).getItemImageURl(),itemsList.get(i).isTake_it_check(),
                                                 true, itemsList.get(i).getUserID(),itemsList.get(i).getCaption(),
                                                 itemsList.get(i).getLeaveit_count(),itemsList.get(i).getTakeit_count(),
-                                                itemsList.get(i).getCountry(),itemsList.get(i).getCan_see()), new DatabaseReference.CompletionListener() {
+                                                itemsList.get(i).getCountry(),itemsList.get(i).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                             }

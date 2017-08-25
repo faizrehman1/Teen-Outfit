@@ -1,11 +1,15 @@
 package com.example.faiz.vividways.UI.Activities;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.faiz.vividways.Models.FilterItem;
 import com.example.faiz.vividways.R;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public ImageView home_image, top_image, notification_image, setting_image, profile_image;
     public TextView home_text, top_text, notification_text, setting_text, profile_text;
     public static Context context;
+    private static final int REQUEST_READ_CONTACTS = 2;
     public static ImageView back_image, delete_image, report_image;
     public static MainActivity getInstance() {
         return mainActivity;
@@ -56,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
+
+
+        if (Build.VERSION.SDK_INT >= 23) {
+
+            mayRequestContacts();
+
+        }
 
 //        BottomNavigationView bottomNavigationView = (BottomNavigationView)
 //                findViewById(R.id.bottom_navigation);
@@ -104,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
         setting_image = (ImageView) findViewById(R.id.setting_image);
         setting_text = (TextView) findViewById(R.id.setting_text);
 
-        home_image.setImageResource(R.mipmap.sel_home_icon);
-        home_text.setTextColor(Color.parseColor("#da59a8"));
 
         FirebaseHandler.getInstance().getUser_privacy()
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -118,9 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                 FilterItem.getInstance(filterItem.getCan_see(),filterItem.getWant_see());
                             }
                         }
-
                     }
-
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -305,6 +314,56 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().popBackStack();
 
         // super.onBackPressed();
+
+    }
+
+    private boolean mayRequestContacts() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED  && ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    && ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        2);
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        2);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+        return false;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //   populateAutoComplete();
+            }
+        }else{
+            Toast.makeText(MainActivity.this,"Please Allow Storage ..",Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

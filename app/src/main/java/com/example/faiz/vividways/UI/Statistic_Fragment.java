@@ -73,7 +73,7 @@ public class Statistic_Fragment extends android.support.v4.app.Fragment {
         if (getArguments() != null) {
             itemObject = getArguments().getParcelable("clickItem");
             AppLogs.d(TAG, itemObject.getItemID() + "");
-            Glide.with(getActivity()).load(itemObject.getItemImageURl()).into(imageView_item);
+            Glide.with(getActivity()).load(itemObject.getItemImageURl()).placeholder(R.mipmap.placeholder).into(imageView_item);
 
 
             FirebaseHandler.getInstance()

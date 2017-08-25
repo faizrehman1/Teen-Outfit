@@ -20,14 +20,14 @@ public class ItemObject implements Parcelable {
     public String country;
     public String want_see;
     public String can_see;
+    public long timestamp;
 
     public ItemObject() {
     }
 
 
 
-
-    public ItemObject(String itemID, String itemImageURl, boolean take_it_check, boolean leave_it_check,String userID,String caption,int leaveit_count,int takeit_count,String post_country,String can_see) {
+    public ItemObject(String itemID, String itemImageURl, boolean take_it_check, boolean leave_it_check, String userID, String caption, int leaveit_count, int takeit_count, String post_country, String can_see,long timestamp) {
         this.itemID = itemID;
         this.itemImageURl = itemImageURl;
         this.take_it_check = take_it_check;
@@ -38,8 +38,16 @@ public class ItemObject implements Parcelable {
         this.takeit_count  = takeit_count;
         this.country = post_country;
         this.can_see = can_see;
+        this.timestamp = timestamp;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public String getCountry() {
         return country;

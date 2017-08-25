@@ -694,6 +694,8 @@ public class Discovery_Fragment extends android.support.v4.app.Fragment {
                 bundle.putString("cansee", cansee);
                 bundle.putString("wantpost", wantPost);
 
+
+
                 Home_Fragment home_fragment = new Home_Fragment();
                 home_fragment.setArguments(bundle);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager()
