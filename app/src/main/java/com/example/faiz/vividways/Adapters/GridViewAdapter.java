@@ -31,6 +31,7 @@ public class GridViewAdapter extends ArrayAdapter<TopItems> {
     public Context mContext;
     public ArrayList<TopItems> itemObjectArrayList;
     public ArrayList<TopItems> backUpList;
+    public ArrayList<TopItems> filterList = new ArrayList<>();
     private int mCurrentFilterLength;
 
     public GridViewAdapter(Context mContext, ArrayList<TopItems> itemObjectArrayList) {
@@ -102,6 +103,10 @@ public class GridViewAdapter extends ArrayAdapter<TopItems> {
 
         int i = 0;
 
+
+
+
+
         if (selectOption.equals("today")) {
             itemObjectArrayList.clear();
             itemObjectArrayList.addAll(backUpList);
@@ -111,7 +116,9 @@ public class GridViewAdapter extends ArrayAdapter<TopItems> {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
                 String day = sdf.format(date);
                 //  for (String s : days) {
-                if (days.contains(day)) {
+
+
+                if (!days.get(0).equals(day) || !itemObjectArrayList.get(i).getItemObject().getCountry().equals(country)) {
                     itemObjectArrayList.remove(i);
                     //     }
                     //   }
@@ -124,21 +131,32 @@ public class GridViewAdapter extends ArrayAdapter<TopItems> {
                 // }
             }
             notifyDataSetChanged();
-        }else if(selectOption.equals("Week") || selectOption.equals("Half Of Month")){
+        }else if(selectOption.equals("Week") || selectOption.equals("Half Of Month") || selectOption.equals("Month")){
             itemObjectArrayList.clear();
             itemObjectArrayList.addAll(backUpList);
+            filterList.clear();
             while (i < itemObjectArrayList.size()) {
                 Date date = new Date(itemObjectArrayList.get(i).getItemObject().getTimestamp());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
                 String day = sdf.format(date);
 
               //  for (int i1 = days.length-1; i1 >=0; i1--) {
+
                 for (String s : days) {
-                    if(!s.equals(day)){
-                        itemObjectArrayList.remove(i);
-                          break;
-                        //    }
-                    }
+                   if(country.equals("world")){
+                       if(s.equals(day) && !itemObjectArrayList.get(i).getItemObject().getCountry().equals(country)){
+                           filterList.add(itemObjectArrayList.get(i));
+                           break;
+                           //    }
+                       }
+                   }else{
+                       if(s.equals(day) && itemObjectArrayList.get(i).getItemObject().getCountry().equals(country)){
+                           filterList.add(itemObjectArrayList.get(i));
+                           break;
+                           //    }
+                       }
+                   }
+
                 }
 
                 i++;
@@ -147,6 +165,8 @@ public class GridViewAdapter extends ArrayAdapter<TopItems> {
               //  }
 
             }
+            itemObjectArrayList.clear();
+            itemObjectArrayList.addAll(filterList);
             notifyDataSetChanged();
         }
             //   int filterLength = days.length;

@@ -7,9 +7,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <permission android:name="android.permission.FLASHLIGHT" />
-    <uses-feature android:name="android.hardware.camera"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
 
+    <permission android:name="android.permission.FLASHLIGHT" />
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".Utils.AppController"
@@ -18,7 +21,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -26,10 +32,12 @@
         <activity
             android:name=".UI.Activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".UI.Activities.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,10 +45,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".UI.Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".UI.FullImageActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            />
+
+        <service
+            android:name="com.example.faiz.vividways.Service.NotificationServices"
+
+            />
+
+
+        <receiver
+            android:name="com.example.faiz.vividways.Service.MyReciever"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.REBOOT"/>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

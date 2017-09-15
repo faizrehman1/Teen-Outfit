@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
+
     android:layout_height="wrap_content"
     card_view:cardUseCompatPadding="true"
     card_view:cardCornerRadius="8dp"
@@ -106,6 +107,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:background="#78fffdfd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

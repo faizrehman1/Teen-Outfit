@@ -15,7 +15,7 @@ import android.view.View;
 public class ScrollingLinearLayout extends LinearLayoutManager {
 
     private final int duration;
-
+    public boolean isScroll = true;
     public ScrollingLinearLayout(Context context, int orientation, boolean reverseLayout, int duration) {
         super(context, orientation, reverseLayout);
         this.duration = duration;
@@ -59,5 +59,11 @@ public class ScrollingLinearLayout extends LinearLayoutManager {
             float proportion = (float) dx / distanceInPixels;
             return (int) (duration * proportion);
         }
+    }
+
+    @Override
+    public void setSmoothScrollbarEnabled(boolean enabled) {
+      //  super.setSmoothScrollbarEnabled(enabled);
+        this.isScroll = enabled;
     }
 }

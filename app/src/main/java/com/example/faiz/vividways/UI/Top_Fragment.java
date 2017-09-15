@@ -27,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Faiz on 7/20/2017.
@@ -40,20 +42,20 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
     public GridView grid_view_top5;
     public View view;
     public Spinner day_no, country_name;
-    String contry_array[] = {"Afghanistan",
-            "Albania",
-            "Algeria",
-            "Andorra",
-            "Angola",
-            "Antigua & Barbuda","Country"
+    ArrayAdapter<String> AdapterCountry;
+    String contry_array[] = {"My Country",
+            "The World",
+            "Country"
     };
 
     String days_array[] = {"Today",
             "Week",
             "Half Of Month",
-            "Month","Day"
+            "Month", "Day"
     };
     public Query query;
+    public String filter_country;
+
 
     @Nullable
     @Override
@@ -66,29 +68,37 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
         country_name.setPrompt("Countries");
         itemObjectArrayList = new ArrayList<>();
         grid_view_top5 = (GridView) view.findViewById(R.id.top_5_list);
-//
-
+//        Locale[] locale = Locale.getAvailableLocales();
+//        ArrayList<String> countries = new ArrayList<String>();
+//        String country;
+//        for( Locale loc : locale ){
+//            country = loc.getDisplayCountry();
+//            if( country.length() > 0 && !countries.contains(country) ){
+//                countries.add( country );
+//            }
+//        }
+//        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
         grid_view_adapter = new GridViewAdapter(getActivity(), itemObjectArrayList);
 
         ArrayAdapter<String> adapterDays = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_spinner_item, days_array){
+                getActivity(), android.R.layout.simple_spinner_item, days_array) {
 
             @Override
             public int getCount() {
-                return super.getCount()-1;
+                return super.getCount() - 1;
             }
         };
         day_no.setAdapter(adapterDays);
         adapterDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         day_no.setSelection(adapterDays.getCount());
 
-        ArrayAdapter<String> AdapterCountry = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_spinner_item, contry_array){
+        AdapterCountry = new ArrayAdapter<String>(
+                getActivity(), android.R.layout.simple_spinner_item, contry_array) {
 
             @Override
             public int getCount() {
-                return super.getCount()-1;
+                return super.getCount() - 1;
             }
         };
         country_name.setAdapter(AdapterCountry);
@@ -99,49 +109,51 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
         MainActivity.Uploadbutton.setVisibility(View.GONE);
 
 
+        Query query = FirebaseHandler.getInstance().getPostRef().orderByChild("takeit_count").startAt(1).endAt(100).limitToLast(5);
 
 
-        FirebaseHandler.getInstance().getPostRef().addValueEventListener(new ValueEventListener() {
-               @Override
-               public void onDataChange(DataSnapshot dataSnapshot) {
-                   if (dataSnapshot != null) {
-                       if (dataSnapshot.getValue() != null) {
-                           //  AppLogs.d("TAG_top5", dataSnapshot.getValue().toString());
-                           for (DataSnapshot data : dataSnapshot.getChildren()) {
-                               final ItemObject itemObject = data.getValue(ItemObject.class);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    if (dataSnapshot.getValue() != null) {
+                        //  AppLogs.d("TAG_top5", dataSnapshot.getValue().toString());
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            final ItemObject itemObject = data.getValue(ItemObject.class);
 
-                               if (itemObject.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        //    if (itemObject.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
-                               } else {
+                        //    } else {
 
-                                   //    itemObjectArrayList.add(itemObject);
-                                   // grid_view_adapter.notifyDataSetChanged();
-                                   FirebaseHandler.getInstance().getUsersRef().child(itemObject.getUserID())
-                                           .addValueEventListener(new ValueEventListener() {
-                                               @Override
-                                               public void onDataChange(DataSnapshot dataSnapshot) {
-                                                   if (dataSnapshot != null) {
-                                                       if (dataSnapshot.getValue() != null) {
-                                                           UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                                                           itemObjectArrayList.add(new TopItems(userModel,itemObject));
-                                                            grid_view_adapter.add(new TopItems(userModel,itemObject));
-                                                           grid_view_adapter.notifyDataSetChanged();
-                                                       }
-                                                   }
-                                               }
+                                //    itemObjectArrayList.add(itemObject);
+                                // grid_view_adapter.notifyDataSetChanged();
+                                FirebaseHandler.getInstance().getUsersRef().child(itemObject.getUserID())
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot != null) {
+                                                    if (dataSnapshot.getValue() != null) {
+                                                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                                                        itemObjectArrayList.add(new TopItems(userModel, itemObject));
+                                                        grid_view_adapter.add(new TopItems(userModel, itemObject));
+                                                        grid_view_adapter.notifyDataSetChanged();
+                                                    }
+                                                }
+                                            }
 
-                                               @Override
-                                               public void onCancelled(DatabaseError databaseError) {
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                                               }
-                                           });
-                               }
+                                            }
+                                        });
+                            }
 
-                               //     filterItems();
-                           }
-                       }
-                   }
-               }
+                            //     filterItems();
+                        }
+                    }
+             //   }
+            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -151,8 +163,12 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
         day_no.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(country_name.getSelectedItem().toString()!=null){
-                    filterItems();
+                if (day_no.getSelectedItem().toString() != null) {
+                    if (day_no.getSelectedItem().toString().equals("Day")) {
+
+                    } else {
+                        filterItems();
+                    }
                 }
             }
 
@@ -165,8 +181,24 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
         country_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(day_no.getSelectedItem().toString()!=null){
-                    filterItems();
+                if (country_name.getSelectedItem().toString() != null) {
+                    if (country_name.getSelectedItem().toString().equals("Country")) {
+
+                    } else {
+                        if (country_name.getSelectedItem().toString().equals("My Country")) {
+                            if (UserModel.getInstanceIfNotNull() != null) {
+                                if (UserModel.getInstanceIfNotNull().getUser_country() != null) {
+                                    filter_country = UserModel.getInstanceIfNotNull().getUser_country();
+                                    String[] splitLocation = UserModel.getInstanceIfNotNull().getUser_country().split(",");
+                                    filter_country = splitLocation[1];
+                                    // country_name.setSelection();
+                                }
+                            }
+                        } else if (country_name.getSelectedItem().toString().equals("The World")) {
+                                    filter_country = "world";
+                        }
+                        filterItems();
+                    }
                 }
             }
 
@@ -180,92 +212,95 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
     }
 
 
-    private String[] checkItemsDate(long timestamp) {
-        String flag[] = {""};
-        Date date = new Date(timestamp);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
-        String mainItemDate = sdf.format(date);
+    public void filterItems() {
 
 
-        if (day_no.getSelectedItem().toString().equals("Day")) {
-            Date dumyDate = new Date(System.currentTimeMillis());
-            SimpleDateFormat dumysdf = new SimpleDateFormat("yyyy-MM-dd ");
-            String ItemDate = dumysdf.format(dumyDate);
-            if(mainItemDate.equals(ItemDate)){
-                flag = flag;
-            }
+        if (day_no.getSelectedItem().toString() != null && !day_no.getSelectedItem().toString().equals("Day")) {
+            if (country_name.getSelectedItem().toString() != null && !country_name.getSelectedItem().toString().equals("Country")) {
+                if (day_no.getSelectedItem().toString().equals("Today")) {
+                    Date date = new Date(System.currentTimeMillis());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                    String day = sdf.format(date);
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList.add(day);
+                    grid_view_adapter.filterMembers(arrayList,filter_country, "today");
+                } else if (day_no.getSelectedItem().toString().equals("Week")) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                    Calendar cal = Calendar.getInstance();
+                    Date date = cal.getTime();
+                    String days;
+                    days = sdf.format(date);
 
-        }
-
-       // else if()
-
-        return flag;
-    }
-
-    public void filterItems(){
-
-
-        if(day_no.getSelectedItem().toString()!=null && !day_no.getSelectedItem().toString().equals("Day")){
-        if(country_name.getSelectedItem().toString()!=null && !country_name.getSelectedItem().toString().equals("Country")){
-           if(day_no.getSelectedItem().toString().equals("Today")){
-               Date date = new Date(System.currentTimeMillis()-86400000);
-               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
-               String  day = sdf.format(date);
-               ArrayList<String> arrayList = new ArrayList<>();
-               arrayList.add(day);
-               grid_view_adapter.filterMembers(arrayList,country_name.getSelectedItem().toString(),"today");
-           }else if(day_no.getSelectedItem().toString().equals("Week")){
-               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
-               Calendar cal = Calendar.getInstance();
-               Date date=cal.getTime();
-               String days ;
-               days=sdf.format(date);
-
-               ArrayList<String> arrayList = new ArrayList<>();
+                    ArrayList<String> arrayList = new ArrayList<>();
 //               arrayList.add(days);
 
-               for(int i = 1; i< 6; i++){
-                   cal.add(Calendar.DAY_OF_MONTH,-1);
-                   date=cal.getTime();
-                     days=sdf.format(date);
-            arrayList.add(days);
-               }
+                    for (int i = 1; i < 8; i++) {
+                        cal.add(Calendar.DAY_OF_MONTH, -1);
+                        date = cal.getTime();
+                        days = sdf.format(date);
+                        arrayList.add(days);
+                    }
 
 
-          //     for(int i = (days.length-1); i >= 0; i--){
-            //       System.out.println(days[i]);
-            //   }
+                    //     for(int i = (days.length-1); i >= 0; i--){
+                    //       System.out.println(days[i]);
+                    //   }
 
-               grid_view_adapter.filterMembers(arrayList,country_name.getSelectedItem().toString(), "Week");
-           }else if(day_no.getSelectedItem().toString().equals("Half Of Month")){
-               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
-               Calendar cal = Calendar.getInstance();
-               Date date=cal.getTime();
-               String days;
-               days=sdf.format(date);
+                    grid_view_adapter.filterMembers(arrayList, filter_country, "Week");
+                } else if (day_no.getSelectedItem().toString().equals("Half Of Month")) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                    Calendar cal = Calendar.getInstance();
+                    Date date = cal.getTime();
+                    String days;
+                    days = sdf.format(date);
 
 
-               ArrayList<String> arrayList = new ArrayList<>();
+                    ArrayList<String> arrayList = new ArrayList<>();
 
-               for(int i = 1; i< 14; i++){
-                   cal.add(Calendar.DAY_OF_YEAR, -1);
-                   date=cal.getTime();
-                   days=sdf.format(date);
-                    arrayList.add(days);
-               }
+                    for (int i = 1; i < 16; i++) {
+                        cal.add(Calendar.DAY_OF_YEAR, -1);
+                        date = cal.getTime();
+                        days = sdf.format(date);
+                        arrayList.add(days);
+                    }
 
 
 //               for(int i = (days.length-1); i >= 0; i--){
 //                   System.out.println(days[i]);
 //               }
 
-               grid_view_adapter.filterMembers(arrayList,country_name.getSelectedItem().toString(), "Half Of Month");
-           }
-        }else{
-            Toast.makeText(getActivity(),"Select Country",Toast.LENGTH_SHORT).show();
-        }
-        }else{
-            Toast.makeText(getActivity(),"Select Days",Toast.LENGTH_SHORT).show();
+                    grid_view_adapter.filterMembers(arrayList,filter_country, "Half Of Month");
+                }
+             else if (day_no.getSelectedItem().toString().equals("Month")) {
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+                    Calendar cal = Calendar.getInstance();
+                    Date date = cal.getTime();
+                    String days;
+                    days = sdf.format(date);
+
+
+                    ArrayList<String> arrayList = new ArrayList<>();
+
+                    for (int i = 1; i < 30; i++) {
+                        cal.add(Calendar.DAY_OF_YEAR, -1);
+                        date = cal.getTime();
+                        days = sdf.format(date);
+                        arrayList.add(days);
+                    }
+
+
+//               for(int i = (days.length-1); i >= 0; i--){
+//                   System.out.println(days[i]);
+//               }
+
+                    grid_view_adapter.filterMembers(arrayList, filter_country, "Month");
+                }
+            } else {
+                    Toast.makeText(getActivity(), "Select Country", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+               Toast.makeText(getActivity(), "Select Days", Toast.LENGTH_SHORT).show();
         }
 
     }

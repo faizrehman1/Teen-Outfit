@@ -65,7 +65,7 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity" ;
+    private static final String TAG = "LoginActivity";
     private static final int REQUEST_READ_CONTACTS = 2;
     public TextView signUpText;
     public FragmentManager fragmentManager;
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginManager fbLoginMan;
     private CallbackManager callbackManager;
     private CheckBox checkBox;
-    private boolean remember_flag=false;
+    private boolean remember_flag = false;
     private static final int REQUEST_INTERNET = 200;
     private static final int PERMISSION_REQUEST_CODE = 1;
 
@@ -92,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}; // List of permissions required
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -112,265 +111,271 @@ public class LoginActivity extends AppCompatActivity {
         firebase = FirebaseDatabase.getInstance().getReference();
         checkBox = (CheckBox) findViewById(R.id.remember_me);
 
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Window window = LoginActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(LoginActivity.this, R.color.colorPrimaryDark));
-        permissionStatus = getSharedPreferences("permissionStatus",MODE_PRIVATE);
+        permissionStatus = getSharedPreferences("permissionStatus", MODE_PRIVATE);
 
 
+        if (Build.VERSION.SDK_INT >= 23) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            Window window = LoginActivity.this.getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(LoginActivity.this, R.color.colorPrimaryDark));
 
-//        if (Build.VERSION.SDK_INT >= 23) {
-//
 //            mayRequestContacts();
 //
-//        }
-            if (SharedPref.getCurrentUser(LoginActivity.this) != null) {
-                UserModel user = SharedPref.getCurrentUser(LoginActivity.this);
-                useremail.setText(user.getUser_email());
-                userpass.setText(user.getUser_password());
-            }
+        }
+        if (SharedPref.getCurrentUser(LoginActivity.this) != null) {
+            UserModel user = SharedPref.getCurrentUser(LoginActivity.this);
+            useremail.setText(user.getUser_email());
+            userpass.setText(user.getUser_password());
+        }
 
 
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        remember_flag = true;
-                    } else {
-                        remember_flag = false;
-                    }
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    remember_flag = true;
+                } else {
+                    remember_flag = false;
                 }
-            });
+            }
+        });
 
 
-            loginBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fbSignIn = false;
-                    final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Sign In", "Connecting...", true, false);
-                    String emails = useremail.getText().toString();
-                    String passo = userpass.getText().toString();
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbSignIn = false;
+                final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Sign In", "Connecting...", true, false);
+                String emails = useremail.getText().toString();
+                String passo = userpass.getText().toString();
 
 
-                    if (emails.length() == 0) {
-                        useremail.setError("This is Required Field");
-                        progressDialog.dismiss();
-                    } else if (passo.length() == 0 && passo.length() <= 6) {
-                        userpass.setError("This is Required Field");
-                        progressDialog.dismiss();
-                    } else {
-                        try {
+                if (emails.length() == 0) {
+                    useremail.setError("This is Required Field");
+                    progressDialog.dismiss();
+                } else if (passo.length() == 0 && passo.length() <= 6) {
+                    userpass.setError("This is Required Field");
+                    progressDialog.dismiss();
+                } else {
+                    try {
 
-                            mAuth.signInWithEmailAndPassword(emails, passo).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        AppLogs.logd("signInWithEmail:onComplete:" + task.isSuccessful());
-                                        Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                                        ///      openMainScreen();
-                                        progressDialog.dismiss();
+                        mAuth.signInWithEmailAndPassword(emails, passo).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    AppLogs.logd("signInWithEmail:onComplete:" + task.isSuccessful());
+                                    Toast.makeText(LoginActivity.this, "Login Successfully", Toast.LENGTH_SHORT).show();
+                                    ///      openMainScreen();
+                                    progressDialog.dismiss();
 
-                                        FirebaseHandler.getInstance().getUsersRef().child(task.getResult().getUser().getUid()).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot != null) {
-                                                    if (dataSnapshot.getValue() != null) {
-                                                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                                                        UserModel userModel1 = new UserModel(userModel.getUser_email(),userModel.getUser_password(),userModel.getUser_userID(),userModel.getUser_fname(),userModel.getUser_lname(),userModel.getUser_imgURL(),userModel.getUser_country(),userModel.getUser_gender());
-                                                        UserModel.myObj = userModel1;
+                                    FirebaseHandler.getInstance().getUsersRef().child(task.getResult().getUser().getUid()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot != null) {
+                                                if (dataSnapshot.getValue() != null) {
+                                                    UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                                                    UserModel userModel1 = new UserModel(userModel.getUser_email(), userModel.getUser_password(), userModel.getUser_userID(), userModel.getUser_fname(), userModel.getUser_lname(), userModel.getUser_imgURL(), userModel.getUser_country(), userModel.getUser_gender());
+                                                    UserModel.myObj = userModel1;
 
-                                                    }
                                                 }
                                             }
+                                        }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                            }
-                                        });
-                                                    } else if (!task.isSuccessful()) {
-                                        progressDialog.dismiss();
-                                        AppLogs.logw("signInWithEmail" + task.getException());
-                                        Toast.makeText(LoginActivity.this, "" + task.getException(),
-                                                Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } else if (!task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    AppLogs.logw("signInWithEmail" + task.getException());
+                                    Toast.makeText(LoginActivity.this, "" + task.getException(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        progressDialog.dismiss();
+                    }
+                }
+            }
+        });
+        fragmentManager = getSupportFragmentManager();
+
+
+        fbLogin.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View v) {
+                                           fbSignIn = true;
+                                           fbLoginMan.logInWithReadPermissions(LoginActivity.this, Arrays.asList("email",
+                                                   "public_profile", "user_location"));
+                                           fbLoginMan.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                                               @Override
+                                               public void onSuccess(LoginResult loginResult) {
+                                                   Toast.makeText(LoginActivity.this, "LoginSuccessfully Via Facebook", Toast.LENGTH_SHORT).show();
+
+                                                   AccessToken accessToken = loginResult.getAccessToken();
+
+                                                   Log.d("accessToken", " " + accessToken);
+
+
+                                                   profile = Profile.getCurrentProfile();
+
+
+                                                   GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+
+                                                       @Override
+                                                       public void onCompleted(JSONObject object, GraphResponse response) {
+                                                           try {
+                                                               Log.e("Graph Resp Json:", "" + object.toString());
+                                                               Log.e("Graph Resp Raw:", "" + response.getRawResponse());
+                                                               String token = AccessToken.getCurrentAccessToken().getToken();
+                                                               Log.e("Graph Token:", "" + token);
+
+                                                               String first_namefire = object.getString("first_name");
+                                                               Log.e("FirstName", "" + first_namefire);
+                                                               user.setUser_fname(first_namefire);
+                                                               String last_namefire = object.getString("last_name");
+                                                               Log.e("LastName", "" + last_namefire);
+                                                               user.setUser_lname(last_namefire);
+                                                               String emailfire = object.getString("email");
+                                                               Log.e("Email", "" + emailfire);
+                                                               user.setUser_email(emailfire);
+                                                               //        String birthdayfire = object.getString("birthday");
+
+                                                               //      Log.e("birthday", "" + birthdayfire);
+//                                    user.setDob(birthdayfire);
+                                                               JSONObject locationJson = object.getJSONObject("location");
+                                                               String location = locationJson.getString("name");
+                                                             //  String[] splitLocation = location.split(",");
+                                                               user.setUser_country(location);
+                                                               String genderfire = object.getString("gender");
+                                                               Log.e("gender :", "" + genderfire);
+                                                               user.setUser_gender(genderfire);
+                                                               String dpfire = Profile.getCurrentProfile().getProfilePictureUri(400, 400).toString();
+                                                               Log.e("Graph Dp:", "" + dpfire);
+                                                               user.setUser_imgURL(dpfire);
+
+
+                                                           } catch (Exception ex) {
+                                                               ex.printStackTrace();
+                                                           }
+                                                       }
+
+                                                   });
+
+                                                   Bundle parameters = new Bundle();
+                                                   String request_params = "id,name,gender,email,birthday";
+                                                   String old_req_params = "id, first_name, last_name, email,gender, birthday, location";
+                                                   parameters.putString("fields", old_req_params);
+                                                   request.setParameters(parameters);
+                                                   request.executeAsync();
+
+                                                   /////////////////FB user data save and Sign in END/////////////////////
+
+
+                                                   handleFacebookAccessToken(loginResult.getAccessToken());
+
+
+                                               }
+
+                                               @Override
+                                               public void onCancel() {
+                                                   fbSignIn = false;
+                                                   Log.d("TAG", "facebook:onCancel");
+                                               }
+
+                                               @Override
+                                               public void onError(FacebookException error) {
+                                                   fbSignIn = false;
+                                                   Toast.makeText(LoginActivity.this, "" + error, Toast.LENGTH_SHORT).show();
+                                                   Log.d("TAG", "facebook:onError " + error);
+                                               }
+                                           });
+
+                                       }
+                                   }
+        );
+
+
+        signUpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                fragmentManager.beginTransaction().add(R.id.container, new SignUp_Fragment()).addToBackStack(null).commit();
+
+
+            }
+        });
+
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                if (currentUser != null) {
+                    currentUser.getUid();
+
+                    if (fbSignIn) {
+                        /**
+                         * Face Book Auth
+                         * */
+                        user.setUser_userID(currentUser.getUid());
+                        user.setUser_password("");
+                        user.setUser_imgURL(currentUser.getPhotoUrl().toString());
+                        AppLogs.logd("Auth State User ID:" + currentUser.getUid());
+                        AppLogs.logd("Auth State User Email:" + currentUser.getEmail());
+                        AppLogs.logd("Auth State User PhotoUrl:" + currentUser.getPhotoUrl());
+                        AppLogs.logd("Auth State User Name:" + currentUser.getDisplayName());
+
+                        firebase.child("users").child(currentUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (remember_flag) {
+                                    SharedPref.setCurrentUser(LoginActivity.this, user);
+                                }
+                                UserModel.getInstance(user.getUser_email(),user.getUser_password(),user.getUser_userID(),user.getUser_fname()
+                                ,user.getUser_lname(),user.getUser_imgURL(),user.getUser_country(),user.getUser_gender());
+                                openMainScreen();
+                            }
+                        });
+                    } else {
+                        try {
+                            firebase.child("users").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    UserModel user = dataSnapshot.getValue(UserModel.class);
+//                                AppLogs.logd("User Logged In For My Auth:" + user.getEmail());
+                                    if (user != null) {
+                                        if (remember_flag) {
+                                            SharedPref.setCurrentUser(LoginActivity.this, user);
+                                        }
+                                        openMainScreen();
                                     }
                                 }
-                            });
 
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    AppLogs.loge("Error Logged In MYAUTH");
+
+                                }
+                            });
 
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            progressDialog.dismiss();
                         }
+
                     }
+                } else {
+                    AppLogs.loge("Auth Listener: User Not Signed In");
                 }
-            });
-            fragmentManager = getSupportFragmentManager();
 
-
-            fbLogin.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-                                               fbSignIn = true;
-                                               fbLoginMan.logInWithReadPermissions(LoginActivity.this, Arrays.asList("email",
-                                                       "user_birthday", "public_profile"));
-
-                                               fbLoginMan.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                                                   @Override
-                                                   public void onSuccess(LoginResult loginResult) {
-                                                       Toast.makeText(LoginActivity.this, "LoginSuccessfully Via Facebook", Toast.LENGTH_SHORT).show();
-
-                                                       AccessToken accessToken = loginResult.getAccessToken();
-
-                                                       Log.d("accessToken", " " + accessToken);
-
-
-                                                       profile = Profile.getCurrentProfile();
-
-
-                                                       GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-
-                                                           @Override
-                                                           public void onCompleted(JSONObject object, GraphResponse response) {
-                                                               try {
-                                                                   Log.e("Graph Resp Json:", "" + object.toString());
-                                                                   Log.e("Graph Resp Raw:", "" + response.getRawResponse());
-                                                                   String token = AccessToken.getCurrentAccessToken().getToken();
-                                                                   Log.e("Graph Token:", "" + token);
-
-                                                                   String first_namefire = object.getString("first_name");
-                                                                   Log.e("FirstName", "" + first_namefire);
-                                                                   user.setUser_fname(first_namefire);
-                                                                   String last_namefire = object.getString("last_name");
-                                                                   Log.e("LastName", "" + last_namefire);
-                                                                   user.setUser_lname(last_namefire);
-                                                                   String emailfire = object.getString("email");
-                                                                   Log.e("Email", "" + emailfire);
-                                                                   user.setUser_email(emailfire);
-                                                                   String birthdayfire = object.getString("birthday");
-                                                                   Log.e("birthday", "" + birthdayfire);
-//                                    user.setDob(birthdayfire);
-//                                    String genderfire = object.getString("gender");
-//                                    Log.e("gender :", "" + genderfire);
-//                                    user.setGender(genderfire);
-                                                                   String dpfire = Profile.getCurrentProfile().getProfilePictureUri(400, 400).toString();
-                                                                   Log.e("Graph Dp:", "" + dpfire);
-                                                                   user.setUser_imgURL(dpfire);
-
-
-                                                               } catch (Exception ex) {
-                                                                   ex.printStackTrace();
-                                                               }
-                                                           }
-
-                                                       });
-                                                       Bundle parameters = new Bundle();
-                                                       String request_params = "id,name,gender,email,birthday";
-                                                       String old_req_params = "id, first_name, last_name, email,gender, birthday, location";
-                                                       parameters.putString("fields", old_req_params);
-                                                       request.setParameters(parameters);
-                                                       request.executeAsync();
-
-                                                       /////////////////FB user data save and Sign in END/////////////////////
-
-
-                                                       handleFacebookAccessToken(loginResult.getAccessToken());
-
-
-                                                   }
-
-                                                   @Override
-                                                   public void onCancel() {
-                                                       fbSignIn = false;
-                                                       Log.d("TAG", "facebook:onCancel");
-                                                   }
-
-                                                   @Override
-                                                   public void onError(FacebookException error) {
-                                                       fbSignIn = false;
-                                                       Toast.makeText(LoginActivity.this, "" + error, Toast.LENGTH_SHORT).show();
-                                                       Log.d("TAG", "facebook:onError " + error);
-                                                   }
-                                               });
-
-                                           }
-                                       }
-            );
-
-
-            signUpText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    fragmentManager.beginTransaction().add(R.id.container, new SignUp_Fragment()).addToBackStack(null).commit();
-
-
-                }
-            });
-
-
-            mAuthListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                    if (currentUser != null) {
-                        currentUser.getUid();
-
-                        if (fbSignIn) {
-                            /**
-                             * Face Book Auth
-                             * */
-                            user.setUser_userID(currentUser.getUid());
-                            user.setUser_password("");
-                            user.setUser_imgURL(currentUser.getPhotoUrl().toString());
-                            AppLogs.logd("Auth State User ID:" + currentUser.getUid());
-                            AppLogs.logd("Auth State User Email:" + currentUser.getEmail());
-                            AppLogs.logd("Auth State User PhotoUrl:" + currentUser.getPhotoUrl());
-                            AppLogs.logd("Auth State User Name:" + currentUser.getDisplayName());
-
-                            firebase.child("users").child(currentUser.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    if (remember_flag) {
-                                        SharedPref.setCurrentUser(LoginActivity.this, user);
-                                    }
-                                    openMainScreen();
-                                }
-                            });
-                        } else {
-                            try {
-                                firebase.child("users").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        UserModel user = dataSnapshot.getValue(UserModel.class);
-//                                AppLogs.logd("User Logged In For My Auth:" + user.getEmail());
-                                        if (user != null) {
-                                            if (remember_flag) {
-                                                SharedPref.setCurrentUser(LoginActivity.this, user);
-                                            }
-                                            openMainScreen();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        AppLogs.loge("Error Logged In MYAUTH");
-
-                                    }
-                                });
-
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-
-                        }
-                    } else {
-                        AppLogs.loge("Auth Listener: User Not Signed In");
-                    }
-
-                }
-            };
-        }
+            }
+        };
+    }
 
 //    private boolean mayRequestContacts() {
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -409,8 +414,6 @@ public class LoginActivity extends AppCompatActivity {
 //    }
 
 
-
-
     public void handleFacebookAccessToken(AccessToken accessToken) {
         Log.d("TAG", "handleFacebookAccessToken: " + accessToken);
 
@@ -439,7 +442,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void openMainScreen() {
-        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -473,7 +476,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }

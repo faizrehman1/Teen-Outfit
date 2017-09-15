@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cont_name"
+    android:layout_width="220dp"
+    android:layout_height="45dp"
+    android:textColor="#fff"
+    android:text="Hello World"
+    android:textAlignment="center"
+    android:background="@drawable/dis_pref_button_edges_r"
+    android:padding="15dp"
+    android:textSize="10sp"
+    />

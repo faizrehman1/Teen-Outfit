@@ -5,7 +5,7 @@
     android:layout_height="35dp"
     android:textColor="#fff"
     android:text="Hello World"
-    android:background="@color/colorPrimary"
+    android:background="#70c2c2c2"
     android:paddingTop="10dp"
     android:paddingLeft="10dp"
     android:layout_margin="15dp"

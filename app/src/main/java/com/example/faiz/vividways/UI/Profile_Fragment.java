@@ -78,7 +78,7 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
                             if(dataSnapshot.getValue()!=null){
                                 UserModel userModel  = dataSnapshot.getValue(UserModel.class);
                                 Glide.with(getActivity()).load(userModel.getUser_imgURL()).placeholder(R.mipmap.placeholder).into(user_profile_img);
-                                user_name_profile.setText(userModel.getUser_fname()+" "+userModel.getUser_lname());
+                                user_name_profile.setText(userModel.getUser_fname()+" ("+userModel.getUser_gender()+")");
                                 user_city.setText(userModel.getUser_country());
                             }
                         }

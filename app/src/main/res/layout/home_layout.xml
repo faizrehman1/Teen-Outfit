@@ -5,12 +5,43 @@
     android:background="#fff"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="6dp"
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+
         />
 
+                      <!---->
 
+            <LinearLayout
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+
+                android:id="@+id/leave_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/leaveit_btn"
+
+                />
+
+            <Button
+                android:id="@+id/take_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@mipmap/takeit_btn" />
+            </LinearLayout>
+
+
+    </RelativeLayout>
 </LinearLayout>
+

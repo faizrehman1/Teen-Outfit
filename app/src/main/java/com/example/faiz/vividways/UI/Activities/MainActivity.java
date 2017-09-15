@@ -2,10 +2,9 @@ package com.example.faiz.vividways.UI.Activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -16,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,17 +25,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.faiz.vividways.Models.FilterItem;
+import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.R;
+import com.example.faiz.vividways.Service.MyReciever;
+import com.example.faiz.vividways.Service.NotificationServices;
 import com.example.faiz.vividways.UI.Home_Fragment;
 import com.example.faiz.vividways.UI.Notification_Fragment;
 import com.example.faiz.vividways.UI.Profile_Fragment;
 import com.example.faiz.vividways.UI.Setting_Fragment;
 import com.example.faiz.vividways.UI.Top_Fragment;
+import com.example.faiz.vividways.Utils.AppLogs;
 import com.example.faiz.vividways.Utils.FirebaseHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity getInstance() {
         return mainActivity;
     }
-
+    Toolbar toolbar;
+    private MyReciever receiver;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -64,8 +70,14 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
 
 
-        if (Build.VERSION.SDK_INT >= 23) {
+        if(Build.VERSION.SDK_INT >=20){
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            Window window = MainActivity.this.getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimaryDark));
 
+        }
+
+        if (Build.VERSION.SDK_INT >= 23) {
             mayRequestContacts();
 
         }
@@ -73,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //        BottomNavigationView bottomNavigationView = (BottomNavigationView)
 //                findViewById(R.id.bottom_navigation);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_home);
+         toolbar = (Toolbar) findViewById(R.id.toolbar_home);
         setSupportActionBar(toolbar);
 
         appbar_TextView = (TextView) findViewById(R.id.main_appbar_textView);
@@ -84,11 +96,9 @@ public class MainActivity extends AppCompatActivity {
         //   Window window = getWindow();
         // clear FLAG_TRANSLUCENT_STATUS flag:
         //  window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Window window = MainActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimaryDark));
 
-
+        updateLastSeen();
+        receiver = new MyReciever();
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +109,14 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().popBackStack();
             }
         });
+
+
+     //   registerReceiver(receiver, new IntentFilter("android.intent.action.BOOT_COMPLETED"));
+    //    Intent intent = new Intent(this,MyReciever.class);
+      //  sendBroadcast(intent);
+      //  Intent intent1 = new Intent(MainActivity.this,NotificationServices.class);
+      //  startService(intent1);
+
 
         menu_bar = (LinearLayout) findViewById(R.id.menu_bar);
         home_view = (LinearLayout) findViewById(R.id.home_view);
@@ -365,5 +383,46 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this,"Please Allow Storage ..",Toast.LENGTH_SHORT).show();
         }
 
+    }
+    public void hideToolbar(){
+       // setSupportActionBar(toolbar);
+        if(getSupportActionBar()!=null) {
+            getSupportActionBar().hide();
+        Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(MainActivity.this,"World",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void updateLastSeen() {
+        if(UserModel.getInstanceIfNotNull()==null){
+           // AppLogs.d(updateLastSeen","user null");
+            return;
+        }
+
+        HashMap<String, Object> serverTime = new HashMap<>();
+        serverTime.put("timestamp", ServerValue.TIMESTAMP);
+        String userID = UserModel.getInstanceIfNotNull().getUser_userID();
+        if(userID!=null) {
+            AppLogs.v("Notification last seen updated", serverTime.toString());
+            FirebaseHandler.getInstance().getActivitiesSeenByUser().child(userID).setValue(serverTime);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        startService(new Intent(MainActivity.this, NotificationServices.class));
+       // LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+        //        new IntentFilter(BCom));
+      //  LocalBroadcastManager.getInstance(this).registerReceiver(receiver,);
+
+    }
+
+    @Override
+    protected void onStop() {
+     //   unregisterReceiver(receiver);
+     //   LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 }

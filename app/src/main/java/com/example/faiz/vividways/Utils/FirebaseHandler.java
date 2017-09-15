@@ -23,6 +23,7 @@ public class FirebaseHandler  {
     private FirebaseAuth authData;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private StorageReference mfirebaseStorage;
+    private DatabaseReference activities_seen_by_user;
 
 
 
@@ -56,6 +57,7 @@ public class FirebaseHandler  {
         user_postRef = firebaseRef.child("user-post");
         user_takeit_or_leaveit_post = firebaseRef.child("user-take-or-leave-post");
         user_privacy = firebaseRef.child("users-privacy");
+        activities_seen_by_user = firebaseRef.child("activities-seen-by-user");
        // user_takeit_post = firebaseRef.child("user-takeit-post");
     }
 
@@ -81,5 +83,10 @@ public class FirebaseHandler  {
 
     public DatabaseReference getUser_privacy() {
         return user_privacy;
+    }
+
+    public DatabaseReference getActivitiesSeenByUser() {
+
+        return activities_seen_by_user;
     }
 }

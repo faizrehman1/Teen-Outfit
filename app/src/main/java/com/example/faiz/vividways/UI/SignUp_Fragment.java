@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.StaticLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -86,6 +90,8 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
             "Female",
     };
 
+    public static final String constantImageURL = "https://firebasestorage.googleapis.com/v0/b/luminous-torch-4640.appspot.com/o/defaults%2Fuser.png?alt=media&token=5430f4a2-d3f0-4cd1-9149-49938181dcb2";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,7 +119,19 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
         spinner_country=(Spinner)rootView.findViewById(R.id.country_signup_spin);
         spinner_gender=(Spinner)rootView.findViewById(R.id.country_signup_gender);
 
-        ArrayAdapter<String> adapter_country = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner, country_array);
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String country;
+        for( Locale loc : locale ){
+            country = loc.getDisplayCountry();
+            if( country.length() > 0 && !countries.contains(country) ){
+                countries.add( country );
+            }
+        }
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
+
+        ArrayAdapter<String> adapter_country = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner, countries);
         spinner_country.setAdapter(adapter_country);
 
         ArrayAdapter<String> adapter_gender = new ArrayAdapter<String>(getActivity(),R.layout.custom_spinner, gender_array);
@@ -148,9 +166,12 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                 //Checking the length of pasword while registering new USER;
                 else if (pass.length() <= 6) {
                     main(pass);
-                } else if(imageURL==null) {
-                    Toast.makeText(getActivity(),"Upload Image",Toast.LENGTH_SHORT).show();
-                }else{
+                }
+
+               // else if(imageURL==null) {
+                //    Toast.makeText(getActivity(),"Upload Image",Toast.LENGTH_SHORT).show();
+              //  }
+                else{
                     try {
                         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "Sign Up", "Connecting...", true, false);
 
@@ -161,7 +182,7 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
                                         String uid = mAuth.getCurrentUser().getUid();
                                         String user_country = spinner_country.getSelectedItem().toString();
                                         String user_gender = spinner_gender.getSelectedItem().toString();
-                                            firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass,uid, fname.getText().toString(), lname.getText().toString(),imageURL,user_country,user_gender));
+                                            firebase.child("users").child(uid).setValue(new UserModel(email.getText().toString(), pass,uid, fname.getText().toString(), lname.getText().toString(),constantImageURL,user_country,user_gender));
                                         FirebaseHandler.getInstance().getUser_privacy()
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                 .setValue(new FilterItem("", ""));
@@ -196,13 +217,13 @@ public class SignUp_Fragment extends android.support.v4.app.Fragment {
         });
 
 
-        profile_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, Browse_image);
-            }
-        });
+     //   profile_image.setOnClickListener(new View.OnClickListener() {
+     //       @Override
+     //       public void onClick(View v) {
+    //            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+       //         startActivityForResult(i, Browse_image);
+     //       }
+     //   });
 
 
 
