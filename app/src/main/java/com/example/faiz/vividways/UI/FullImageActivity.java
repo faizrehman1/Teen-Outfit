@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.example.faiz.vividways.Models.ItemObject;
 import com.example.faiz.vividways.R;
 import com.example.faiz.vividways.UI.Activities.SplashActivity;
 
@@ -38,8 +40,11 @@ public class FullImageActivity extends AppCompatActivity {
     //    } catch (FileNotFoundException e) {
       //      e.printStackTrace();
     //    }
-        byte[] bytes = getIntent().getByteArrayExtra("img");
-        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        imageView.setImageBitmap(bmp);
+        //byte[] bytes = getIntent().getByteArrayExtra("img");
+       // Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+        ItemObject itemObject = getIntent().getParcelableExtra("img");
+        Glide.with(FullImageActivity.this).load(itemObject.getItemImageURl()).asBitmap().placeholder(R.mipmap.placeholder).into(imageView);
+       // imageView.setImageBitmap(bmp);
     }
 }

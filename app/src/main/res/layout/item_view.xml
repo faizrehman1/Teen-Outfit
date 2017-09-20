@@ -77,10 +77,11 @@
                 </RelativeLayout>
 
                 <TextView
+                    android:textDirection="ltr"
                     android:gravity="center"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/caption_item"
-                    android:text="Lorem ipsum dolor sit amet,por incididunt ut labore et dolorasdasdx zc"
+                    android:text="ديمقراطيةديمقراطيةديمقراطية ديمقراطية ديمقراطية ديمقراطية  اطية ديمقراطية ديمقراطية ديمقراطية   zc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

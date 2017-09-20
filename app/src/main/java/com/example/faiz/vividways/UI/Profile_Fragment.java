@@ -79,7 +79,16 @@ public class Profile_Fragment extends android.support.v4.app.Fragment {
                                 UserModel userModel  = dataSnapshot.getValue(UserModel.class);
                                 Glide.with(getActivity()).load(userModel.getUser_imgURL()).placeholder(R.mipmap.placeholder).into(user_profile_img);
                                 user_name_profile.setText(userModel.getUser_fname()+" ("+userModel.getUser_gender()+")");
-                                user_city.setText(userModel.getUser_country());
+                                String[] split_user_country =userModel.getUser_country().replace(" ","").split(",");
+                                String tempCountry = "";
+                                if(split_user_country.length == 3){
+                                    tempCountry = split_user_country[2];
+                                }else if(split_user_country.length == 2){
+                                    tempCountry = split_user_country[1];
+                                }else{
+                                    tempCountry = split_user_country[0];
+                                }
+                                user_city.setText(tempCountry);
                             }
                         }
                     }

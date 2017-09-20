@@ -10,8 +10,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
@@ -26,17 +30,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.faiz.vividways.Adapters.OnSwipeTouchListener;
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
 import com.example.faiz.vividways.Models.FilterItem;
@@ -65,6 +73,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Faiz on 7/20/2017.
@@ -106,6 +116,13 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     public int i=0;
     private Camera camera;
    // private CameraPreview mPreview;
+   public float firstItemWidthDate;
+    public float paddingDate;
+    public float itemWidthDate;
+    public int allPixelsDate;
+    public int finalWidthDate;
+    int counter = 0;
+    int dummyPosition = 0;
 
 
     @Nullable
@@ -147,10 +164,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         MainActivity.delete_image.setVisibility(View.GONE);
         MainActivity.report_image.setVisibility(View.GONE);
         //    Toast.makeText(getActivity(),"Your Location : \n California City, California",Toast.LENGTH_SHORT).show();
-        my_recycler_view.setOnFlingListener(snapHelper);
-        my_recycler_view.setHasFixedSize(true);
-        my_recycler_view.stopNestedScroll();
-        my_recycler_view.stopScroll();
+    //    my_recycler_view.setOnFlingListener(snapHelper);
+      //  my_recycler_view.setHasFixedSize(true);
+      //  my_recycler_view.stopNestedScroll();
+     //   my_recycler_view.stopScroll();
         userModel = new UserModel();
         filterItemObj = new FilterItem();
         adapter = new SectionListDataAdapter(getActivity(), imageURL);
@@ -163,15 +180,145 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
      //   scrollingLinearLayout.setSmoothScrollbarEnabled(false);
         //  my_recycler_view.setLayoutManager(layoutManager);
         my_recycler_view.setAdapter(adapter);
-      //  firstVisibleInListview = layoutManager.findFirstVisibleItemPosition();
-     //   my_recycler_view.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-       //     @Override
-     //       public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                // Stop only scrolling.
-     //           return rv.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING;
-     //       }
-     //   });
+//        firstVisibleInListview = layoutManager.findFirstVisibleItemPosition();
+//        my_recycler_view.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+//            @Override
+//            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+//                 //Stop only scrolling.
+//                return rv.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING;
+//            }
+//        });
 
+
+
+
+        adapter.notifyDataSetChanged();
+
+        my_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                int center = recyclerView.getWidth() / 2;
+                View centerView = recyclerView.findChildViewUnder(center, recyclerView.getTop());
+                position = recyclerView.getChildAdapterPosition(centerView);
+                if(position==counter){
+
+                }else {
+                    counter = position;
+                    //     dummyPosition = position;
+
+                    if (position == dummyPosition + 1) {
+                        Toast.makeText(getActivity(), "Like", Toast.LENGTH_SHORT).show();
+                               dummyPosition = position;
+                        //      }else if(position==dummyPosition--){
+                        //      Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
+                        //
+                        if(position==0){
+
+                        }else{
+                            position = position-1;
+                        }
+                        int takit_count = 0;
+                        AppLogs.d(TAG, imageURL.get(position).getTakeit_count() + "");
+                        takit_count = imageURL.get(position).getTakeit_count() + 1;
+                        imageURL.get(position).setTakeit_count(takit_count);
+                        final int finalTakit_count = takit_count;
+                        FirebaseHandler.getInstance().getPostRef()
+                                .child(String.valueOf(imageURL.get(position).getItemID()))
+                                .child("takeit_count")
+                                .setValue(takit_count, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//
+                                        //  ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
+
+                                        FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("take_it_check").setValue(true);
+                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("take_it_check").setValue(true);
+                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("takeit_count").setValue(finalTakit_count);
+
+                                  //      imageURL.remove(0);
+
+
+                                        FirebaseHandler.getInstance().getUser_leaveit_post()
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+                                                .child("user-take-posts")
+                                                .child(imageURL.get(position).getItemID())
+                                                .setValue(new ItemObject(imageURL.get(position).getItemID(), imageURL.get(position).getItemImageURl(), true,
+                                                        imageURL.get(position).isLeave_it_check(), imageURL.get(position).getUserID(), imageURL.get(position).getCaption(),
+                                                        imageURL.get(position).getLeaveit_count(), imageURL.get(position).getTakeit_count(), imageURL.get(position).getCountry(),
+                                                        imageURL.get(position).getCan_see(), System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
+
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                  }
+                                                });
+                                    }
+                                });
+
+                    } else if (position == dummyPosition - 1) {
+                        dummyPosition = position;
+
+                              Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
+                        int leave_it_count=0;
+                        //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+                        AppLogs.d(TAG,imageURL.get(position).leaveit_count+"");
+                        //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+                        AppLogs.d(TAG,imageURL.get(position).getLeaveit_count()+"");
+                        leave_it_count = imageURL.get(position).getLeaveit_count()+1;
+                        imageURL.get(position).setLeaveit_count(leave_it_count);
+                        final int finalLeave_it_count = leave_it_count;
+                        FirebaseHandler.getInstance().getPostRef()
+                                .child(String.valueOf(imageURL.get(position).getItemID()))
+                                .child("leaveit_count")
+                                .setValue(leave_it_count, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                                        //      ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
+
+                                        FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("leave_it_check").setValue(true);
+                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leave_it_check").setValue(true);
+                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leaveit_count").setValue(finalLeave_it_count);
+
+                                  //      imageURL.remove(0);
+
+
+                                        FirebaseHandler.getInstance().getUser_leaveit_post()
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+                                                .child("user-leave-posts")
+                                                .child(imageURL.get(position).getItemID())
+                                                .setValue(new ItemObject(imageURL.get(position).getItemID(),
+                                                        imageURL.get(position).getItemImageURl(),imageURL.get(position).isTake_it_check(),
+                                                        true, imageURL.get(position).getUserID(),imageURL.get(position).getCaption(),
+                                                        imageURL.get(position).getLeaveit_count(),imageURL.get(position).getTakeit_count(),
+                                                        imageURL.get(position).getCountry(),imageURL.get(position).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+
+                                                    }
+                                                });
+                                    }
+                                });
+
+                        //      Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+
+            }
+        });
+        //setUpItemTouchHelper();
+      //  setUpAnimationDecoratorHelper();
+     //   my_recycler_view.setOnTouchListener(simpleItemTouchCallback);
 
 
         leave_btn.setOnClickListener(new View.OnClickListener() {
@@ -183,42 +330,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
             //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i--);
 //                counterOne++;
 //
-//                int leave_it_count=0;
-//                //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
-//                AppLogs.d(TAG,imageURL.get(position).leaveit_count+"");
-//            //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
-//                AppLogs.d(TAG,imageURL.get(position).getLeaveit_count()+"");
-//                leave_it_count = imageURL.get(position).getLeaveit_count()+1;
-//                imageURL.get(position).setLeaveit_count(leave_it_count);
-//                final int finalLeave_it_count = leave_it_count;
-//                FirebaseHandler.getInstance().getPostRef()
-//                        .child(String.valueOf(imageURL.get(position).getItemID()))
-//                        .child("leaveit_count")
-//                        .setValue(leave_it_count, new DatabaseReference.CompletionListener() {
-//                            @Override
-//                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//
-//                                //      ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
-//                                FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("leave_it_check").setValue(true);
-//                                FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leave_it_check").setValue(true);
-//                                FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leaveit_count").setValue(finalLeave_it_count);
-//
-//                                FirebaseHandler.getInstance().getUser_leaveit_post()
-//                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
-//                                        .child("user-leave-posts")
-//                                        .child(imageURL.get(position).getItemID())
-//                                        .setValue(new ItemObject(imageURL.get(position).getItemID(),
-//                                                imageURL.get(position).getItemImageURl(),imageURL.get(position).isTake_it_check(),
-//                                                true, imageURL.get(position).getUserID(),imageURL.get(position).getCaption(),
-//                                                imageURL.get(position).getLeaveit_count(),imageURL.get(position).getTakeit_count(),
-//                                                imageURL.get(position).getCountry(),imageURL.get(position).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
-//                                            @Override
-//                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                            }
-//                                        });
-//                            }
-//                        });
-//
+
 //
 
 
@@ -234,39 +346,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //                int takit_count = 0;
              //   Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i++);
 //                if (imageURL.size() > 0) {
-//                    AppLogs.d(TAG, imageURL.get(position).getTakeit_count() + "");
-//                    takit_count = imageURL.get(position).getTakeit_count() + 1;
-//                    imageURL.get(position).setTakeit_count(takit_count);
-//                    final int finalTakit_count = takit_count;
-//                    FirebaseHandler.getInstance().getPostRef()
-//                            .child(String.valueOf(imageURL.get(position).getItemID()))
-//                            .child("takeit_count")
-//                            .setValue(takit_count, new DatabaseReference.CompletionListener() {
-//                                @Override
-//                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-////
-//                                    //  ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
-//                                    FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("take_it_check").setValue(true);
-//                                    FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("take_it_check").setValue(true);
-//                                    FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("takeit_count").setValue(finalTakit_count);
-//
-//                                    FirebaseHandler.getInstance().getUser_leaveit_post()
-//                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
-//                                            .child("user-take-posts")
-//                                            .child(imageURL.get(position).getItemID())
-//                                            .setValue(new ItemObject(imageURL.get(position).getItemID(), imageURL.get(position).getItemImageURl(), true,
-//                                                    imageURL.get(position).isLeave_it_check(), imageURL.get(position).getUserID(), imageURL.get(position).getCaption(),
-//                                                    imageURL.get(position).getLeaveit_count(), imageURL.get(position).getTakeit_count(), imageURL.get(position).getCountry(),
-//                                                    imageURL.get(position).getCan_see(), System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
-//
-//                                                @Override
-//                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                                    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(counterOne + 1);
-//                                                    counterOne++;
-//                                                }
-//                                            });
-//                                }
-//                            });
+
 
 //                }
             }
@@ -799,4 +879,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
     }
+
+
+
+
 }

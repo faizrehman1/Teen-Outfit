@@ -50,7 +50,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
      public MainActivity mainActivity;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private int selectedItem = -1;
 
+    public int position;
 
 
     public SectionListDataAdapter(Context context, ArrayList<ItemObject> itemsList) {
@@ -184,7 +186,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                     bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] bytes = stream.toByteArray();
                     Intent intent = new Intent(mContext, FullImageActivity.class);
-                    intent.putExtra("img", bytes);
+                    intent.putExtra("img", itemsList.get(i));
                     mContext.startActivity(intent);
                 }catch(Exception e){
                     e.printStackTrace();

@@ -190,8 +190,14 @@ public class Top_Fragment extends android.support.v4.app.Fragment {
                                 if (UserModel.getInstanceIfNotNull().getUser_country() != null) {
                                     filter_country = UserModel.getInstanceIfNotNull().getUser_country();
                                     String[] splitLocation = UserModel.getInstanceIfNotNull().getUser_country().split(",");
-                                    filter_country = splitLocation[1];
-                                    // country_name.setSelection();
+                                    if (splitLocation.length == 3) {
+                                        filter_country = splitLocation[2];
+                                    } else if (splitLocation.length == 2) {
+                                        filter_country = splitLocation[1];
+                                        // country_name.setSelection();
+                                    } else {
+                                        filter_country = splitLocation[0];
+                                    }
                                 }
                             }
                         } else if (country_name.getSelectedItem().toString().equals("The World")) {
