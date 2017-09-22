@@ -40,18 +40,19 @@ import com.google.firebase.database.DatabaseReference;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder> {
 
     private static final String TAG = "SectionAdapter";
-    private ArrayList<ItemObject> itemsList;
+    public static ArrayList<ItemObject> itemsList;
     private Context mContext;
     private ImageView imageView;
      public MainActivity mainActivity;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private int selectedItem = -1;
-
+    public  int pos = 0;
     public int position;
 
 
@@ -68,35 +69,57 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     }
 
     @Override
-    public void onBindViewHolder(final SingleItemRowHolder holder, final int i) {
+    public long getItemId(int position) {
+        return position;
+    }
 
-          mainActivity = (MainActivity) mContext;
-        ItemObject singleItem = itemsList.get(i);
-     //   Home_Fragment.getInstance().position = i;
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
+
+    public void SetPostion(int pos){
+        this.pos = pos;
+    }
+
+    @Override
+    public void onBindViewHolder(final SingleItemRowHolder holder, int i) {
+
+        mainActivity = (MainActivity) mContext;
+
+      //  if (itemsList.size() > 0) {
+
+       //     i = i % itemsList.size();
+
+            ItemObject singleItem;
+            singleItem = itemsList.get(i);
+
+
+            //   Home_Fragment.getInstance().position = i;
 
 
 //        holder.tvTitle.setBackgroundResource(R.mipmap.hanger_img);
-        AppLogs.e("Image Ka URL",singleItem.getItemImageURl());
+            AppLogs.e("Image Ka URL", singleItem.getItemImageURl());
 
-        holder.takeIT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(),"Take IT", Toast.LENGTH_SHORT).show();
-                openListFragment(mContext,true,itemsList,i);
 
-            }
-        });
+            holder.takeIT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(), "Take IT", Toast.LENGTH_SHORT).show();
+                    openListFragment(mContext, true, itemsList, 0);
 
-        holder.leaveIT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(),"Leave IT", Toast.LENGTH_SHORT).show();
-                openListFragment(mContext, false, itemsList,i);
+                }
+            });
 
-            }
-        });
+            holder.leaveIT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(), "Leave IT", Toast.LENGTH_SHORT).show();
+                    openListFragment(mContext, false, itemsList, 0);
 
+                }
+            });
 
 
 //        holder.take_btn.setOnClickListener(new View.OnClickListener() {
@@ -150,27 +173,28 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 //            }
 //        });
 
-        holder.itemImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            final int finalI = i;
+            holder.itemImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-           //     BitmapDrawable drawable = (BitmapDrawable) holder.itemImage.getDrawable();
-           //     Bitmap bitmap = drawable.getBitmap();
-           //     Bitmap bmap = holder.itemImage.getDrawingCache();
-         //       Bitmap bmp = ((GlideBitmapDrawable)holder.itemImage.getDrawable().getCurrent()).getBitmap();
-                Bitmap bm=((BitmapDrawable)holder.itemImage.getDrawable()).getBitmap();
-          //      Bitmap bitmap = ((BitmapDrawable)holder.wallPaperImageView.getDrawable()).getBitmap();
-         //       Bitmap bimap = ((BitmapDrawable)holder.itemImage.getDrawable()).getBitmap();
-            //    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-              //  View view = ((MainActivity) mContext).getLayoutInflater().inflate(R.layout.full_image_view,null);
-             //   LayoutInflater inflater = LayoutInflater.from(mContext);
-             //   View view = inflater.inflate(R.layout.full_image_view, null);
-             //   ImageView full_img = (ImageView) view.findViewById(R.id.full_img);
-              //  full_img.setBackground(bm);
-              //  full_img.setImageBitmap(bm);
+                    //     BitmapDrawable drawable = (BitmapDrawable) holder.itemImage.getDrawable();
+                    //     Bitmap bitmap = drawable.getBitmap();
+                    //     Bitmap bmap = holder.itemImage.getDrawingCache();
+                    //       Bitmap bmp = ((GlideBitmapDrawable)holder.itemImage.getDrawable().getCurrent()).getBitmap();
+                    Bitmap bm = ((BitmapDrawable) holder.itemImage.getDrawable()).getBitmap();
+                    //      Bitmap bitmap = ((BitmapDrawable)holder.wallPaperImageView.getDrawable()).getBitmap();
+                    //       Bitmap bimap = ((BitmapDrawable)holder.itemImage.getDrawable()).getBitmap();
+                    //    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    //  View view = ((MainActivity) mContext).getLayoutInflater().inflate(R.layout.full_image_view,null);
+                    //   LayoutInflater inflater = LayoutInflater.from(mContext);
+                    //   View view = inflater.inflate(R.layout.full_image_view, null);
+                    //   ImageView full_img = (ImageView) view.findViewById(R.id.full_img);
+                    //  full_img.setBackground(bm);
+                    //  full_img.setImageBitmap(bm);
 
-              //  builder.setView(view);
-            //    builder.create().show();
+                    //  builder.setView(view);
+                    //    builder.create().show();
 
 
 //                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -179,55 +203,60 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 //                SharedPreferences preferences = mContext.getSharedPreferences("img", Context.MODE_PRIVATE);
 //                preferences.edit().putString("img",bm).apply();
 //                editor.commit();
-            //  String s= createImageFromBitmap(bm);
+                    //  String s= createImageFromBitmap(bm);
 
-                try {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] bytes = stream.toByteArray();
-                    Intent intent = new Intent(mContext, FullImageActivity.class);
-                    intent.putExtra("img", itemsList.get(i));
-                    mContext.startActivity(intent);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+                    try {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+                        Intent intent = new Intent(mContext, FullImageActivity.class);
+                        intent.putExtra("img", itemsList.get(finalI));
+                        mContext.startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
 
-          //      Bundle bundle = new Bundle();
-          //      bundle.putParcelable("img",bm);
-            //    Full_Image_Fragment statistic_fragment = new Full_Image_Fragment();
-            //    statistic_fragment.setArguments(bundle);
-             //   FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
-              //          .beginTransaction();
-              //  mainActivity.Uploadbutton.setVisibility(View.GONE);
-             //   mainActivity.getSupportActionBar().hide();
+                    //      Bundle bundle = new Bundle();
+                    //      bundle.putParcelable("img",bm);
+                    //    Full_Image_Fragment statistic_fragment = new Full_Image_Fragment();
+                    //    statistic_fragment.setArguments(bundle);
+                    //   FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
+                    //          .beginTransaction();
+                    //  mainActivity.Uploadbutton.setVisibility(View.GONE);
+                    //   mainActivity.getSupportActionBar().hide();
 //                mainActivity.appbar_TextView.setText("Statistic");
 //                MainActivity.back_image.setVisibility(View.VISIBLE);
 //                MainActivity.delete_image.setVisibility(View.VISIBLE);
 //                MainActivity.report_image.setVisibility(View.VISIBLE);
-              //  ft.replace(R.id.fragment_container,statistic_fragment);
-              //  ft.addToBackStack("");
-              //  ft.commit();
-            }
-        });
+                    //  ft.replace(R.id.fragment_container,statistic_fragment);
+                    //  ft.addToBackStack("");
+                    //  ft.commit();
+                }
+            });
 
 
-        Glide.with(mContext).load(singleItem.getItemImageURl()).asBitmap().placeholder(R.mipmap.placeholder).into(holder.itemImage);
-        holder.take_num.setText(String.valueOf(singleItem.getTakeit_count()));
-        holder.leave_num.setText(String.valueOf(singleItem.getLeaveit_count()));
-   //     holder.caption.setText(singleItem.getCaption());
+            Glide.with(mContext).load(singleItem.getItemImageURl()).asBitmap().placeholder(R.mipmap.placeholder).into(holder.itemImage);
+            holder.take_num.setText(String.valueOf(singleItem.getTakeit_count()));
+            holder.leave_num.setText(String.valueOf(singleItem.getLeaveit_count()));
+            holder.caption.setText(singleItem.getCaption());
        /* Glide.with(mContext)
                 .load(feedItem.getImageURL())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .error(R.drawable.bg)
                 .into(feedListRowHolder.thumbView);*/
+            //}
+    //    }
     }
-
     @Override
     public int getItemCount() {
-        return itemsList.size();
+
+            return itemsList.size();
+
     }
+
+
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
@@ -235,7 +264,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         protected LinearLayout leaveIT,takeIT;
         protected ImageView itemImage;
         protected Button leave_btn,take_btn;
-        private TextView leave_num,take_num;
+        private TextView leave_num,take_num,caption;
 
         public SingleItemRowHolder(View view) {
             super(view);
@@ -247,7 +276,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
             this.leaveIT =(LinearLayout)view.findViewById(R.id.itemleave);
             this.takeIT =(LinearLayout)view.findViewById(R.id.itemtake);
-         //   this.caption = (TextView)view.findViewById(R.id.caption_item);
+            this.caption = (TextView)view.findViewById(R.id.caption_item);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

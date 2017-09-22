@@ -10,12 +10,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
@@ -30,21 +26,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.faiz.vividways.Adapters.OnSwipeTouchListener;
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
 import com.example.faiz.vividways.Models.FilterItem;
@@ -70,11 +62,8 @@ import com.soundcloud.android.crop.Crop;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Faiz on 7/20/2017.
@@ -123,6 +112,13 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     public int finalWidthDate;
     int counter = 0;
     int dummyPosition = 0;
+    ScrollingLinearLayout scrollingLinearLayout;
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    public boolean flag = false;
+    public String tempCaption;
+    public int index=10;
+    public Intent intent;
 
 
     @Nullable
@@ -135,6 +131,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         take_btn = (Button) view.findViewById(R.id.take_btn);
         mAuth = FirebaseAuth.getInstance();
         firebase = FirebaseDatabase.getInstance().getReference();
+
 
         Display display =getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -163,11 +160,17 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         MainActivity.back_image.setVisibility(View.GONE);
         MainActivity.delete_image.setVisibility(View.GONE);
         MainActivity.report_image.setVisibility(View.GONE);
+
+       // LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+
+      //  recyclerView.setLayoutManager(mLayoutManager);
+
         //    Toast.makeText(getActivity(),"Your Location : \n California City, California",Toast.LENGTH_SHORT).show();
     //    my_recycler_view.setOnFlingListener(snapHelper);
       //  my_recycler_view.setHasFixedSize(true);
       //  my_recycler_view.stopNestedScroll();
      //   my_recycler_view.stopScroll();
+
         userModel = new UserModel();
         filterItemObj = new FilterItem();
         adapter = new SectionListDataAdapter(getActivity(), imageURL);
@@ -175,11 +178,22 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         int duration = getResources().getInteger(R.integer.scroll_duration);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
      //   my_recycler_view.setLayoutManager();
-        ScrollingLinearLayout scrollingLinearLayout  = new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration);
-         my_recycler_view.setLayoutManager(scrollingLinearLayout);
+         scrollingLinearLayout  = new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration);
+//        scrollingLinearLayout.setReverseLayout(true);
+//        scrollingLinearLayout.setStackFromEnd(true);
+
+
+
+        my_recycler_view.setLayoutManager(scrollingLinearLayout);
+
+
+
+
      //   scrollingLinearLayout.setSmoothScrollbarEnabled(false);
+
         //  my_recycler_view.setLayoutManager(layoutManager);
         my_recycler_view.setAdapter(adapter);
+    //    scrollingLinearLayout.scrollToPosition(Integer.MAX_VALUE / 2);
 //        firstVisibleInListview = layoutManager.findFirstVisibleItemPosition();
 //        my_recycler_view.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
 //            @Override
@@ -192,34 +206,85 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
 
 
-        adapter.notifyDataSetChanged();
+     //   adapter.notifyDataSetChanged();
+
+//        my_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(dx < 0) //check for scroll down
+//                {
+//                    visibleItemCount = scrollingLinearLayout.getChildCount();
+//                    totalItemCount = scrollingLinearLayout.getItemCount();
+//                    pastVisiblesItems = scrollingLinearLayout.findFirstVisibleItemPosition();
+//
+//                    if (loading)
+//                    {
+//                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
+//                        {
+//                            loading = false;
+//                            Log.v("...", "Last Item Wow !");
+//                            //Do pagination.. i.e. fetch new data
+//                        }
+//                    }
+//                }
+//            }
+//
+//        });
+
 
         my_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(final RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
+     //           TextView caption = (TextView) recyclerView.findViewById(R.id.caption_item);
+//                AppLogs.d("", caption.getText().toString());
                 int center = recyclerView.getWidth() / 2;
                 View centerView = recyclerView.findChildViewUnder(center, recyclerView.getTop());
                 position = recyclerView.getChildAdapterPosition(centerView);
-                if(position==counter){
 
-                }else {
-                    counter = position;
-                    //     dummyPosition = position;
 
+                //my_recycler_view.scrollToPosition(index);
+                //index--;
+//                if(!flag){
+//                    tempCaption = caption.getText().toString();
+//                    for (ItemObject itemObject : imageURL) {
+//                        if(itemObject.getCaption().equals(tempCaption)) {
+//                            imageURL.remove(itemObject);
+//                            break;
+//                        }
+//                    }
+//                    adapter.notifyDataSetChanged();
+//                flag = true;
+//                }else{
+//              //     if(tempCaption!=caption.getText().toString()){
+//               //         flag = false;
+//               //     }
+//
+//                }
+
+
+       //        position = position%imageURL.size();
+            if (position == counter) {
+
+               } else {
+                   counter = position;
+//                if(dummyPosition==0) {
+//                    dummyPosition = imageURL.size() / 2;
+//               }
                     if (position == dummyPosition + 1) {
-                        Toast.makeText(getActivity(), "Like", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Like"+position, Toast.LENGTH_SHORT).show();
                                dummyPosition = position;
-                        //      }else if(position==dummyPosition--){
-                        //      Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
-                        //
-                        if(position==0){
-
-                        }else{
-                            position = position-1;
-                        }
+//                        //      }else if(position==dummyPosition--){
+////                        //      Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
+////                        //
                         int takit_count = 0;
+                        position = position-1;
                         AppLogs.d(TAG, imageURL.get(position).getTakeit_count() + "");
                         takit_count = imageURL.get(position).getTakeit_count() + 1;
                         imageURL.get(position).setTakeit_count(takit_count);
@@ -232,14 +297,15 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 //
                                         //  ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
-
+                                        position = position-1;
                                         FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("take_it_check").setValue(true);
                                         FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("take_it_check").setValue(true);
                                         FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("takeit_count").setValue(finalTakit_count);
 
                                   //      imageURL.remove(0);
+                                 //       position = position-1;
 
-
+                                    //    position = position-1;
                                         FirebaseHandler.getInstance().getUser_leaveit_post()
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
                                                 .child("user-take-posts")
@@ -251,6 +317,14 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                          //              SectionListDataAdapter.itemsList.remove(position);
+                                        //                adapter.notifyItemRemoved(position-1);
+                                              //          position = position-1;
+                                                    //    imageURL.remove(position);
+                                                   //     adapter = new SectionListDataAdapter(getActivity(),imageURL);
+                                             //           adapter.SetPostion(position);
+                                                    //    recyclerView.setAdapter(adapter);
+                                              //          SectionListDataAdapter.itemsList.remove(position);
                                                   }
                                                 });
                                     }
@@ -259,9 +333,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                     } else if (position == dummyPosition - 1) {
                         dummyPosition = position;
 
-                              Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
+                              Toast.makeText(getActivity(),"Unlike"+position,Toast.LENGTH_SHORT).show();
                         int leave_it_count=0;
-                        //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+//                        //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+                        position = position+1;
                         AppLogs.d(TAG,imageURL.get(position).leaveit_count+"");
                         //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
                         AppLogs.d(TAG,imageURL.get(position).getLeaveit_count()+"");
@@ -277,12 +352,13 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
                                         //      ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
 
+                                        position = position+1;
+
                                         FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("leave_it_check").setValue(true);
                                         FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leave_it_check").setValue(true);
                                         FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leaveit_count").setValue(finalLeave_it_count);
 
                                   //      imageURL.remove(0);
-
 
                                         FirebaseHandler.getInstance().getUser_leaveit_post()
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
@@ -295,8 +371,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                                         imageURL.get(position).getCountry(),imageURL.get(position).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
                                                     @Override
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-
-
+                                                  //      position = position+1;
+                                                 //       imageURL.remove(position);
+                                                  //      adapter = new SectionListDataAdapter(getActivity(),imageURL);
+                                                   //     recyclerView.setAdapter(adapter);
                                                     }
                                                 });
                                     }
@@ -305,9 +383,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                         //      Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
                     }
                 }
+//
+//
+                   }
 
 
-            }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -315,7 +395,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
 
             }
-        });
+       });
         //setUpItemTouchHelper();
       //  setUpAnimationDecoratorHelper();
      //   my_recycler_view.setOnTouchListener(simpleItemTouchCallback);
@@ -374,19 +454,19 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                     2);
                         } else {
                     //       if(Build.VERSION.SDK_INT >16) {
-                            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "Images");
-                            imagesFolder.mkdirs();
-                            File image = new File(imagesFolder.getPath(), "MyImage_.jpg");
+                  //          File imagesFolder = new File(Environment.getExternalStorageDirectory(), "Images");
+                   //         imagesFolder.mkdirs();
+                   //         File image = new File(imagesFolder.getPath(), "MyImage_.jpg");
                        //        String fileName = "temp.jpg";
-                               ContentValues values = new ContentValues();
-                               values.put(MediaStore.Images.Media.TITLE, image.getAbsolutePath());
-                               mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    //           ContentValues values = new ContentValues();
+                     //          values.put(MediaStore.Images.Media.TITLE, image.getAbsolutePath());
+                    //           mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                       //     }
 
 
                             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+                       //     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                             startActivityForResult(cameraIntent, CAMERA_REQUEST);
                         }
                     }
@@ -438,6 +518,9 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
                     }
                 });
+
+
+
 
 
         FirebaseHandler.getInstance().getPostRef()
@@ -607,10 +690,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //                    startActivityForResult(intent, 2);
 //
 //                }
-
-
+           //     if(intent==null) {
+          //          intent = data;
+            //    }
                 String[] projection = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(mCapturedImageURI, projection, null, null, null);
+                Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
                 int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 imgPath = cursor.getString(column_index_data);
@@ -618,8 +702,58 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
                 if(Build.VERSION.SDK_INT <=19){
                     handleCrop(resultCode,data,mCapturedImageURI);
-                }else{
-                    beginCrop(data.getData());
+                }else {
+                       if (data == null) {
+                           String[] projectionn = {
+                                   MediaStore.Images.Thumbnails._ID,  // The columns we want
+                                   MediaStore.Images.Thumbnails.IMAGE_ID,
+                                   MediaStore.Images.Thumbnails.KIND,
+                                   MediaStore.Images.Thumbnails.DATA};
+                           String selection = MediaStore.Images.Thumbnails.KIND + "="  + // Select only mini's
+                                   MediaStore.Images.Thumbnails.MINI_KIND;
+
+                           String sort = MediaStore.Images.Thumbnails._ID + " DESC";
+
+//At the moment, this is a bit of a hack, as I'm returning ALL images, and just taking the latest one. There is a better way to narrow this down I think with a WHERE clause which is currently the selection variable
+                           Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projectionn, selection, null, sort);
+
+                           long imageId = 0l;
+                           long thumbnailImageId = 0l;
+                           String thumbnailPath = "";
+
+                           try{
+                               myCursor.moveToFirst();
+                               imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+                               thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+                               thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+                           }
+                           finally{myCursor.close();}
+
+                           //Create new Cursor to obtain the file Path for the large image
+
+                           String[] largeFileProjection = {
+                                   MediaStore.Images.ImageColumns._ID,
+                                   MediaStore.Images.ImageColumns.DATA
+                           };
+
+                           String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
+                           myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
+                           String largeImagePath = "";
+
+                           try{
+                               myCursor.moveToFirst();
+
+//This will actually give yo uthe file path location of the image.
+                               largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
+                           }
+                           finally{myCursor.close();}
+                           // These are the two URI's you'll be interested in. They give you a handle to the actual images
+                           Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
+                           Uri uriThumbnailImage = Uri.withAppendedPath(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, String.valueOf(thumbnailImageId));
+                            beginCrop(uriLargeImage);
+                       } else {
+                        beginCrop(data.getData());
+                    }
                 }
 
             } else if (requestCode == 9162) {
@@ -812,6 +946,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("param",mCapturedImageURI);
+        outState.putParcelable("paramm",intent);
     }
 
     @Override
@@ -819,6 +954,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             mCapturedImageURI = savedInstanceState.getParcelable("param");
+            intent = savedInstanceState.getParcelable("paramm");
         }
     }
 
