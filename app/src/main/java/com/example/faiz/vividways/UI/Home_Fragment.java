@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
+import com.example.faiz.vividways.Adapters.TouristSpotCardAdapter;
 import com.example.faiz.vividways.Models.FilterItem;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.Utils.AppLogs;
@@ -58,6 +59,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.soundcloud.android.crop.Crop;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -86,7 +88,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     private ProgressDialog mProgressDialog;
     private String downloadURL;
     private String string_caption;
-    public SectionListDataAdapter adapter;
+    public SectionListDataAdapter adapter1;
     private static final int CAMERA_REQUEST = 1888;
     private UserModel userModel;
     public FilterItem filterItemObj;
@@ -119,7 +121,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     public String tempCaption;
     public int index=10;
     public Intent intent;
-
+  //  TouristSpotCardAdapter adapter1;
 
     @Nullable
     @Override
@@ -154,7 +156,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         imageURL = new ArrayList<ItemObject>();
         rootStorageRef = FirebaseStorage.getInstance().getReference();
         folderRef = rootStorageRef.child("postImages");
-        my_recycler_view = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+       //
+         my_recycler_view = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         LinearSnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(my_recycler_view);
         MainActivity.back_image.setVisibility(View.GONE);
@@ -173,26 +176,21 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
         userModel = new UserModel();
         filterItemObj = new FilterItem();
-        adapter = new SectionListDataAdapter(getActivity(), imageURL);
+        adapter1 = new SectionListDataAdapter(getActivity(), imageURL);
       //  layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         int duration = getResources().getInteger(R.integer.scroll_duration);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
      //   my_recycler_view.setLayoutManager();
          scrollingLinearLayout  = new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration);
-//        scrollingLinearLayout.setReverseLayout(true);
-//        scrollingLinearLayout.setStackFromEnd(true);
-
-
-
         my_recycler_view.setLayoutManager(scrollingLinearLayout);
 
-
+     //    adapter1 = new TouristSpotCardAdapter(getActivity());
 
 
      //   scrollingLinearLayout.setSmoothScrollbarEnabled(false);
 
         //  my_recycler_view.setLayoutManager(layoutManager);
-        my_recycler_view.setAdapter(adapter);
+            my_recycler_view.setAdapter(adapter1);
     //    scrollingLinearLayout.scrollToPosition(Integer.MAX_VALUE / 2);
 //        firstVisibleInListview = layoutManager.findFirstVisibleItemPosition();
 //        my_recycler_view.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
@@ -203,199 +201,201 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //            }
 //        });
 
+//        cardStackView = (CardStackView)view.findViewById(R.id.my_recycler_view);
+//        cardStackView.setAdapter(adapter1);
+//        cardStackView.setCardEventListener(new CardStackView.CardEventListener() {
+//            @Override
+//            public void onCardDragging(float percentX, float percentY) {
+//                Log.d("CardStackView", "onCardDragging");
+//            }
+//
+//            @Override
+//            public void onCardSwiped(SwipeDirection direction) {
+//                Log.d("CardStackView", "onCardSwiped: " + direction.toString());
+//                Log.d("CardStackView", "topIndex: " + cardStackView.getTopIndex());
+//                if (cardStackView.getTopIndex() == adapter1.getCount() - 5) {
+//                    Log.d("CardStackView", "Paginate: " + cardStackView.getTopIndex());
+//                 //   paginate();
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onCardReversed() {
+//                Log.d("CardStackView", "onCardReversed");
+//            }
+//
+//            @Override
+//            public void onCardMovedToOrigin() {
+//                Log.d("CardStackView", "onCardMovedToOrigin");
+//            }
+//
+//            @Override
+//            public void onCardClicked(int index) {
+//                Log.d("CardStackView", "onCardClicked: " + index);
+//            }
+//        });
 
 
-
-     //   adapter.notifyDataSetChanged();
-
+//
 //        my_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//            public void onScrollStateChanged(final RecyclerView recyclerView, int newState) {
 //                super.onScrollStateChanged(recyclerView, newState);
-//            }
+//     //           TextView caption = (TextView) recyclerView.findViewById(R.id.caption_item);
+////                AppLogs.d("", caption.getText().toString());
+//                int center = recyclerView.getWidth() / 2;
+//                View centerView = recyclerView.findChildViewUnder(center, recyclerView.getTop());
+//                position = recyclerView.getChildAdapterPosition(centerView);
+//
+//
+//                //my_recycler_view.scrollToPosition(index);
+//                //index--;
+////                if(!flag){
+////                    tempCaption = caption.getText().toString();
+////                    for (ItemObject itemObject : imageURL) {
+////                        if(itemObject.getCaption().equals(tempCaption)) {
+////                            imageURL.remove(itemObject);
+////                            break;
+////                        }
+////                    }
+////                    adapter.notifyDataSetChanged();
+////                flag = true;
+////                }else{
+////              //     if(tempCaption!=caption.getText().toString()){
+////               //         flag = false;
+////               //     }
+////
+////                }
+//
+//
+//       //        position = position%imageURL.size();
+//            if (position == counter) {
+//
+//               } else {
+//                   counter = position;
+////                if(dummyPosition==0) {
+////                    dummyPosition = imageURL.size() / 2;
+////               }
+//                    if (position == dummyPosition + 1) {
+//                        Toast.makeText(getActivity(), "Like"+position, Toast.LENGTH_SHORT).show();
+//                               dummyPosition = position;
+////                        //      }else if(position==dummyPosition--){
+//////                        //      Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
+//////                        //
+//                        int takit_count = 0;
+//                        position = position-1;
+//                        AppLogs.d(TAG, imageURL.get(position).getTakeit_count() + "");
+//                        takit_count = imageURL.get(position).getTakeit_count() + 1;
+//                        imageURL.get(position).setTakeit_count(takit_count);
+//                        final int finalTakit_count = takit_count;
+//                        FirebaseHandler.getInstance().getPostRef()
+//                                .child(String.valueOf(imageURL.get(position).getItemID()))
+//                                .child("takeit_count")
+//                                .setValue(takit_count, new DatabaseReference.CompletionListener() {
+//                                    @Override
+//                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+////
+//                                        //  ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
+//                                        position = position-1;
+//                                        FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("take_it_check").setValue(true);
+//                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("take_it_check").setValue(true);
+//                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("takeit_count").setValue(finalTakit_count);
+//
+//                                  //      imageURL.remove(0);
+//                                 //       position = position-1;
+//
+//                                    //    position = position-1;
+//                                        FirebaseHandler.getInstance().getUser_leaveit_post()
+//                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+//                                                .child("user-take-posts")
+//                                                .child(imageURL.get(position).getItemID())
+//                                                .setValue(new ItemObject(imageURL.get(position).getItemID(), imageURL.get(position).getItemImageURl(), true,
+//                                                        imageURL.get(position).isLeave_it_check(), imageURL.get(position).getUserID(), imageURL.get(position).getCaption(),
+//                                                        imageURL.get(position).getLeaveit_count(), imageURL.get(position).getTakeit_count(), imageURL.get(position).getCountry(),
+//                                                        imageURL.get(position).getCan_see(), System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
+//
+//                                                    @Override
+//                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                                          //              SectionListDataAdapter.itemsList.remove(position);
+//                                        //                adapter.notifyItemRemoved(position-1);
+//                                              //          position = position-1;
+//                                                    //    imageURL.remove(position);
+//                                                   //     adapter = new SectionListDataAdapter(getActivity(),imageURL);
+//                                             //           adapter.SetPostion(position);
+//                                                    //    recyclerView.setAdapter(adapter);
+//                                              //          SectionListDataAdapter.itemsList.remove(position);
+//                                                  }
+//                                                });
+//                                    }
+//                                });
+//
+//                    } else if (position == dummyPosition - 1) {
+//                        dummyPosition = position;
+//
+//                              Toast.makeText(getActivity(),"Unlike"+position,Toast.LENGTH_SHORT).show();
+//                        int leave_it_count=0;
+////                        //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+//                        position = position+1;
+//                        AppLogs.d(TAG,imageURL.get(position).leaveit_count+"");
+//                        //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
+//                        AppLogs.d(TAG,imageURL.get(position).getLeaveit_count()+"");
+//                        leave_it_count = imageURL.get(position).getLeaveit_count()+1;
+//                        imageURL.get(position).setLeaveit_count(leave_it_count);
+//                        final int finalLeave_it_count = leave_it_count;
+//                        FirebaseHandler.getInstance().getPostRef()
+//                                .child(String.valueOf(imageURL.get(position).getItemID()))
+//                                .child("leaveit_count")
+//                                .setValue(leave_it_count, new DatabaseReference.CompletionListener() {
+//                                    @Override
+//                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//
+//                                        //      ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
+//
+//                                        position = position+1;
+//
+//                                        FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("leave_it_check").setValue(true);
+//                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leave_it_check").setValue(true);
+//                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leaveit_count").setValue(finalLeave_it_count);
+//
+//                                  //      imageURL.remove(0);
+//
+//                                        FirebaseHandler.getInstance().getUser_leaveit_post()
+//                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
+//                                                .child("user-leave-posts")
+//                                                .child(imageURL.get(position).getItemID())
+//                                                .setValue(new ItemObject(imageURL.get(position).getItemID(),
+//                                                        imageURL.get(position).getItemImageURl(),imageURL.get(position).isTake_it_check(),
+//                                                        true, imageURL.get(position).getUserID(),imageURL.get(position).getCaption(),
+//                                                        imageURL.get(position).getLeaveit_count(),imageURL.get(position).getTakeit_count(),
+//                                                        imageURL.get(position).getCountry(),imageURL.get(position).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
+//                                                    @Override
+//                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                                                  //      position = position+1;
+//                                                 //       imageURL.remove(position);
+//                                                  //      adapter = new SectionListDataAdapter(getActivity(),imageURL);
+//                                                   //     recyclerView.setAdapter(adapter);
+//                                                    }
+//                                                });
+//                                    }
+//                                });
+//
+//                        //      Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+////
+////
+//                   }
+//
+//
 //
 //            @Override
 //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //                super.onScrolled(recyclerView, dx, dy);
-//                if(dx < 0) //check for scroll down
-//                {
-//                    visibleItemCount = scrollingLinearLayout.getChildCount();
-//                    totalItemCount = scrollingLinearLayout.getItemCount();
-//                    pastVisiblesItems = scrollingLinearLayout.findFirstVisibleItemPosition();
 //
-//                    if (loading)
-//                    {
-//                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-//                        {
-//                            loading = false;
-//                            Log.v("...", "Last Item Wow !");
-//                            //Do pagination.. i.e. fetch new data
-//                        }
-//                    }
-//                }
+//
 //            }
-//
-//        });
-
-
-        my_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(final RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-     //           TextView caption = (TextView) recyclerView.findViewById(R.id.caption_item);
-//                AppLogs.d("", caption.getText().toString());
-                int center = recyclerView.getWidth() / 2;
-                View centerView = recyclerView.findChildViewUnder(center, recyclerView.getTop());
-                position = recyclerView.getChildAdapterPosition(centerView);
-
-
-                //my_recycler_view.scrollToPosition(index);
-                //index--;
-//                if(!flag){
-//                    tempCaption = caption.getText().toString();
-//                    for (ItemObject itemObject : imageURL) {
-//                        if(itemObject.getCaption().equals(tempCaption)) {
-//                            imageURL.remove(itemObject);
-//                            break;
-//                        }
-//                    }
-//                    adapter.notifyDataSetChanged();
-//                flag = true;
-//                }else{
-//              //     if(tempCaption!=caption.getText().toString()){
-//               //         flag = false;
-//               //     }
-//
-//                }
-
-
-       //        position = position%imageURL.size();
-            if (position == counter) {
-
-               } else {
-                   counter = position;
-//                if(dummyPosition==0) {
-//                    dummyPosition = imageURL.size() / 2;
-//               }
-                    if (position == dummyPosition + 1) {
-                        Toast.makeText(getActivity(), "Like"+position, Toast.LENGTH_SHORT).show();
-                               dummyPosition = position;
-//                        //      }else if(position==dummyPosition--){
-////                        //      Toast.makeText(getActivity(),"Unlike",Toast.LENGTH_SHORT).show();
-////                        //
-                        int takit_count = 0;
-                        position = position-1;
-                        AppLogs.d(TAG, imageURL.get(position).getTakeit_count() + "");
-                        takit_count = imageURL.get(position).getTakeit_count() + 1;
-                        imageURL.get(position).setTakeit_count(takit_count);
-                        final int finalTakit_count = takit_count;
-                        FirebaseHandler.getInstance().getPostRef()
-                                .child(String.valueOf(imageURL.get(position).getItemID()))
-                                .child("takeit_count")
-                                .setValue(takit_count, new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//
-                                        //  ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
-                                        position = position-1;
-                                        FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("take_it_check").setValue(true);
-                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("take_it_check").setValue(true);
-                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("takeit_count").setValue(finalTakit_count);
-
-                                  //      imageURL.remove(0);
-                                 //       position = position-1;
-
-                                    //    position = position-1;
-                                        FirebaseHandler.getInstance().getUser_leaveit_post()
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
-                                                .child("user-take-posts")
-                                                .child(imageURL.get(position).getItemID())
-                                                .setValue(new ItemObject(imageURL.get(position).getItemID(), imageURL.get(position).getItemImageURl(), true,
-                                                        imageURL.get(position).isLeave_it_check(), imageURL.get(position).getUserID(), imageURL.get(position).getCaption(),
-                                                        imageURL.get(position).getLeaveit_count(), imageURL.get(position).getTakeit_count(), imageURL.get(position).getCountry(),
-                                                        imageURL.get(position).getCan_see(), System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
-
-                                                    @Override
-                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                          //              SectionListDataAdapter.itemsList.remove(position);
-                                        //                adapter.notifyItemRemoved(position-1);
-                                              //          position = position-1;
-                                                    //    imageURL.remove(position);
-                                                   //     adapter = new SectionListDataAdapter(getActivity(),imageURL);
-                                             //           adapter.SetPostion(position);
-                                                    //    recyclerView.setAdapter(adapter);
-                                              //          SectionListDataAdapter.itemsList.remove(position);
-                                                  }
-                                                });
-                                    }
-                                });
-
-                    } else if (position == dummyPosition - 1) {
-                        dummyPosition = position;
-
-                              Toast.makeText(getActivity(),"Unlike"+position,Toast.LENGTH_SHORT).show();
-                        int leave_it_count=0;
-//                        //     Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
-                        position = position+1;
-                        AppLogs.d(TAG,imageURL.get(position).leaveit_count+"");
-                        //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i+1);
-                        AppLogs.d(TAG,imageURL.get(position).getLeaveit_count()+"");
-                        leave_it_count = imageURL.get(position).getLeaveit_count()+1;
-                        imageURL.get(position).setLeaveit_count(leave_it_count);
-                        final int finalLeave_it_count = leave_it_count;
-                        FirebaseHandler.getInstance().getPostRef()
-                                .child(String.valueOf(imageURL.get(position).getItemID()))
-                                .child("leaveit_count")
-                                .setValue(leave_it_count, new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-
-                                        //      ItemObject itemObject = new ItemObject(itemsList.get(i).getItemID(),itemsList.get(i).getItemImageURl(),true,false);
-
-                                        position = position+1;
-
-                                        FirebaseHandler.getInstance().getPostRef().child(String.valueOf(imageURL.get(position).getItemID())).child("leave_it_check").setValue(true);
-                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leave_it_check").setValue(true);
-                                        FirebaseHandler.getInstance().getUser_postRef().child(imageURL.get(position).getUserID()).child(imageURL.get(position).getItemID()).child("leaveit_count").setValue(finalLeave_it_count);
-
-                                  //      imageURL.remove(0);
-
-                                        FirebaseHandler.getInstance().getUser_leaveit_post()
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString())
-                                                .child("user-leave-posts")
-                                                .child(imageURL.get(position).getItemID())
-                                                .setValue(new ItemObject(imageURL.get(position).getItemID(),
-                                                        imageURL.get(position).getItemImageURl(),imageURL.get(position).isTake_it_check(),
-                                                        true, imageURL.get(position).getUserID(),imageURL.get(position).getCaption(),
-                                                        imageURL.get(position).getLeaveit_count(),imageURL.get(position).getTakeit_count(),
-                                                        imageURL.get(position).getCountry(),imageURL.get(position).getCan_see(),System.currentTimeMillis()), new DatabaseReference.CompletionListener() {
-                                                    @Override
-                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                  //      position = position+1;
-                                                 //       imageURL.remove(position);
-                                                  //      adapter = new SectionListDataAdapter(getActivity(),imageURL);
-                                                   //     recyclerView.setAdapter(adapter);
-                                                    }
-                                                });
-                                    }
-                                });
-
-                        //      Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
-                    }
-                }
-//
-//
-                   }
-
-
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-
-            }
-       });
+//       });
         //setUpItemTouchHelper();
       //  setUpAnimationDecoratorHelper();
      //   my_recycler_view.setOnTouchListener(simpleItemTouchCallback);
@@ -543,6 +543,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                                         if (itemObject.getCan_see().equals(UserModel.getInstanceIfNotNull().getUser_country())) {
                                                             if (itemObject.getCountry().equals(filterItemObj.getWant_see())) {
                                                                 imageURL.add(itemObject);
+                                                             //   adapter1.add(itemObject);
+                                                             //   adapter1.notifyDataSetChanged();
                                                             }
                                                         }
                                                     }
@@ -634,16 +636,16 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                         for (int i = 0; i < imageURL.size(); i++) {
                                             if (imageURL.get(i).getItemID().equals(itemObject.getItemID())) {
                                                 imageURL.remove(i);
-                                                adapter.notifyDataSetChanged();
+                                                adapter1.notifyDataSetChanged();
                                             }
                                         }
                                     }
                                 }
                             } else {
-                                adapter.notifyDataSetChanged();
+                                adapter1.notifyDataSetChanged();
                             }
                         } else {
-                            adapter.notifyDataSetChanged();
+                            adapter1.notifyDataSetChanged();
                         }
                     }
 
@@ -1017,6 +1019,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     }
 
 
+    private void paginate() {
+     //   cardStackView.setPaginationReserved();
+     ///   adapter..addAll(createTouristSpots());
+      //  adapter.notifyDataSetChanged();
+    }
 
 
 }

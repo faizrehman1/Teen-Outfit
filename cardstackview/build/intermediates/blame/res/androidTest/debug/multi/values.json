@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "C:\\Users\\Faiz\\AndroidStudioProjects\\Vividways\\cardstackview\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 956,
+                    "endColumn": 50,
+                    "endOffset": 1002
+                },
+                "from": {
+                    "file": "C:\\Users\\Faiz\\AndroidStudioProjects\\Vividways\\cardstackview\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 956,
+                        "endColumn": 50,
+                        "endOffset": 1002
+                    }
+                }
+            }
+        ]
+    }
+]
