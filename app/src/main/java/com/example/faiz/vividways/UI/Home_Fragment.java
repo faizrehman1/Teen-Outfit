@@ -17,29 +17,39 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.faiz.vividways.Adapters.RecyclerTouchListener;
 import com.example.faiz.vividways.Adapters.ScrollingLinearLayout;
 import com.example.faiz.vividways.Adapters.SectionListDataAdapter;
 import com.example.faiz.vividways.Adapters.TouristSpotCardAdapter;
+import com.example.faiz.vividways.Models.Axis;
 import com.example.faiz.vividways.Models.FilterItem;
 import com.example.faiz.vividways.Models.UserModel;
 import com.example.faiz.vividways.Utils.AppLogs;
@@ -66,6 +76,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Faiz on 7/20/2017.
@@ -102,12 +114,12 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     private float firstItemWidth;
     private float allPixels;
     private int mLastPosition;
-    int counterOne = 0,counterTwo = 0;
-    public int position=0;
-    public int i=0;
+    int counterOne = 0, counterTwo = 0;
+    public int position = 0;
+    public int i = 0;
     private Camera camera;
-   // private CameraPreview mPreview;
-   public float firstItemWidthDate;
+    // private CameraPreview mPreview;
+    public float firstItemWidthDate;
     public float paddingDate;
     public float itemWidthDate;
     public int allPixelsDate;
@@ -119,10 +131,15 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public boolean flag = false;
     public String tempCaption;
-    public int index=10;
+    public int index = 10;
     public Intent intent;
-  //  TouristSpotCardAdapter adapter1;
+    private float x1, x2, y1, y2;
+    static final int MIN_DISTANCE = 70;
+    //  TouristSpotCardAdapter adapter1;
+    public ArrayList<String> placeHolderList;
+    public ArrayList<Axis> axisArrayList;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -133,10 +150,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         take_btn = (Button) view.findViewById(R.id.take_btn);
         mAuth = FirebaseAuth.getInstance();
         firebase = FirebaseDatabase.getInstance().getReference();
-
-
-        Display display =getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
+        axisArrayList = new ArrayList<>();
+        placeHolderList = new ArrayList<>();
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        final Point size = new Point();
         display.getSize(size);
         itemWidth = getResources().getDimension(R.dimen.item_width);
         padding = (size.x - itemWidth) / 2;
@@ -144,7 +161,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
         allPixels = 0;
 
-     //   camera = getCameraInstance();
+        //   camera = getCameraInstance();
 
 
         MainActivity.appbar_TextView.setText("Home");
@@ -156,42 +173,265 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         imageURL = new ArrayList<ItemObject>();
         rootStorageRef = FirebaseStorage.getInstance().getReference();
         folderRef = rootStorageRef.child("postImages");
-       //
-         my_recycler_view = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-        LinearSnapHelper snapHelper = new LinearSnapHelper();
+        //
+        my_recycler_view = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        final SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(my_recycler_view);
         MainActivity.back_image.setVisibility(View.GONE);
         MainActivity.delete_image.setVisibility(View.GONE);
         MainActivity.report_image.setVisibility(View.GONE);
 
-       // LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        // LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
-      //  recyclerView.setLayoutManager(mLayoutManager);
+        //  recyclerView.setLayoutManager(mLayoutManager);
 
         //    Toast.makeText(getActivity(),"Your Location : \n California City, California",Toast.LENGTH_SHORT).show();
-    //    my_recycler_view.setOnFlingListener(snapHelper);
-      //  my_recycler_view.setHasFixedSize(true);
-      //  my_recycler_view.stopNestedScroll();
-     //   my_recycler_view.stopScroll();
+        //    my_recycler_view.setOnFlingListener(snapHelper);
+        //  my_recycler_view.setHasFixedSize(true);
+        //  my_recycler_view.stopNestedScroll();
+        //   my_recycler_view.stopScroll();
 
         userModel = new UserModel();
         filterItemObj = new FilterItem();
-        adapter1 = new SectionListDataAdapter(getActivity(), imageURL);
-      //  layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        adapter1 = new SectionListDataAdapter(getActivity(), imageURL, placeHolderList);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         int duration = getResources().getInteger(R.integer.scroll_duration);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-     //   my_recycler_view.setLayoutManager();
-         scrollingLinearLayout  = new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration);
-        my_recycler_view.setLayoutManager(scrollingLinearLayout);
+        //   my_recycler_view.setLayoutManager();
+        //  scrollingLinearLayout  = new ScrollingLinearLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false, duration);
+        my_recycler_view.setLayoutManager(layoutManager);
+        my_recycler_view.setAdapter(adapter1);
+//        my_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), my_recycler_view, new RecyclerTouchListener.RecyclerViewClickListener() {
+//            @Override
+//            public void onClick(View view, int position) {
+//
+//            }
+//
+//            @Override
+//            public void onLongClick(View view, int position) {
+//
+//            }
+//        }));
 
-     //    adapter1 = new TouristSpotCardAdapter(getActivity());
+        //        my_recycler_view.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+//            @Override
+//            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+//                 //Stop only scrolling.
+//                return rv.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING;
+//            }
+//        });
 
 
-     //   scrollingLinearLayout.setSmoothScrollbarEnabled(false);
+        my_recycler_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                View child = null;
+                int pos = 0;
+                //   if(dx<(-168)){
+                //     child = recyclerView.findChildViewUnder(dx, dy);
+                //   pos = recyclerView.getChildPosition(child);
+
+                //      }
+                //    }else if (dx==0){
+
+                View view = snapHelper.findSnapView(layoutManager);
+                pos = recyclerView.getChildAdapterPosition(view);
+
+
+                //       child = recyclerView.findChildViewUnder(dx, dy);
+                //    pos = recyclerView.getChildPosition(child);
+//                if(pos>imageURL.size()){
+//                    pos=1;
+//                }
+                ItemObject itemObject;
+
+//                if (imageURL.get(0) == null && imageURL.get(imageURL.size()-1) ==null) {
+//                  //  my_recycler_view.setOnTouchListener();
+//                  //   flag = recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING;
+//               //     my_recycler_view.stopScroll();
+//                //    recyclerView.stopScroll();
+//                    layoutManager.setSmoothScrollbarEnabled(false);
+////
+////                layoutManager = new LinearLayoutManager(getActivity()){
+////                    @Override
+////                    public boolean canScrollHorizontally() {
+////                        return false;
+////                    }
+////                };
+//             //       recyclerView.setLayoutManager(layoutManager);
+//
+//                }
+
+//                if(dummyPosition==imageURL.size()-1){
+//                    int sizelist = dummyPosition;
+//                    while (sizelist > imageURL.size()) {
+//                        if (imageURL.get(sizelist) != null) {
+//                            imageURL.set(pos, imageURL.get(sizelist));
+//                            imageURL.set(sizelist, null);
+//                            break;
+//                        }
+//                        sizelist--;
+//                    }
+//                }
+
+//                if(dummyPosition==0){
+//                    for(int i=0;i<imageURL.size();i++){
+//                        if (imageURL.get(i) != null) {
+//                            imageURL.set(dummyPosition, imageURL.get(i));
+//                            imageURL.set(i, null);
+//                            break;
+//                        }
+//                    }
+//                }
+
+                //   if (!flag) {
+                // if(imageURL.size()>)
+                //    pos = pos / 2;
+                //   pos = (pos/2) % imageURL.size();
+                if (pos < imageURL.size()) {
+                    if (imageURL.get(pos) == null) {
+                        int sizelist = 0;
+                        while (sizelist < imageURL.size()) {
+                            if (imageURL.get(sizelist) != null) {
+                                imageURL.set(pos, imageURL.get(sizelist));
+                                imageURL.set(sizelist, null);
+                                break;
+                            }
+                            sizelist++;
+                        }
+                    }
+                } else {
+                    int sizelist = 0;
+                    while (sizelist < imageURL.size()) {
+                        if (imageURL.get(sizelist) != null) {
+                            imageURL.add(pos, imageURL.get(sizelist));
+                            imageURL.set(sizelist, null);
+                            //       imageURL.remove(sizelist);
+                            //       pos = pos-1;
+                            //     dummyPosition = dummyPosition-1;
+                            break;
+                        }
+                        sizelist++;
+                    }
+                }
+
+             //   if(imageURL.size()-1 == dummyPosition){
+             //   }
+
+//                    if(pos==imageURL.size()){
+//                        int sizelist = dummyPosition;
+//                        while (sizelist < imageURL.size()) {
+//                            if (imageURL.get(sizelist) != null) {
+//                                imageURL.add(pos, imageURL.get(sizelist));
+//                                imageURL.add(sizelist, null);
+//                                break;
+//                            }
+//                            sizelist--;
+//                        }
+//                    }
+
+
+                TextView leave_num = (TextView) view.findViewById(R.id.leave_no);
+                Button leave_btn = (Button) view.findViewById(R.id.leave_btn);
+                TextView take_num = (TextView) view.findViewById(R.id.take_no);
+                Button take_btn = (Button) view.findViewById(R.id.take_btn);
+                ImageView itemImage = (ImageView) view.findViewById(R.id.itemImage);
+                LinearLayout leaveIT = (LinearLayout) view.findViewById(R.id.itemleave);
+                LinearLayout takeIT = (LinearLayout) view.findViewById(R.id.itemtake);
+                TextView caption = (TextView) view.findViewById(R.id.caption_item);
+
+//                Glide.with(getActivity()).load(R.mipmap.placeholder).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+//                take_num.setText(String.valueOf(""));
+//                leave_num.setText(String.valueOf(""));
+//                caption.setText("No View Available");
+                //   if (imageURL.toString() != null) {
+                if (pos != dummyPosition && pos >= 0) {
+                    axisArrayList.add(new Axis(dx, dy));
+                    //   TextView textView = (TextView) child.findViewById(R.id.caption_item);
+
+                    //      if(imageURL.get(pos)!=null) {
+                    try {
+                        if (imageURL.get(pos) != null) {
+                            dummyPosition = pos;
+
+//                            if (pos == dummyPosition + 1) {
+//                                Toast.makeText(getActivity(), "+1", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(getActivity(), "-1", Toast.LENGTH_SHORT).show();
+//                            }
+                            //  pos = pos/2;
+                         //   caption.setText(imageURL.get(pos).getCaption());
+                            Glide.with(getActivity()).load(imageURL.get(pos).getItemImageURl()).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+                            take_num.setText(String.valueOf(imageURL.get(pos).getTakeit_count()));
+                            leave_num.setText(String.valueOf(imageURL.get(pos).getLeaveit_count()));
+                            caption.setText(imageURL.get(pos).getCaption());
+
+                            if (imageURL.get(pos) != null) {
+                                imageURL.set(dummyPosition, null);
+                            }
+                            //  adapter1.notifyItemInserted(pos);
+                            layoutManager.scrollToPosition(dummyPosition);
+                            ///    adapter1.notifyItemInserted(dummyPosition+1);
+                            ///   adapter1.notifyDataSetChanged();
+                            //   adapter1.notifyItemRemoved(dummyPosition);
+                            //    adapter1.notifyDataSetChanged();
+                        } else {
+                           // caption.setText("");
+                            Glide.with(getActivity()).load(R.mipmap.placeholder).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+                            take_num.setText(String.valueOf(""));
+                            leave_num.setText(String.valueOf(""));
+                            caption.setText("No View Available");
+                            adapter1.notifyDataSetChanged();
+
+                        }
+
+                        //       }
+                        //      }
+                        //    }
+
+
+                    } catch (Exception c) {
+                        c.printStackTrace();
+                      //  caption.setText("");
+                        Glide.with(getActivity()).load(R.mipmap.placeholder).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+                        take_num.setText(String.valueOf(""));
+                        leave_num.setText(String.valueOf(""));
+                        caption.setText("No View Available");
+                        adapter1.notifyDataSetChanged();
+
+                    }
+                }
+//                    else{
+//                        caption.setText("");
+//                        Glide.with(getActivity()).load(R.mipmap.placeholder).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+//                        take_num.setText(String.valueOf(""));
+//                        leave_num.setText(String.valueOf(""));
+//                        caption.setText("No View Available");
+//                    }
+                //  }
+            }
+            //  }
+        });
+
+        //    adapter1 = new TouristSpotCardAdapter(getActivity());
+
+
+        //   scrollingLinearLayout.setSmoothScrollbarEnabled(false);
 
         //  my_recycler_view.setLayoutManager(layoutManager);
-            my_recycler_view.setAdapter(adapter1);
-    //    scrollingLinearLayout.scrollToPosition(Integer.MAX_VALUE / 2);
+
+
+        //  my_recycler_view.setOnTouchListener(new RecyclerTouchListener());
+
+
 //        firstVisibleInListview = layoutManager.findFirstVisibleItemPosition();
 //        my_recycler_view.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
 //            @Override
@@ -397,17 +637,17 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //            }
 //       });
         //setUpItemTouchHelper();
-      //  setUpAnimationDecoratorHelper();
-     //   my_recycler_view.setOnTouchListener(simpleItemTouchCallback);
+        //  setUpAnimationDecoratorHelper();
+        //   my_recycler_view.setOnTouchListener(simpleItemTouchCallback);
 
 
         leave_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(),"Leave It. ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Leave It. ", Toast.LENGTH_SHORT).show();
 
-            //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i--);
+                //    Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i--);
 //                counterOne++;
 //
 
@@ -421,10 +661,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(),"Take it",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Take it", Toast.LENGTH_SHORT).show();
 
 //                int takit_count = 0;
-             //   Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i++);
+                //   Home_Fragment.getInstance().my_recycler_view.smoothScrollToPosition(i++);
 //                if (imageURL.size() > 0) {
 
 
@@ -453,20 +693,20 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                     2);
                         } else {
-                    //       if(Build.VERSION.SDK_INT >16) {
-                  //          File imagesFolder = new File(Environment.getExternalStorageDirectory(), "Images");
-                   //         imagesFolder.mkdirs();
-                   //         File image = new File(imagesFolder.getPath(), "MyImage_.jpg");
-                       //        String fileName = "temp.jpg";
-                    //           ContentValues values = new ContentValues();
-                     //          values.put(MediaStore.Images.Media.TITLE, image.getAbsolutePath());
-                    //           mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                      //     }
+                            //       if(Build.VERSION.SDK_INT >16) {
+                            //          File imagesFolder = new File(Environment.getExternalStorageDirectory(), "Images");
+                            //         imagesFolder.mkdirs();
+                            //         File image = new File(imagesFolder.getPath(), "MyImage_.jpg");
+                            //        String fileName = "temp.jpg";
+                            //           ContentValues values = new ContentValues();
+                            //          values.put(MediaStore.Images.Media.TITLE, image.getAbsolutePath());
+                            //           mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                            //     }
 
 
                             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
-                       //     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+                            //     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                             startActivityForResult(cameraIntent, CAMERA_REQUEST);
                         }
                     }
@@ -520,11 +760,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                 });
 
 
-
-
-
         FirebaseHandler.getInstance().getPostRef()
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         imageURL.clear();
@@ -536,22 +773,28 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
                                 } else {
                                     if (UserModel.getInstanceIfNotNull() != null) {
-                                        if (UserModel.getInstanceIfNotNull().getUser_country() != null) {
-                                            if (!itemObject.getCan_see().equals("")) {
-                                                if (filterItemObj != null) {
-                                                    if (!filterItemObj.getWant_see().equals("")) {
-                                                        if (itemObject.getCan_see().equals(UserModel.getInstanceIfNotNull().getUser_country())) {
-                                                            if (itemObject.getCountry().equals(filterItemObj.getWant_see())) {
-                                                                imageURL.add(itemObject);
-                                                             //   adapter1.add(itemObject);
-                                                             //   adapter1.notifyDataSetChanged();
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                        //        if (UserModel.getInstanceIfNotNull().getUser_country() != null) {
+                                        //         if (!itemObject.getCan_see().equals("")) {
+                                        //            if (filterItemObj != null) {
+                                        //                 if (!filterItemObj.getWant_see().equals("")) {
+                                        if (itemObject.getCan_see().equals(UserModel.getInstanceIfNotNull().getUser_country())) {
+                                            if (itemObject.getCountry().equals(filterItemObj.getWant_see())) {
+                                                imageURL.add(itemObject);
+                                                placeHolderList.add("https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2Fuser.png?alt=media&token=1a586330-08ff-4832-b9c1-c85668e02e07");
+
+                                                //   adapter1.add(itemObject);
+                                                //   adapter1.notifyDataSetChanged();
+                                                //            }
+                                                //          }
+                                                //      }
+                                                //    }
                                             } else imageURL.add(itemObject);
+                                            placeHolderList.add("https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2Fuser.png?alt=media&token=1a586330-08ff-4832-b9c1-c85668e02e07");
+
                                         } else
                                             imageURL.add(itemObject);
+                                        placeHolderList.add("https://firebasestorage.googleapis.com/v0/b/vividways-1675b.appspot.com/o/profileImages%2Fuser.png?alt=media&token=1a586330-08ff-4832-b9c1-c85668e02e07");
+
                                     }
                                     ///   adapter.notifyDataSetChanged();
                                 }
@@ -624,7 +867,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         FirebaseHandler.getInstance()
                 .getUser_leaveit_post()
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null) {
@@ -636,6 +879,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                         for (int i = 0; i < imageURL.size(); i++) {
                                             if (imageURL.get(i).getItemID().equals(itemObject.getItemID())) {
                                                 imageURL.remove(i);
+                                                placeHolderList.remove(i);
                                                 adapter1.notifyDataSetChanged();
                                             }
                                         }
@@ -647,6 +891,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                         } else {
                             adapter1.notifyDataSetChanged();
                         }
+
+
+                        layoutManager.scrollToPosition(placeHolderList.size());
+                        dummyPosition = (imageURL.size() / 2) - 1;
+                        //     adapter1.setSelection(0);
                     }
 
                     @Override
@@ -692,9 +941,9 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //                    startActivityForResult(intent, 2);
 //
 //                }
-           //     if(intent==null) {
-          //          intent = data;
-            //    }
+                //     if(intent==null) {
+                //          intent = data;
+                //    }
                 String[] projection = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
                 int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -702,58 +951,60 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                 imgPath = cursor.getString(column_index_data);
                 cursor.close();
 
-                if(Build.VERSION.SDK_INT <=19){
-                    handleCrop(resultCode,data,mCapturedImageURI);
-                }else {
-                       if (data == null) {
-                           String[] projectionn = {
-                                   MediaStore.Images.Thumbnails._ID,  // The columns we want
-                                   MediaStore.Images.Thumbnails.IMAGE_ID,
-                                   MediaStore.Images.Thumbnails.KIND,
-                                   MediaStore.Images.Thumbnails.DATA};
-                           String selection = MediaStore.Images.Thumbnails.KIND + "="  + // Select only mini's
-                                   MediaStore.Images.Thumbnails.MINI_KIND;
+                if (Build.VERSION.SDK_INT <= 19) {
+                    handleCrop(resultCode, data, mCapturedImageURI);
+                } else {
+                    if (data == null) {
+                        String[] projectionn = {
+                                MediaStore.Images.Thumbnails._ID,  // The columns we want
+                                MediaStore.Images.Thumbnails.IMAGE_ID,
+                                MediaStore.Images.Thumbnails.KIND,
+                                MediaStore.Images.Thumbnails.DATA};
+                        String selection = MediaStore.Images.Thumbnails.KIND + "=" + // Select only mini's
+                                MediaStore.Images.Thumbnails.MINI_KIND;
 
-                           String sort = MediaStore.Images.Thumbnails._ID + " DESC";
+                        String sort = MediaStore.Images.Thumbnails._ID + " DESC";
 
 //At the moment, this is a bit of a hack, as I'm returning ALL images, and just taking the latest one. There is a better way to narrow this down I think with a WHERE clause which is currently the selection variable
-                           Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projectionn, selection, null, sort);
+                        Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projectionn, selection, null, sort);
 
-                           long imageId = 0l;
-                           long thumbnailImageId = 0l;
-                           String thumbnailPath = "";
+                        long imageId = 0l;
+                        long thumbnailImageId = 0l;
+                        String thumbnailPath = "";
 
-                           try{
-                               myCursor.moveToFirst();
-                               imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
-                               thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
-                               thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
-                           }
-                           finally{myCursor.close();}
+                        try {
+                            myCursor.moveToFirst();
+                            imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+                            thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+                            thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+                        } finally {
+                            myCursor.close();
+                        }
 
-                           //Create new Cursor to obtain the file Path for the large image
+                        //Create new Cursor to obtain the file Path for the large image
 
-                           String[] largeFileProjection = {
-                                   MediaStore.Images.ImageColumns._ID,
-                                   MediaStore.Images.ImageColumns.DATA
-                           };
+                        String[] largeFileProjection = {
+                                MediaStore.Images.ImageColumns._ID,
+                                MediaStore.Images.ImageColumns.DATA
+                        };
 
-                           String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
-                           myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
-                           String largeImagePath = "";
+                        String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
+                        myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
+                        String largeImagePath = "";
 
-                           try{
-                               myCursor.moveToFirst();
+                        try {
+                            myCursor.moveToFirst();
 
 //This will actually give yo uthe file path location of the image.
-                               largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
-                           }
-                           finally{myCursor.close();}
-                           // These are the two URI's you'll be interested in. They give you a handle to the actual images
-                           Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
-                           Uri uriThumbnailImage = Uri.withAppendedPath(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, String.valueOf(thumbnailImageId));
-                            beginCrop(uriLargeImage);
-                       } else {
+                            largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
+                        } finally {
+                            myCursor.close();
+                        }
+                        // These are the two URI's you'll be interested in. They give you a handle to the actual images
+                        Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
+                        Uri uriThumbnailImage = Uri.withAppendedPath(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, String.valueOf(thumbnailImageId));
+                        beginCrop(uriLargeImage);
+                    } else {
                         beginCrop(data.getData());
                     }
                 }
@@ -771,10 +1022,10 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                 cursor.close();
 
 
-                if(Build.VERSION.SDK_INT >19) {
+                if (Build.VERSION.SDK_INT > 19) {
                     beginCrop(data.getData());
-                }else{
-                    handleCrop(resultCode,data,mCapturedImageURI);
+                } else {
+                    handleCrop(resultCode, data, mCapturedImageURI);
                 }
             } else if (requestCode == Crop.REQUEST_CROP) {
                 handleCrop(resultCode, data, mCapturedImageURI);
@@ -867,17 +1118,17 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         if (resultCode == getActivity().RESULT_OK) {
             Bitmap bitmap = null;
             try {
-               if(Build.VERSION.SDK_INT <=19){
-                  //     bitmap =(Bitmap) mCapturedImageURI.
-                //   InputStream image_stream =getActivity().getContentResolver().openInputStream(mCapturedImageURI);
+                if (Build.VERSION.SDK_INT <= 19) {
+                    //     bitmap =(Bitmap) mCapturedImageURI.
+                    //   InputStream image_stream =getActivity().getContentResolver().openInputStream(mCapturedImageURI);
 
-                 //   bitmap= BitmapFactory.decodeStream(image_stream);
-                       bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mCapturedImageURI);
+                    //   bitmap= BitmapFactory.decodeStream(image_stream);
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mCapturedImageURI);
 
-               }else {
-                   bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), Crop.getOutput(result));
-               }
-                   AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                } else {
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), Crop.getOutput(result));
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Want to Upload Image or not ?");
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
                 View view1 = inflater.inflate(R.layout.image_view_alert, null);
@@ -891,16 +1142,16 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //                int columnIndex = cursor.getColumnIndex(imgHolder[0]);
 //                imgPath = cursor.getString(columnIndex);
 //                cursor.close();
-         //      if(Build.VERSION.SDK_INT <=19){
+                //      if(Build.VERSION.SDK_INT <=19){
                 //   bitmap = decodeFile(imgPath);
-             //      bitmap = Bitmap.createBitmap(bitmap, 0, 0,
-               //            bitmap.getWidth(), bitmap.getHeight(), , true);
-              //     bitmap = Bitmap.createScaledBitmap(myPictureBitmap, editText_caption.getWidth(),editText_caption.getHeight(),true);
-         //      }
-              alertImageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-               alertImageView.setImageBitmap(bitmap);
+                //      bitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                //            bitmap.getWidth(), bitmap.getHeight(), , true);
+                //     bitmap = Bitmap.createScaledBitmap(myPictureBitmap, editText_caption.getWidth(),editText_caption.getHeight(),true);
+                //      }
+                alertImageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                alertImageView.setImageBitmap(bitmap);
                 alertImageView.invalidate();
-             //   alertImageView.setImageURI(mCapturedImageURI);
+                //   alertImageView.setImageURI(mCapturedImageURI);
                 //    Glide.with(getActivity()).load(mCapturedImageURI).into(alertImageView);
                 //    alertImageView.setImageURI(uri);
                 //    }
@@ -947,8 +1198,8 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("param",mCapturedImageURI);
-        outState.putParcelable("paramm",intent);
+        outState.putParcelable("param", mCapturedImageURI);
+        outState.putParcelable("paramm", intent);
     }
 
     @Override
@@ -984,13 +1235,13 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
         return null;
 
     }
-    public static Camera getCameraInstance(){
+
+    public static Camera getCameraInstance() {
         Camera c = null;
 
         try {
             c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK); // attempt to get a Camera instance
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             // Camera is not available (in use or does not exist)
             Log.d("cam", "Camera is not available - in use or does not exist");
         }
@@ -1020,9 +1271,9 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
 
     private void paginate() {
-     //   cardStackView.setPaginationReserved();
-     ///   adapter..addAll(createTouristSpots());
-      //  adapter.notifyDataSetChanged();
+        //   cardStackView.setPaginationReserved();
+        ///   adapter..addAll(createTouristSpots());
+        //  adapter.notifyDataSetChanged();
     }
 
 

@@ -48,17 +48,20 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     public static ArrayList<ItemObject> itemsList;
     private Context mContext;
     private ImageView imageView;
-     public MainActivity mainActivity;
+    public MainActivity mainActivity;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private int selectedItem = -1;
-    public  int pos = 0;
+    public int pos = 0;
     public int position;
+    public ArrayList<String> placeHolderList;
+    public SingleItemRowHolder viewHolderRecy = null;
+    public boolean flag = true;
 
-
-    public SectionListDataAdapter(Context context, ArrayList<ItemObject> itemsList) {
+    public SectionListDataAdapter(Context context, ArrayList<ItemObject> itemsList, ArrayList<String> placeHolderList) {
         this.itemsList = itemsList;
         this.mContext = context;
+        this.placeHolderList = placeHolderList;
     }
 
     @Override
@@ -79,47 +82,68 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     }
 
 
-    public void SetPostion(int pos){
+    public void SetPostion(int pos) {
         this.pos = pos;
     }
+
 
     @Override
     public void onBindViewHolder(final SingleItemRowHolder holder, int i) {
 
         mainActivity = (MainActivity) mContext;
 
-      //  if (itemsList.size() > 0) {
 
-       //     i = i % itemsList.size();
+//            SingleItemRowHolder singleItemRowHolder = (SingleItemRowHolder) getView();
+//
+//            if (singleItemRowHolder != null && singleItemRowHolder != holder) {
+        Glide.with(mContext).load(R.mipmap.placeholder).asBitmap().into(holder.itemImage);
+        holder.take_num.setText("");
+        holder.leave_num.setText("");
+        holder.caption.setText("No View Available");
+        setViewHolderRecy(holder);
 
-            ItemObject singleItem;
-            singleItem = itemsList.get(i);
+//            }
+        // if(flag) {
+        //     flag = false;
+        //  }
+        //    setViewHolderRecy(ho);
+        //  if (itemsList.size() > 0) {
+
+        //     i = i % itemsList.size();
+
+        //  ItemObject singleItem;
+        //   singleItem = itemsList.get(i);
+
+//        Glide.with(mContext).load("").asBitmap().placeholder(R.mipmap.placeholder).into(holder.itemImage);
+//        holder.take_num.setText("");
+//        holder.leave_num.setText("");
+//        holder.caption.setText("");
 
 
-            //   Home_Fragment.getInstance().position = i;
+        //   Home_Fragment.getInstance().position = i;
 
 
 //        holder.tvTitle.setBackgroundResource(R.mipmap.hanger_img);
-            AppLogs.e("Image Ka URL", singleItem.getItemImageURl());
+        //   AppLogs.e("Image Ka URL", singleItem.getItemImageURl());
 
 
-            holder.takeIT.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Take IT", Toast.LENGTH_SHORT).show();
-                    openListFragment(mContext, true, itemsList, 0);
-
-                }
-            });
-
-            holder.leaveIT.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Leave IT", Toast.LENGTH_SHORT).show();
-                    openListFragment(mContext, false, itemsList, 0);
-
-                }
-            });
+//            holder.takeIT.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(v.getContext(), "Take IT", Toast.LENGTH_SHORT).show();
+//                    openListFragment(mContext, true, itemsList, 0);
+//
+//                }
+//            });
+//
+//            holder.leaveIT.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(v.getContext(), "Leave IT", Toast.LENGTH_SHORT).show();
+//                    openListFragment(mContext, false, itemsList, 0);
+//
+//                }
+//            });
 
 
 //        holder.take_btn.setOnClickListener(new View.OnClickListener() {
@@ -173,110 +197,111 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 //            }
 //        });
 
-            final int finalI = i;
-            holder.itemImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        final int finalI = i;
+//            holder.itemImage.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    //     BitmapDrawable drawable = (BitmapDrawable) holder.itemImage.getDrawable();
+//                    //     Bitmap bitmap = drawable.getBitmap();
+//                    //     Bitmap bmap = holder.itemImage.getDrawingCache();
+//                    //       Bitmap bmp = ((GlideBitmapDrawable)holder.itemImage.getDrawable().getCurrent()).getBitmap();
+//              //      Bitmap bm = ((BitmapDrawable) holder.itemImage.getDrawable()).getBitmap();
+//                    //      Bitmap bitmap = ((BitmapDrawable)holder.wallPaperImageView.getDrawable()).getBitmap();
+//                    //       Bitmap bimap = ((BitmapDrawable)holder.itemImage.getDrawable()).getBitmap();
+//                    //    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//                    //  View view = ((MainActivity) mContext).getLayoutInflater().inflate(R.layout.full_image_view,null);
+//                    //   LayoutInflater inflater = LayoutInflater.from(mContext);
+//                    //   View view = inflater.inflate(R.layout.full_image_view, null);
+//                    //   ImageView full_img = (ImageView) view.findViewById(R.id.full_img);
+//                    //  full_img.setBackground(bm);
+//                    //  full_img.setImageBitmap(bm);
+//
+//                    //  builder.setView(view);
+//                    //    builder.create().show();
+//
+//
+////                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+////                editor = sharedPreferences.edit();
+////           //     editor.clear();
+////                SharedPreferences preferences = mContext.getSharedPreferences("img", Context.MODE_PRIVATE);
+////                preferences.edit().putString("img",bm).apply();
+////                editor.commit();
+//                    //  String s= createImageFromBitmap(bm);
+//
+////                    try {
+////                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+////                        bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+////                        byte[] bytes = stream.toByteArray();
+////                        Intent intent = new Intent(mContext, FullImageActivity.class);
+////                        intent.putExtra("img", itemsList.get(finalI));
+////                        mContext.startActivity(intent);
+////                    } catch (Exception e) {
+////                        e.printStackTrace();
+////                    }
+//
+//
+//                    //      Bundle bundle = new Bundle();
+//                    //      bundle.putParcelable("img",bm);
+//                    //    Full_Image_Fragment statistic_fragment = new Full_Image_Fragment();
+//                    //    statistic_fragment.setArguments(bundle);
+//                    //   FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
+//                    //          .beginTransaction();
+//                    //  mainActivity.Uploadbutton.setVisibility(View.GONE);
+//                    //   mainActivity.getSupportActionBar().hide();
+////                mainActivity.appbar_TextView.setText("Statistic");
+////                MainActivity.back_image.setVisibility(View.VISIBLE);
+////                MainActivity.delete_image.setVisibility(View.VISIBLE);
+////                MainActivity.report_image.setVisibility(View.VISIBLE);
+//                    //  ft.replace(R.id.fragment_container,statistic_fragment);
+//                    //  ft.addToBackStack("");
+//                    //  ft.commit();
+//                }
+//            });
+//
 
-                    //     BitmapDrawable drawable = (BitmapDrawable) holder.itemImage.getDrawable();
-                    //     Bitmap bitmap = drawable.getBitmap();
-                    //     Bitmap bmap = holder.itemImage.getDrawingCache();
-                    //       Bitmap bmp = ((GlideBitmapDrawable)holder.itemImage.getDrawable().getCurrent()).getBitmap();
-                    Bitmap bm = ((BitmapDrawable) holder.itemImage.getDrawable()).getBitmap();
-                    //      Bitmap bitmap = ((BitmapDrawable)holder.wallPaperImageView.getDrawable()).getBitmap();
-                    //       Bitmap bimap = ((BitmapDrawable)holder.itemImage.getDrawable()).getBitmap();
-                    //    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    //  View view = ((MainActivity) mContext).getLayoutInflater().inflate(R.layout.full_image_view,null);
-                    //   LayoutInflater inflater = LayoutInflater.from(mContext);
-                    //   View view = inflater.inflate(R.layout.full_image_view, null);
-                    //   ImageView full_img = (ImageView) view.findViewById(R.id.full_img);
-                    //  full_img.setBackground(bm);
-                    //  full_img.setImageBitmap(bm);
 
-                    //  builder.setView(view);
-                    //    builder.create().show();
-
-
-//                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-//                editor = sharedPreferences.edit();
-//           //     editor.clear();
-//                SharedPreferences preferences = mContext.getSharedPreferences("img", Context.MODE_PRIVATE);
-//                preferences.edit().putString("img",bm).apply();
-//                editor.commit();
-                    //  String s= createImageFromBitmap(bm);
-
-                    try {
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] bytes = stream.toByteArray();
-                        Intent intent = new Intent(mContext, FullImageActivity.class);
-                        intent.putExtra("img", itemsList.get(finalI));
-                        mContext.startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                    //      Bundle bundle = new Bundle();
-                    //      bundle.putParcelable("img",bm);
-                    //    Full_Image_Fragment statistic_fragment = new Full_Image_Fragment();
-                    //    statistic_fragment.setArguments(bundle);
-                    //   FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
-                    //          .beginTransaction();
-                    //  mainActivity.Uploadbutton.setVisibility(View.GONE);
-                    //   mainActivity.getSupportActionBar().hide();
-//                mainActivity.appbar_TextView.setText("Statistic");
-//                MainActivity.back_image.setVisibility(View.VISIBLE);
-//                MainActivity.delete_image.setVisibility(View.VISIBLE);
-//                MainActivity.report_image.setVisibility(View.VISIBLE);
-                    //  ft.replace(R.id.fragment_container,statistic_fragment);
-                    //  ft.addToBackStack("");
-                    //  ft.commit();
-                }
-            });
-
-
-            Glide.with(mContext).load(singleItem.getItemImageURl()).asBitmap().placeholder(R.mipmap.placeholder).into(holder.itemImage);
-            holder.take_num.setText(String.valueOf(singleItem.getTakeit_count()));
-            holder.leave_num.setText(String.valueOf(singleItem.getLeaveit_count()));
-            holder.caption.setText(singleItem.getCaption());
        /* Glide.with(mContext)
                 .load(feedItem.getImageURL())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .error(R.drawable.bg)
                 .into(feedListRowHolder.thumbView);*/
-            //}
-    //    }
+        //}
+        //    }
     }
+
     @Override
     public int getItemCount() {
 
-            return itemsList.size();
+        return placeHolderList.size()*3;
 
     }
 
+    public void setSelection() {
+
+    }
 
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
         protected CardView tvTitle;
-        protected LinearLayout leaveIT,takeIT;
+        protected LinearLayout leaveIT, takeIT;
         protected ImageView itemImage;
-        protected Button leave_btn,take_btn;
-        private TextView leave_num,take_num,caption;
+        protected Button leave_btn, take_btn;
+        private TextView leave_num, take_num, caption;
 
         public SingleItemRowHolder(View view) {
             super(view);
 
-            this.leave_num = (TextView)view.findViewById(R.id.leave_no);
-           this.leave_btn = (Button)view.findViewById(R.id.leave_btn);
-            this.take_num = (TextView)view.findViewById(R.id.take_no);
-            this.take_btn = (Button)view.findViewById(R.id.take_btn);
+            this.leave_num = (TextView) view.findViewById(R.id.leave_no);
+            this.leave_btn = (Button) view.findViewById(R.id.leave_btn);
+            this.take_num = (TextView) view.findViewById(R.id.take_no);
+            this.take_btn = (Button) view.findViewById(R.id.take_btn);
             this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
-            this.leaveIT =(LinearLayout)view.findViewById(R.id.itemleave);
-            this.takeIT =(LinearLayout)view.findViewById(R.id.itemtake);
-            this.caption = (TextView)view.findViewById(R.id.caption_item);
+            this.leaveIT = (LinearLayout) view.findViewById(R.id.itemleave);
+            this.takeIT = (LinearLayout) view.findViewById(R.id.itemtake);
+            this.caption = (TextView) view.findViewById(R.id.caption_item);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -292,19 +317,18 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
     }
 
-    public void openListFragment(Context mContext, boolean b, ArrayList<ItemObject> itemsList, int i){
+    public void openListFragment(Context mContext, boolean b, ArrayList<ItemObject> itemsList, int i) {
         Bundle data = new Bundle();
-       if(b){
-           //take it
-           data.putBoolean("listb", b);
-       }else{
-          // leave it
-           data.putBoolean("listb", b);
-       }
+        if (b) {
+            //take it
+            data.putBoolean("listb", b);
+        } else {
+            // leave it
+            data.putBoolean("listb", b);
+        }
 
 
-
-       List_Fragment list_fragment = new List_Fragment();
+        List_Fragment list_fragment = new List_Fragment();
 
         FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager()
                 .beginTransaction();
@@ -314,10 +338,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         mainActivity.delete_image.setVisibility(View.GONE);
         mainActivity.report_image.setVisibility(View.GONE);
         mainActivity.menu_bar.setVisibility(View.GONE);
-      //  data.putParcelable("item", (Parcelable) itemsList);
-        data.putParcelable("item",itemsList.get(i));
+        //  data.putParcelable("item", (Parcelable) itemsList);
+        data.putParcelable("item", itemsList.get(i));
         list_fragment.setArguments(data);
-        ft.replace(R.id.fragment_container,list_fragment);
+        ft.replace(R.id.fragment_container, list_fragment);
         ft.addToBackStack("");
         ft.commit();
     }
@@ -336,6 +360,15 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
             fileName = null;
         }
         return fileName;
+    }
+
+
+    public SingleItemRowHolder getView() {
+        return viewHolderRecy;
+    }
+
+    public void setViewHolderRecy(SingleItemRowHolder viewHolderRecy) {
+        this.viewHolderRecy = viewHolderRecy;
     }
 
 }
