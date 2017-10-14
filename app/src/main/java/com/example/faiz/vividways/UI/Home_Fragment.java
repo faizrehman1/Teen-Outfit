@@ -693,20 +693,20 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                     2);
                         } else {
-                            //       if(Build.VERSION.SDK_INT >16) {
-                            //          File imagesFolder = new File(Environment.getExternalStorageDirectory(), "Images");
-                            //         imagesFolder.mkdirs();
-                            //         File image = new File(imagesFolder.getPath(), "MyImage_.jpg");
-                            //        String fileName = "temp.jpg";
-                            //           ContentValues values = new ContentValues();
-                            //          values.put(MediaStore.Images.Media.TITLE, image.getAbsolutePath());
-                            //           mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                            //     }
+                                   if(Build.VERSION.SDK_INT >20) {
+                                      File imagesFolder = new File(Environment.getExternalStorageDirectory(), "Images");
+                                     imagesFolder.mkdirs();
+                                     File image = new File(imagesFolder.getPath(), "MyImage_.jpg");
+                                    String fileName = "temp.jpg";
+                                       ContentValues values = new ContentValues();
+                                      values.put(MediaStore.Images.Media.TITLE, image.getAbsolutePath());
+                                       mCapturedImageURI = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                                 }
 
 
                             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
-                            //     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+                                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                             startActivityForResult(cameraIntent, CAMERA_REQUEST);
                         }
                     }
@@ -944,21 +944,21 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                 //     if(intent==null) {
                 //          intent = data;
                 //    }
-                String[] projection = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
-                int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                imgPath = cursor.getString(column_index_data);
-                cursor.close();
+//                String[] projection = {MediaStore.Images.Media.DATA};
+//                Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
+//                int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//                cursor.moveToFirst();
+//                imgPath = cursor.getString(column_index_data);
+//                cursor.close();
 
                 if (Build.VERSION.SDK_INT <= 19) {
                     handleCrop(resultCode, data, mCapturedImageURI);
                 } else {
                     if (data == null) {
                         String[] projectionn = {
-                                MediaStore.Images.Thumbnails._ID,  // The columns we want
-                                MediaStore.Images.Thumbnails.IMAGE_ID,
-                                MediaStore.Images.Thumbnails.KIND,
+//                                MediaStore.Images.Thumbnails._ID,  // The columns we want
+//                                MediaStore.Images.Thumbnails.IMAGE_ID,
+//                                MediaStore.Images.Thumbnails.KIND,
                                 MediaStore.Images.Thumbnails.DATA};
                         String selection = MediaStore.Images.Thumbnails.KIND + "=" + // Select only mini's
                                 MediaStore.Images.Thumbnails.MINI_KIND;
@@ -966,7 +966,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                         String sort = MediaStore.Images.Thumbnails._ID + " DESC";
 
 //At the moment, this is a bit of a hack, as I'm returning ALL images, and just taking the latest one. There is a better way to narrow this down I think with a WHERE clause which is currently the selection variable
-                        Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projectionn, selection, null, sort);
+                        Cursor myCursor = getActivity().getContentResolver().query(mCapturedImageURI, projectionn, null, null, null);
 
                         long imageId = 0l;
                         long thumbnailImageId = 0l;
@@ -974,36 +974,36 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 
                         try {
                             myCursor.moveToFirst();
-                            imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
-                            thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
-                            thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+//                            imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+ //                           thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+//                            thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
                         } finally {
                             myCursor.close();
                         }
 
                         //Create new Cursor to obtain the file Path for the large image
 
-                        String[] largeFileProjection = {
-                                MediaStore.Images.ImageColumns._ID,
-                                MediaStore.Images.ImageColumns.DATA
-                        };
-
-                        String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
-                        myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
-                        String largeImagePath = "";
-
-                        try {
-                            myCursor.moveToFirst();
-
-//This will actually give yo uthe file path location of the image.
-                            largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
-                        } finally {
-                            myCursor.close();
-                        }
-                        // These are the two URI's you'll be interested in. They give you a handle to the actual images
-                        Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
-                        Uri uriThumbnailImage = Uri.withAppendedPath(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, String.valueOf(thumbnailImageId));
-                        beginCrop(uriLargeImage);
+//                        String[] largeFileProjection = {
+//                                MediaStore.Images.ImageColumns._ID,
+//                                MediaStore.Images.ImageColumns.DATA
+//                        };
+//
+//                        String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
+//                        myCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
+//                        String largeImagePath = "";
+//
+//                        try {
+//                            myCursor.moveToFirst();
+//
+////This will actually give yo uthe file path location of the image.
+//                            largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
+//                        } finally {
+//                            myCursor.close();
+//                        }
+//                        // These are the two URI's you'll be interested in. They give you a handle to the actual images
+//                        Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
+//                        Uri uriThumbnailImage = Uri.withAppendedPath(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, String.valueOf(thumbnailImageId));
+                        beginCrop(mCapturedImageURI);
                     } else {
                         beginCrop(data.getData());
                     }
