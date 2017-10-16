@@ -378,7 +378,7 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                                 imageURL.set(dummyPosition, null);
                             }
                             //  adapter1.notifyItemInserted(pos);
-                            layoutManager.scrollToPosition(dummyPosition);
+                      //      layoutManager.scrollToPosition(dummyPosition);
                             ///    adapter1.notifyItemInserted(dummyPosition+1);
                             ///   adapter1.notifyDataSetChanged();
                             //   adapter1.notifyItemRemoved(dummyPosition);
