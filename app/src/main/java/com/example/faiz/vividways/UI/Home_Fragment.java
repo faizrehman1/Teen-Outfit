@@ -369,7 +369,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
 //                            }
                             //  pos = pos/2;
                          //   caption.setText(imageURL.get(pos).getCaption());
-                            Glide.with(getActivity()).load(imageURL.get(pos).getItemImageURl()).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+                            Glide.with(getActivity())
+                                    .load(imageURL.get(pos).getItemImageURl()).asBitmap()
+                                    .animate(R.anim.fade_in)
+                                    .placeholder(R.mipmap.placeholder)
+                                    .into(itemImage);
                             take_num.setText(String.valueOf(imageURL.get(pos).getTakeit_count()));
                             leave_num.setText(String.valueOf(imageURL.get(pos).getLeaveit_count()));
                             caption.setText(imageURL.get(pos).getCaption());
@@ -385,7 +389,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                             //    adapter1.notifyDataSetChanged();
                         } else {
                            // caption.setText("");
-                            Glide.with(getActivity()).load(R.mipmap.placeholder).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+                            Glide.with(getActivity())
+                                    .load(R.mipmap.placeholder).asBitmap()
+                                    .placeholder(R.mipmap.placeholder)
+                                    .animate(R.anim.fade_in)
+                                    .into(itemImage);
                             take_num.setText(String.valueOf(""));
                             leave_num.setText(String.valueOf(""));
                             caption.setText("No View Available");
@@ -401,7 +409,11 @@ public class Home_Fragment extends android.support.v4.app.Fragment {
                     } catch (Exception c) {
                         c.printStackTrace();
                       //  caption.setText("");
-                        Glide.with(getActivity()).load(R.mipmap.placeholder).asBitmap().placeholder(R.mipmap.placeholder).into(itemImage);
+                        Glide.with(getActivity()).load(R.mipmap.placeholder)
+                                .asBitmap()
+                                .animate(R.anim.fade_in)
+                                .placeholder(R.mipmap.placeholder)
+                                .into(itemImage);
                         take_num.setText(String.valueOf(""));
                         leave_num.setText(String.valueOf(""));
                         caption.setText("No View Available");

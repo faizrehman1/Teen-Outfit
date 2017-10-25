@@ -96,7 +96,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 //            SingleItemRowHolder singleItemRowHolder = (SingleItemRowHolder) getView();
 //
 //            if (singleItemRowHolder != null && singleItemRowHolder != holder) {
-        Glide.with(mContext).load(R.mipmap.placeholder).asBitmap().into(holder.itemImage);
+        Glide.with(mContext).load(R.mipmap.placeholder)
+                .asBitmap()
+                .animate(R.anim.fade_in)
+                .into(holder.itemImage);
         holder.take_num.setText("");
         holder.leave_num.setText("");
         holder.caption.setText("No View Available");
